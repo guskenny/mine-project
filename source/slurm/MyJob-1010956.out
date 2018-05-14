@@ -1,0 +1,70 @@
+
+------------------------------
+Network width: 5
+Network depth: 5
+Number of nodes: 25
+Number of arcs: 52
+
+Boykov-Kolmogorov time: 0 ms
+
+Time to find closure: 0 ms
+
+Total run time: 0 ms
+
+------------------------------
+
+------------------------------
+Network width: 1000
+Network depth: 20
+Number of nodes: 20000
+Number of arcs: 56962
+
+Boykov-Kolmogorov time: 110 ms
+
+Time to find closure: 20 ms
+
+Total run time: 130 ms
+
+------------------------------
+
+------------------------------
+Network width: 10000
+Network depth: 50
+Number of nodes: 500000
+Number of arcs: 1469902
+
+Boykov-Kolmogorov time: 3060 ms
+
+Time to find closure: 650 ms
+
+Total run time: 3710 ms
+
+------------------------------
+
+------------------------------
+Network width: 50000
+Network depth: 50
+Number of nodes: 2500000
+Number of arcs: 7349902
+
+Boykov-Kolmogorov time: 13740 ms
+
+Time to find closure: 2410 ms
+
+Total run time: 16150 ms
+
+------------------------------
+
+------------------------------
+Network width: 50000
+Network depth: 100
+Number of nodes: 5000000
+Number of arcs: 14849802
+
+Boykov-Kolmogorov time: 30290 ms
+
+Time to find closure: 5050 ms
+
+Total run time: 35340 ms
+
+------------------------------

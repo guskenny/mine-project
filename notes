@@ -1,0 +1,233 @@
+NOTES:
+
+NOTES FROM MEETING 3/5/2018:
+============================
+
+selecting a group means taking an entire solution (if there is no overlap)
+
+Theory stuff:
+-------------
+How many integer points are there for:
+MIP(x0,x1)?
+MIP(x0,x1,x2)?
+MIP(x0,x1,...,xn)?
+
+look at different cases, overlap, independent, etc.
+
+what does it mean for solutions to be independent?
+independent in time? independent in space? both?
+
+is there some way that we can predict an upper or lower bound for the
+improvements we get from a merge. is it as simple as
+x* = x0 + delta_1 + delta_2 + delta_3, etc
+or is the interaction between non-independent solutions letting us prouce
+merged solutions that are better than the sum of all of their parts?
+
+Improvement stuff:
+------------------
+pick a number of swaps, order swaps by improvement value and
+select swaps until resource limit in balance again. This means
+that we have a much higher chance of getting an improving each
+time, rather than random
+
+
+BACKWARD = 0
+FORWARD = 1
+
+IMPROVED SWAPPING:
+- maintain R vector with size |T| of how much resource usage for each period
+- maintain P vector with size |T| containing set objects of each block in each period
+- select random block, b
+  - (if 1 < x <= t_max, x = p(b), p(b) is period of b) select random direction, d
+  - compute resource use r of cone in direction d
+  - subtract r from R[p(b)], add r to R[p(b) + d - !d]
+  - update P vector of vectors
+  - vector periods = [p(b), p(b)+ d - !d]
+  - while R[p(b)] > R_total[p(b)] or R[p(b)+ d - !d] > R_total[p(b)+ d - !d]:
+    - temp_d = d;
+    - temp_p = periods[0];
+    - if R[p(b)+ d - !d] > R_total[p(b)+ d - !d]:
+       - temp_d = !temp_d
+       - temp_p = p(b)+ d - !d;
+    - select random block, temp_b from temp_p
+    - compute resource use temp_r of cone in direction temp_d
+    - subtract r from R[temp_p], add r to R[temp_p + d - !d]
+    - update P vector of vectors
+
+CODING NOTES:
+overwrite < and > operators for Sol_Int
+overwrite print operator for Sol_Int
+
+IDEA FOR NEW CONSTRUCTION TECHNIQUE:
+construct 500 random solutions
+*take first nT-1 periods of best solution as fixed and construct 500 more solutions
+then take first nT-2 periods and construct 500 more solutions
+if better solution found, go back to *
+if not then take first nT-3 periods an construct 500 solutions
+repeat
+
+ALTERNATIVE IDEA FOR CONSTRUCTION TECHNIQUE:
+construct 500 random solutions
+fix first period of best solution
+construct 500 more random solutions
+fix 2nd period of best solution
+construct 500 more solutions
+etc
+
+ANOTHER IDEA FOR CONSTRUCTION TECHNIQUE:
+similar to pre-processing
+for each period, find best cones and add to solution til resource limit reached
+next period, etc
+
+QOL QUESTIONS:
+how to tell if a solution has been found
+how to check if a solution ahs been found to a certain gap by a certain time
+how to implement objective functions
+
+
+
+- when generating initial solutions, don't use all resources in a period
+  so that swapping is easier later on
+
+TODO:
+build local search improver:
+
+--------------------------------------------------------------------
+
+** get initial boundaries **
+- take solution, model and period
+- for each block b in model:
+  - if block b in current period:
+    - for each predecessor p of block b:
+      - if p in a previous period:
+        - add b to current boundary
+        - add p to previous boundary
+
+--------------------------------------------------------------------
+
+** recompute initial boundary **
+(changed to do both directions always)
+- take full boundary, period t and direction (forward eg.)
+- for each block b in full boundary:
+  - for each predecessor p of block b:
+    - if p in a previous period:
+      - add b to current boundary
+(backwards eg.)
+- for each block b in full boundary:
+  - for each successor s of block b:
+    - if s in t:
+      - add b to current boundary
+
+--------------------------------------------------------------------
+
+** find boundary to a depth **
+- take initial boundary vector, depth and a direction
+- until depth reached (forward direction eg.):
+  - for each block in the current boundary:
+    - for each successor to current block:
+      - if successor not in full boundary and in same period:
+        - add successor to next boundary
+        - add successor to full boundary
+  - make next boundary current boundary
+
+--------------------------------------------------------------------
+
+** update boundary after swapping cone **
+(pushing cone forward in time eg.)
+- for each block b in cone:
+  - for each predecessor of b:
+    - if p not in current cone:
+      - add p to new boundary(backwards)
+- find boundary to depth (backwards) using new boundary
+- combine new boundary with old boundary
+- recompute initial boundary (forwards)
+- find boundary to depth (forwards) using full boundary
+
+--------------------------------------------------------------------
+
+** update boundary after swapping cone **
+- compute cone boundaries
+- swap boundary for cone
+- for each direction d in num_dirs:
+  - remove external boundary[d] + depth-1 from main boundaries
+- if cone moved forwards:
+  - add backward boundary + depth - 1 (forwards)
+  - add backward boundary + depth (backwards)
+- if cone moved backwards:
+  - add forwards boundary + depth (forwards)
+  - add forwards boundary + depth - 1 (backwards)
+
+--------------------------------------------------------------------
+
+** compute cone and decide period to swap to (for simulated annealing)**
+(forward direction eg.)
+- for each block b in cone:
+  - add value of block to sum value
+  - add resources of block to sum value
+  - if successor s of b is in different period:
+    - find min of successor period t and current min
+- return cone, sum value and resources consumed
+
+(reverse direction eg.)
+- for each block b in cone:
+  - add value of block to sum value
+  - add resources of block to sum value (keeping track of periods)
+  - if predecessor p of b is in different period:
+    - find max of predecessor period t and current max
+- return cone, sum value and resources consumed
+
+--------------------------------------------------------------------
+
+** first option **
+- for each period t, beginning at the end:
+  - compute initial boundaries
+  - find boundaries to depth
+  - using simulated annealing:
+    - choose random direction
+    - choose random block b in boundary
+    - find all blocks in the cone of b that are of the same period
+    - while computing cone, compute updated mine total using discount
+    - decide whether to take move, based on simulated annealing and resource limits:
+      - if resource limits are unavailable for max/min period, reject
+    - if move taken:
+      - push cone forward or backward, depending on direction
+      - update mine value
+      - update boundaries
+
+--------------------------------------------------------------------
+
+** second option **
+- set up recursive function f that takes period t and solution reference:
+  - if t = 1:
+    - return
+  - compute initial boundaries
+  - find backward boundary to a depth
+  - for each block b in backward boundary:
+    - find cone and swap period for b
+    - order cones by least valuable (most loss)
+  - for each cone in ordered list:
+    - compute resource usage if cone is shifted to pre-determined period
+    - if resource limit reached or mine value decreases:
+      - skip current cone
+  - call recursive function f with period t - 1
+  - compute initial boundaries
+  - find forward boundary to a depth
+  - for each block b in forward boundary:
+    - find cone and swap period for b
+    - order cones by value
+  - for each cone in ordered list:
+    - compute resource usage if cone is shifted to pre-determined period
+    - if resource limit reached or mine value decreases:
+      - skip current cone
+
+--------------------------------------------------------------------
+** third option **
+- find boundary
+- find all blocks a couple of layers either side of the boundary
+- solve restricted mip on those blocks only
+- do same for other periods
+
+--------------------------------------------------------------------
+
+** fourth option **
+- mixture of all options

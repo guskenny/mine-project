@@ -1,0 +1,61 @@
+
+------------------------------
+Network width: 5
+Network depth: 5
+Number of nodes: 25
+Number of arcs: 52
+
+Boykov-Kolmogorov time: 10 ms
+
+Time to find closure: 0 ms
+
+Total run time: 10 ms
+
+------------------------------
+
+------------------------------
+Network width: 1000
+Network depth: 20
+Number of nodes: 20000
+Number of arcs: 56962
+
+Boykov-Kolmogorov time: 230 ms
+
+Time to find closure: 40 ms
+
+Total run time: 270 ms
+
+------------------------------
+
+------------------------------
+Network width: 10000
+Network depth: 50
+Number of nodes: 500000
+Number of arcs: 1469902
+
+Boykov-Kolmogorov time: 6390 ms
+
+Time to find closure: 1160 ms
+
+Total run time: 7550 ms
+
+------------------------------
+
+------------------------------
+Network width: 50000
+Network depth: 50
+Number of nodes: 2500000
+Number of arcs: 7349902
+
+Boykov-Kolmogorov time: 36000 ms
+
+Time to find closure: 6370 ms
+
+Total run time: 42370 ms
+
+------------------------------
+slurmstepd: Step 1010945.4 exceeded memory limit (19398916 > 16384000), being killed
+srun: Job step aborted: Waiting up to 2 seconds for job step to finish.
+slurmstepd: *** STEP 1010945.4 CANCELLED AT 2016-06-30T11:55:45 *** on hs14
+slurmstepd: Exceeded job memory limit
+srun: error: Timed out waiting for job step to complete

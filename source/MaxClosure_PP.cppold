@@ -1,0 +1,412 @@
+#include "../include/MaxClosure_PP.h"
+#include "../include/boostMaxFlow.h"
+
+MaxClosure_PP::MaxClosure_PP(const Graph &graph, std::map <int,int> fixed, MaxClosureFactory mcfactory) : MaxClosure_Base(graph) {
+  // establish vector to mark nodes to remove from graph
+  std::vector<int> status(graph.getNumNodes(), -1);
+
+  std::vector<int> inDegree(status.size(),0);
+  std::vector<int> outDegree(status.size(),0);
+
+  // initialise the degree arrays
+  for (size_t i = 0; i < status.size(); i++){
+    inDegree[i] = graph.getNode(i)->getInDegree();
+    outDegree[i] = graph.getNode(i)->getOutDegree();
+  }
+
+  // iterate over fixed map to find nodes to remove
+  for (std::map <int,int>::iterator it=fixed.begin(); it!=fixed.end(); ++it){
+   
+    // set status to infeasible
+    if (status[it->first] > -1){
+//      std::cout << "\nFixing node " << it->first << " yields an infeasible solution!\n";
+      break;
+    }
+
+//    // find all nodes affected by fixed variable
+//    bool backwards;
+//    if (it->second == 1)
+//      backwards = true;
+//    else
+//      backwards = false;
+
+//    std::cout << "variable: " << it->first << ", value: " << it->second << std::endl;
+    
+    //std::cout << "starting dfs... ";
+    visitDFS_PP(it->first, status, inDegree, outDegree, it->second, it->second);
+    //std::cout << "done!";
+  }
+
+//  BoostMaxFlow::printClosureGraph(status, 10, 10);
+
+
+  for (int i =0; i < inDegree.size(); i++){
+    if (inDegree[i] == 1 && outDegree[i] == 1){
+      const Node *curr = graph.getNode(i);
+      std::vector<int> chain;
+      // search backwards in chain
+      findChain2(graph, curr, inDegree, outDegree, status, chain, true);
+      // remove last value to avoid doubling up
+      chain.pop_back();
+      // search forwards in chain
+      findChain2(graph, curr, inDegree, outDegree, status, chain, false);
+      
+      // add current chain to vector of chains
+      chains.push_back(chain);
+    }
+  }
+
+  Graph reducedGraph = Graph();
+
+  int nodeCount = 0;
+
+  pp_nodes.reserve(status.size());
+
+  // if node wasnt in area affected by fixing, create new node and keep mapping to old
+  for (int i = 0; i < status.size(); i++){
+    PP_Node newPP(reducedGraph);
+    newPP.status = status[i];
+    if (status[i] == -1){
+      newPP.nodeID = nodeCount;
+      reducedGraph.addNode(nodeCount++);
+    }
+    else {
+      newPP.nodeID = -1;
+    }
+    pp_nodes.push_back(newPP);
+  }
+
+  reducedNumNodes = nodeCount;
+
+  for (int i = 0; i < status.size(); i++){
+    if (status[i] == -1){
+      const Node *curr = graph.getNode(i);
+      for (int j = 0; j < curr->getOutDegree(); j++){
+        int tgt = curr->getOutArc(j)->getTgtID();
+        if (status[tgt] == -1){
+          reducedGraph.addArc(pp_nodes[i].nodeID, pp_nodes[tgt].nodeID);
+        }
+      }
+    }
+  }
+
+//  int arcCount = 0;
+//  // iterate over new nodes and insert arcs where appropriate
+//  for (int i = 0; i < nodeCount; i++){
+////    std::cout << "\n\ncurr: " << chainMap[i] << ", tgt:";
+//    const Node *curr = graph.getNode(i);
+//    for (int j = 0; j < curr->getOutDegree(); j++){
+//      int tgt = curr->getOutArc(j)->getTgtID();
+////      std::cout << " " << tgt; 
+//      if (status[tgt] < 0){
+//        for (int k = 0; k<chainMap.size(); k++){
+//          if (k == tgt){
+////            std::cout << "! ";
+//            reducedGraph.addArc(arcCount++, i, k);
+//            break;
+//          }
+//        }        
+//      }
+//    }
+//  }
+
+//  std::cout << "\nNumber of nodes in new graph: " << reducedGraph.getNumNodes()
+//            << "\nNumber of arcs in new graph: " << reducedGraph.getNumArcs() << std::endl;
+
+//  std::vector<int> nodesInChain(reducedGraph.getNumNodes(),0);
+//  std::vector<long> arcsToRemove;
+//
+//  // find all chains in reduced graph
+//  for (int i=0; i < reducedGraph.getNumNodes(); i++){
+//    Node *curr = reducedGraph.getNode(i);
+//    // if current node is part of a _new_ chain
+//    if (curr->isChain() && !nodesInChain[curr->getID()]){
+//      // search backwards in chain
+//      findChain(reducedGraph, curr, chain, nodesInChain, arcsToRemove, true);
+//      // remove last value to avoid doubling up
+//      chain.pop_back();
+//      // search forwards in chain
+//      findChain(reducedGraph, curr, chain, nodesInChain, arcsToRemove, false);
+//      
+//      // add current chain to vector of chains
+//      chains.push_back(chain);
+//
+//      // add arc between front and back of chain
+//      reducedGraph.addArc(chain.front(), chain.back());
+//
+//      //std::cout << "front of chain: " << chainMap[chain.front()] 
+//      //          << "\nend of chain: "<< chainMap[chain.back()] 
+//      //          << std::endl; 
+//    }
+//  }
+
+//  std::cout << "\nNumber of chains found: " << chains.size() << std::endl;
+
+//  for (int i=0; i < chains.size(); i++){
+//    std::cout << "Chain " << i+1 << ": ";
+//    for (int j=0;j < chains[i].size(); j++){
+//      std::cout << chainMap[chains[i][j]] << " ";
+//    }
+//    std::cout << std::endl;
+//  }
+
+  // update chain nodes in pp_nodes
+  for (int i = 0; i < chains.size(); i++)
+    for (int j = 1; j < chains[i].size()-1; j++){
+      pp_nodes[chains[i][j]].chain = &chains[i];
+    }
+
+//  std::cout << "\nNumber of nodes in new graph: " << reducedGraph.getNumNodes()
+//            << "\nNumber of arcs in new graph: " << reducedGraph.getNumArcs() << std::endl;
+
+//  for (int i = 0; i < pp_nodes.size(); i++){
+//    if (pp_nodes[i].status < 0){
+//      std::cout << i << " -> " << pp_nodes[i].nodeID; 
+//      if (pp_nodes[i].status == -2){
+//        std::cout << " (in chain: {";
+//        for (int j=0; j<pp_nodes[i].chain->size(); j++)
+//          std::cout << " " << chainMap[(*pp_nodes[i].chain)[j]];
+//        std::cout << " } -> {";
+//        for (int j=0; j<pp_nodes[i].chain->size(); j++)
+//          std::cout << " " << (*pp_nodes[i].chain)[j];
+//        std::cout << " })";
+//      }
+//      std::cout << std::endl;
+//    }
+//  }
+
+  // build reduced problem with reduced graph
+  reducedProblem = mcfactory(reducedGraph);
+}
+
+void MaxClosure_PP::findChain2(const Graph &graph, const Node *curr, vector<int> &inDegree, vector<int> &outDegree, vector<int> &status, vector<int> &chain, bool backwards){
+  
+  // update status and in/out degrees
+  status[curr->getID()] = -2;
+  inDegree[curr->getID()] = 0;
+  outDegree[curr->getID()] = 0;
+
+  if (backwards){
+    // add current ID to beginning of chain vector
+    chain.insert(chain.begin(), curr->getID());
+    const Node *src = curr->getInArc(0)->getSrc();
+    // if previous node is part of chain, recurse - otherwise add to beginning of chain vector
+    if (inDegree[src->getID()] == 1 && outDegree[src->getID()] == 1){
+      findChain2(graph, src, inDegree, outDegree, status, chain, backwards);
+    }
+    else{
+      chain.insert(chain.begin(), src->getID());
+    }
+  }
+  else{
+    // add current ID to end of chain vector
+    chain.push_back(curr->getID());
+    const Node *tgt = curr->getOutArc(0)->getTgt();
+    // if next node is part of chain, recurse - otherwise add to end of chain vector
+    if (inDegree[tgt->getID()] == 1 && outDegree[tgt->getID()] == 1){
+      findChain2(graph, tgt, inDegree, outDegree, status, chain, backwards);
+    }
+    else{
+      chain.push_back(tgt->getID());
+    }
+  }
+}
+
+void MaxClosure_PP::findChain(Graph &graph, Node *curr, vector<int> &chain, vector<int> &nodesInChain, vector<long> &arcsToRemove, bool backwards){}
+//  nodesInChain[curr->getID()] = 1;
+//  if (backwards){
+//    // add current ID to beginning of chain vector
+//    chain.insert(chain.begin(), curr->getID());
+//    Node *src = curr->getInArc(0)->getSrc();
+//    // if previous node is part of chain, recurse - otherwise add to beginning of chain vector
+//    if (src->isChain()){
+//      findChain(graph, src, chain, nodesInChain, arcsToRemove, backwards);
+//    }
+//    else{
+//      chain.insert(chain.begin(), src->getID());
+//    }
+//    // add arcID to list of arcs to remove  
+//    arcsToRemove.push_back(curr->getInArc(0)->getID());
+//  }
+//  else{
+//    // add current ID to end of chain vector
+//    chain.push_back(curr->getID());
+//    Node *tgt = curr->getOutArc(0)->getTgt();
+//    // if next node is part of chain, recurse - otherwise add to end of chain vector
+//    if (tgt->isChain()){
+//      findChain(graph, tgt, chain, nodesInChain, arcsToRemove, backwards);
+//    }
+//    else{
+//      chain.push_back(tgt->getID());
+//    }
+//    // add arcID to list of arcs to remove
+//    arcsToRemove.push_back(curr->getOutArc(0)->getID());
+//  }
+//}
+    
+void MaxClosure_PP::setProfit(const vector<double> &profit){
+  
+  std::vector<double> reducedProfit(reducedNumNodes,0);
+
+  std::vector<int> status(profit.size(),0);
+ 
+//  std::cout << std::endl;
+
+  for (int i = 0; i < profit.size(); i++){
+    if (pp_nodes[i].status == -1)
+      reducedProfit[pp_nodes[i].nodeID] = profit[i];
+
+  for (int i = 0; i < chains.size(); i++){
+    double sum = 0;
+    double maxVal = 0,remainVal=0;
+    int splitIdx = 0;
+    for (int j=1; j < chains[i].size()-1; j++){
+      // set node as visited to avoid double handling chains
+      status[chains[i][j]] = 1;
+      sum += profit[chains[i][j]];
+      if (sum > maxVal){
+        maxVal = sum;
+        splitIdx = j;
+        remainVal=0;
+      }else
+        remainVal += profit[chains[i][j]];
+    }
+
+    // set sum of profits to either side of chain
+    reducedProfit[pp_nodes[chains[i][0]].nodeID] += maxVal;
+
+    reducedProfit[pp_nodes[chains[i][chains[i].size()-1]].nodeID] += remainVal; //sum-maxVal;
+
+    // assign chain nodes to either side of split
+    for (int j = 1; j < chains[i].size()-1; j++){
+      if (j <= splitIdx)
+        pp_nodes[chains[i][j]].nodeID = chains[i][0];
+      else
+        pp_nodes[chains[i][j]].nodeID = chains[i][chains[i].size()-1];
+    }
+  }
+//    int status = pp_nodes[i].status; 
+//    switch (status){
+//      case 1:           // fixed to 1
+//        break;
+//      case 0:           // fixed to 0
+//        break;
+//      case -1:          // not fixed not chain
+//        reducedProfit[pp_nodes[i].nodeID] += profit[i];
+//        break;
+//      case -2:          // in a chain
+//        // if not already visited
+//        if (!status[i]){
+//          // find splitting point
+//          double sum = 0;
+//          double maxVal = 0,remainVal=0;
+//          int splitIdx = 0;
+//          std::vector<int> *chain = pp_nodes[i].chain;
+//          for (int j=1; j < chain->size()-1; j++){
+//            // set node as visited to avoid double handling chains
+//            status[chainMap[(*chain)[j]]] = 1;
+//            sum += profit[chainMap[(*chain)[j]]];
+//            if (sum > maxVal){
+//              maxVal = sum;
+//              splitIdx = j;
+//	      remainVal=0;
+//            }else
+//	      remainVal +=  profit[chainMap[(*chain)[j]]];
+//          }
+//          
+//          // set sum of profits to either side of chain
+//          reducedProfit[pp_nodes[chainMap[(*chain)[0]]].nodeID] += maxVal;
+//
+//          reducedProfit[pp_nodes[chainMap[(*chain)[chain->size()-1]]].nodeID] += remainVal; //sum-maxVal;
+//  
+//          // assign chain nodes to either side of split
+//          for (int j = 1; j < chain->size()-1; j++){
+//            if (j <= splitIdx)
+//              pp_nodes[chainMap[(*chain)[j]]].nodeID = (*chain)[0];
+//            else
+//              pp_nodes[chainMap[(*chain)[j]]].nodeID = (*chain)[chain->size()-1];
+//          }
+//        }
+//        break;
+//    }
+  }
+
+//  std::cout << std::endl;
+//  int idx[13] = {9,10,18,19,21,27,28,29,30,38,39,49,54};
+//  for (int i=0;i<reducedProfit.size();i++)
+//    if ((reducedProfit[i] - profit[idx[i]]) != 0) 
+//      std::cout << i << ": " << profit[idx[i]] << " -> " 
+//                << reducedProfit[i] << " (" 
+//                << reducedProfit[i] - profit[idx[i]] 
+//                << ")" << std::endl;
+// 
+//  std::cout << std::endl;
+//  int idx2[5] = {20,32,43,45,36};
+//  for (int i=0;i<5;i++)
+//    std::cout << idx2[i] << ": " << profit[idx2[i]] << std::endl; 
+
+  reducedProblem->setProfit(reducedProfit); 
+} 
+    
+int MaxClosure_PP::getClosure(vector<int> &sol){
+  // clear solution
+  for(size_t i=0;i<sol.size();++i) sol[i] = 0;
+
+  std::vector<int> reducedSol(reducedNumNodes,0);
+
+  // find reduced closure
+  reducedProblem->getClosure(reducedSol);
+
+  // copy values from reduced solution to full solution
+  for (size_t i=0; i<sol.size(); i++)
+    if (pp_nodes[i].status == -1)
+      sol[i] = reducedSol[pp_nodes[i].nodeID];
+
+  // set all chain nodes to 0 or 1, depending on the split
+  for (size_t i=0; i< chains.size(); i++){
+    for (size_t j=1; j < chains[i].size()-1; j++){
+      sol[chains[i][j]] = sol[pp_nodes[chains[i][j]].nodeID]; 
+    }
+  }
+
+  return true;
+}
+
+// Recursive function to perform depth first search
+void MaxClosure_PP::visitDFS_PP(int curr, vector<int> &status, vector<int> &inDegree, vector<int> &outDegree, int value, bool backwards){
+  // Mark the current node status
+  status[curr] = value;
+
+  // set degree of current node to 0
+  inDegree[curr] = 0;
+  outDegree[curr] = 0;
+
+  //for (int i = 0; i < status.size(); i++)
+  //  std::cout << status[i] << " ";
+  //std::cout << std::endl;
+
+  if (backwards){
+    for (int i = 0; i < _graph->getNode(curr)->getOutDegree(); i++){
+      int next = _graph->getNode(curr)->getOutArc(i)->getTgtID();
+      if (inDegree[next] > 0)
+        inDegree[next] -= 1;
+    }
+    for (int i = 0; i < _graph->getNode(curr)->getInDegree(); i++){
+      int prev = _graph->getNode(curr)->getInArc(i)->getSrcID();
+      if (status[prev] < 0)
+        visitDFS_PP(prev, status, inDegree, outDegree, value, backwards);
+    }
+  }
+  else {
+    for (int i = 0; i < _graph->getNode(curr)->getInDegree(); i++){
+      int prev = _graph->getNode(curr)->getInArc(i)->getSrcID();
+      if (outDegree[prev] > 0)
+        outDegree[prev] -= 1;
+    }
+    for (int i = 0; i < _graph->getNode(curr)->getOutDegree(); i++){
+      int next = _graph->getNode(curr)->getOutArc(i)->getTgtID();
+      if (status[next] < 0)
+        visitDFS_PP(next, status, inDegree, outDegree, value, backwards);
+    }  
+  }
+} 

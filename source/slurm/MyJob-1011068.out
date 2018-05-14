@@ -1,0 +1,37 @@
+
+------------------------------
+Network width: 5
+Network depth: 5
+Number of nodes: 25
+Number of arcs: 52
+
+
+Time to read file: 0 ms
+Time to build graph: 0 ms
+Boykov-Kolmogorov time: 0 ms
+
+Time to find closure: 0 ms
+
+Total run time: 0 ms
+
+------------------------------
+
+------------------------------
+Network width: 1000
+Network depth: 20
+Number of nodes: 20000
+Number of arcs: 56962
+
+
+Time to read file: 190 ms
+Time to build graph: 70 ms
+Boykov-Kolmogorov time: 130 ms
+
+Time to find closure: 20 ms
+
+Total run time: 150 ms
+
+------------------------------
+srun: Job step aborted: Waiting up to 2 seconds for job step to finish.
+slurmstepd: *** STEP 1011068.2 CANCELLED AT 2016-06-30T12:28:42 *** on hs14
+slurmstepd: *** JOB 1011068 CANCELLED AT 2016-06-30T12:28:42 *** on hs14

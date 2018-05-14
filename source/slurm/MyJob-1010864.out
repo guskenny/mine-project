@@ -1,0 +1,44 @@
+
+------------------------------
+Network width: 5
+Network depth: 5
+Number of nodes: 25
+Number of arcs: 52
+
+Boykov-Kolmogorov time: 0 ms
+Push-relabel time: 0 ms
+
+Total run time: 0 ms
+
+------------------------------
+
+------------------------------
+Network width: 1000
+Network depth: 20
+Number of nodes: 20000
+Number of arcs: 56962
+
+Boykov-Kolmogorov time: 80 ms
+Push-relabel time: 430 ms
+
+Total run time: 510 ms
+
+------------------------------
+
+------------------------------
+Network width: 10000
+Network depth: 50
+Number of nodes: 500000
+Number of arcs: 1469902
+
+Boykov-Kolmogorov time: 2320 ms
+Push-relabel time: 17660 ms
+
+Total run time: 19980 ms
+
+------------------------------
+slurmstepd: Step 1010864.3 exceeded memory limit (4925936 > 4096000), being killed
+srun: Job step aborted: Waiting up to 2 seconds for job step to finish.
+slurmstepd: Exceeded job memory limit
+slurmstepd: *** STEP 1010864.3 CANCELLED AT 2016-06-30T10:56:09 *** on hs2
+srun: error: hs2: task 0: Killed

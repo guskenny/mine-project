@@ -1,0 +1,83 @@
+/*************************************************************************** 
+                     A template class for boost max flow 
+                    ------------------------------------- 
+    last modified   : 21/6/2016 
+    copyright       : (C) 2016 by Angus Kenny 
+    libraries		    : . 
+    description		  : contains data structure for boost algorithms, inherits
+                      from MaxClosure_Base class. Class is a template class
+                      which allows different boost algorithms to be used.
+                      
+                      Use the classes:
+                      
+                      MaxClosure_BoostMaxFlow_PL(graph) for push-relabel
+                      MaxClosure_BoostMaxFlow_BK(graph) for Boykov-Kolmogorov
+                      MaxClosure_BoostMaxFlow_EK(graph) for Edmonds-Karp
+
+                      Function definitions have not been separated from the
+                      header file because it is a template.
+
+ ***************************************************************************/ 
+ 
+/*************************************************************************** 
+ *                                                                         * 
+ *   This program is free software; you can redistribute it and/or modify  * 
+ *   it under the terms of the GNU General Public License as published by  * 
+ *   the Free Software Foundation; either version 2 of the License, or     * 
+ *   (at your option) any later version.                                   * 
+ *                                                                         * 
+ ***************************************************************************/ 
+
+#ifndef PreprocMC_H
+#define PreprocMC_H
+
+#include "../include/MaxClosure_Base.h"
+#include <map>
+#include <set>
+#include "../include/MaxClosureFactory.h"
+
+struct PP_Node {
+  Graph *graph; // pointer to reduced graph
+  int nodeID; // value in reduced graph, 
+              // ie. IDMap[nodeID] corresponds to problem ID
+  std::vector<int> *chain; // uses values correspoding with chainMap
+                           // ie. chainMap[chain[i]] corresponds to problem ID
+  int status;  // status (either 0, 1 or -1 if not fixed and -2 if chain)
+  PP_Node(Graph &_graph) : graph(&_graph){}
+};
+
+class MaxClosure_PP : public MaxClosure_Base {
+  private:
+    int reducedNumNodes;
+    //std::vector<int> IDMap; // map from chain-reduced to fixed-reduced
+    //std::vector<int> chainMap; // map from fixed-reduced to problem
+    std::vector< std::vector<int> > chains; // vector of chains
+                                            // uses chainMap values
+    std::vector<PP_Node> pp_nodes;
+    MaxClosure_Base *reducedProblem;
+
+  public:
+    MaxClosure_PP(const Graph &graph, std::map <int,int> fixed, MaxClosureFactory mcfactory);
+    
+    // Virtual function, to be implemented by specific class
+    int solve(){reducedProblem->solve(); return true;};
+    void setProfit(const vector<double> &profit); // profit for each vertex of the network
+    int getClosure(vector<int> &sol); // 0/1 for each vertex
+    void visitDFS_PP(int curr, vector<int> &status, vector<int> &inDegree, vector<int> &outDegree, int value, bool backwards);
+    void findChain2(const Graph &graph, const Node *curr, vector<int> &inDegree, vector<int> &outDegree, vector<int> &status, vector<int> &chain, bool backwards);
+    void findChain(Graph &graph, Node *curr, vector<int> &chain, vector<int> &nodesInChain, vector<long> &arcsToRemove, bool backwards);
+  
+    // get dual solution information:
+    //bool getInFlowSolution(std::vector< std::vector<double> > &inFlow){};  
+    //inFlow[i][j] is flow from node pred[i][j] to i
+    // outFlow is really the same information as inFlow
+    // virtual bool getOutFlowSolution(std::vector< std::vector<double> > &outFlow)=0; 
+    //outFlow[i][j] is flow from node i to succ[i][j] to i
+    //bool getRedCost(std::vector<double> &sol){}; 
+    // reduced cost (dual) associated with 0<= x_i <= 1 constraints
+   
+    ~MaxClosure_PP(){};
+};
+
+#endif
+

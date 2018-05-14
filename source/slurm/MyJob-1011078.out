@@ -1,0 +1,102 @@
+
+------------------------------
+Network width: 5
+Network depth: 5
+Number of nodes: 25
+Number of arcs: 52
+
+Time to read file: 0 ms
+Time to build graph: 0 ms
+
+Boykov-Kolmogorov time: 0 ms
+
+Time to find closure: 0 ms
+
+Total run time: 0 ms
+
+------------------------------
+
+------------------------------
+Network width: 1000
+Network depth: 20
+Number of nodes: 20000
+Number of arcs: 56962
+
+Time to read file: 290 ms
+Time to build graph: 150 ms
+
+Boykov-Kolmogorov time: 130 ms
+
+Time to find closure: 0 ms
+
+Total run time: 130 ms
+
+------------------------------
+
+------------------------------
+Network width: 10000
+Network depth: 50
+Number of nodes: 500000
+Number of arcs: 1469902
+
+Time to read file: 5460 ms
+Time to build graph: 2370 ms
+
+Boykov-Kolmogorov time: 2440 ms
+
+Time to find closure: 440 ms
+
+Total run time: 2880 ms
+
+------------------------------
+
+------------------------------
+Network width: 50000
+Network depth: 50
+Number of nodes: 2500000
+Number of arcs: 7349902
+
+Time to read file: 38450 ms
+Time to build graph: 10590 ms
+
+Boykov-Kolmogorov time: 11270 ms
+
+Time to find closure: 2200 ms
+
+Total run time: 13470 ms
+
+------------------------------
+
+------------------------------
+Network width: 50000
+Network depth: 100
+Number of nodes: 5000000
+Number of arcs: 14849802
+
+Time to read file: 56010 ms
+Time to build graph: 28300 ms
+
+Boykov-Kolmogorov time: 24840 ms
+
+Time to find closure: 5730 ms
+
+Total run time: 30570 ms
+
+------------------------------
+
+------------------------------
+Network width: 100000
+Network depth: 100
+Number of nodes: 10000000
+Number of arcs: 29699802
+
+Time to read file: 113540 ms
+Time to build graph: 104590 ms
+
+Boykov-Kolmogorov time: 50400 ms
+
+Time to find closure: 10500 ms
+
+Total run time: 60900 ms
+
+------------------------------

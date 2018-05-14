@@ -1,0 +1,17 @@
+
+------------------------------
+Network width: 50000
+Network depth: 100
+Number of nodes: 5000000
+Number of arcs: 14849802
+
+Time to read file: 53450 ms
+Time to build graph: 29650 ms
+
+Boykov-Kolmogorov time: 28110 ms
+
+Time to find closure: 7990 ms
+
+Total run time: 36100 ms
+
+------------------------------

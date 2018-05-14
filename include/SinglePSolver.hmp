@@ -1,0 +1,91 @@
+#ifndef __SinglePSolver_H__
+#define __SinglePSolver_H__
+
+#include "SinglePModel.h"
+#include "MaxClosureFactory.h"
+#include "BranchNode.h"
+#include "Preprocess.h"
+#include <boost/format.hpp>
+#include "QOL/QolMIP.h"
+#include "QOL/QolColFormulation.h"
+#include "QOL/CplexFormulation.h"
+#include "QOL/GurobiFormulation.h"
+//#include "QOL/CPBeamACO.h" // needs compilation with boost::thread
+#include "QOL/CpuTimer.h"
+#include <daten.h>
+#include <SinglePModel.h>
+#include <cmath>
+#include <fstream>
+#include <iostream>
+#include <iomanip>
+#include <random>
+#include <algorithm>
+#include "SettingsHandler.h"
+//#include <math.h> 
+
+#define CPLEX_T 1
+#define GUROBI_T 2
+
+class SinglePSolver{
+  private:
+    SinglePModel *probModel;
+    MaxClosure_Base *MCSolver;
+    std::vector<double> residualProfit;
+    char MCType;
+    int solverType;
+    bool solveRelaxed;
+    SettingsHandler sh;
+
+  public:
+    SinglePSolver(const Daten &prob);
+    SinglePSolver(int argc,const char **argv);
+    void initModel(qol::MIPSolver &mip, 
+        std::vector<qol::Variable> &x, 
+        std::vector<std::vector<qol::Variable> > &y, 
+        std::vector<Block> * blocks,
+        std::vector<double> &profitModifier,
+        const BranchNode_info &probInfo);
+    std::vector<double> getFutureProfit();
+    std::vector<double> propagateResidual();//Preprocess &pp);
+    void updateVars(qol::MIPSolver &mip, 
+        const std::vector<qol::Variable> &x, 
+        const std::vector<std::vector<qol::Variable> > &y, 
+        const std::vector<int> &fixed, 
+        const std::vector<int> &old_fixed, 
+        const std::vector<std::vector<double> > &y_fixed,
+        int period, const BranchNode_info &probInfo,
+        const std::vector<bool> &included);
+    std::vector<double> getConstrUse(const qol::MIPSolver &mip);
+    void updateConstraints(qol::MIPSolver &mip, 
+        const std::vector<double> &constrUse,
+        const std::vector<double> &prevUse);
+    int solve();
+    void setSolverType(int type) {solverType = type;};
+    double getTrueObj(const Sol_Int &sol);
+
+    double slideWindow(std::vector<std::vector<std::vector<double> > > &Y_sol);
+
+    double improveWindow(std::vector<std::vector<std::vector<double> > > &Y_sol, int time); 
+
+    void extractSol(const Sol_Int &sol, std::vector<std::vector<std::vector<double> > > &Y_sol);
+    void packSol(const std::vector<std::vector<std::vector<double> > > &Y_sol, Sol_Int &sol);
+
+    double MIP_window(const std::vector<bool> &freed,
+                      int mod_tmin, int mod_tmax,
+                      std::vector<std::vector<std::vector<double> > > &Y_sol,
+                      const std::vector<std::vector<double> > &X,
+                      bool last_window, int b_count);
+
+
+
+
+//    void findBoundary(std::vector<int> &boundary,
+//         const std::vector<int> &sol);
+//    void boundaryDFS(int curr, std::vector<int> &boundary,
+//        std::vector<int> &visited, 
+//        const std::vector<int> &sol);
+    ~SinglePSolver(){};
+    
+};
+
+#endif

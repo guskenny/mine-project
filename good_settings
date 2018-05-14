@@ -1,0 +1,22 @@
+good settings:
+
+# value to limit number of blocks mined per period in random search
+SCALED_RESOURCE=1.0
+
+# number of trials to find boundary depth
+FIND_DEPTH_TRIALS=1000
+
+# depth of boundaries for local search
+BOUND_DEPTH=1
+
+# alpha value for reducing temperature in simulated annealing
+SA_ALPHA=0.97
+
+# minimum temperature value for simulated annealing
+SA_T_MIN=0.01
+
+# number of iterations for simulated annealing before reducing temp
+SA_ITER=10
+
+# number of runs of simulated annealing
+SA_RUNS=4

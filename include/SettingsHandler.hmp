@@ -1,0 +1,128 @@
+#ifndef __SETTINGSHANDLER_H__
+#define __SETTINGSHANDLER_H__
+
+#include <fstream>
+#include <iostream>
+
+class SettingsHandler {
+
+  public:
+    std::string SETTINGS_FILE = "settings.ini";
+    size_t MINI_PERIODS = 1;
+    size_t TIMER_LENGTH=0;
+    size_t NUM_PASSES=4;
+    size_t WINDOW_SIZE=2;
+    double MODIFIER_WEIGHT=0.0;
+    bool WARM_START=false;
+    bool ONLY_NEGATIVE=false;
+    size_t WINDOW_SEARCH_TIME = 0;
+    double TOP_PERCENT = 1.0;
+    double LIMIT_MULTIPLIER = 1.25;
+    double RES_CUTOFF = 0.3;
+    
+    SettingsHandler(){
+    
+      std::ifstream in(SETTINGS_FILE); 
+      
+      std::string in_line; 
+      std::string delimiter = "=";
+    
+      while ((std::getline(in, in_line))) {
+    
+        switch (in_line[0]) {
+          case '#':       // skip comment lines
+            continue;
+          case '\n':      // skip empty lines
+            continue;
+          case '\0':      // skip empty lines at end of file
+            continue;
+        }
+        int pos = in_line.find(delimiter);
+        std::string value = in_line.substr(pos+1,in_line.length());
+        std::string setting = in_line.substr(0, pos);
+    
+        if (setting.compare("TIMER_LENGTH") == 0){
+          TIMER_LENGTH = stoi(value);
+          continue;
+        }
+        else if (setting.compare("MINI_PERIODS") == 0){
+          MINI_PERIODS = stoi(value);
+          continue;
+        }
+        else if (setting.compare("NUM_PASSES") == 0){
+          NUM_PASSES = stoi(value);
+          continue;
+        }
+        else if (setting.compare("WINDOW_SIZE") == 0){
+          WINDOW_SIZE = stoi(value);
+          continue;
+        }
+        else if (setting.compare("MODIFIER_WEIGHT") == 0){
+          MODIFIER_WEIGHT = stof(value);
+          continue;
+        }
+        else if (setting.compare("WARM_START") == 0){
+          WARM_START = stoi(value);
+          continue;
+        }
+        else if (setting.compare("ONLY_NEGATIVE") == 0){
+          ONLY_NEGATIVE = stoi(value);
+          continue;
+        }
+        else if (setting.compare("WINDOW_SEARCH_TIME") == 0){
+          WINDOW_SEARCH_TIME = stoi(value);
+          continue;
+        }
+        else if (setting.compare("TOP_PERCENT") == 0){
+          TOP_PERCENT = stof(value);
+          continue;
+        }
+        else if (setting.compare("LIMIT_MULTIPLIER") == 0){
+          LIMIT_MULTIPLIER = stof(value);
+          continue;
+        }
+        else if (setting.compare("RES_CUTOFF") == 0){
+          RES_CUTOFF = stof(value);
+          continue;
+        }
+        else{
+          std::cout << "Unrecognised setting: '" << setting << "'!" << std::endl;
+        }
+      }
+    }
+    
+    void printSettings(){
+      std::cout << std::endl 
+                << "Algorithm settings:" << std::endl
+                << "-------------------" << std::endl
+                << "MINI_PERIODS: " << MINI_PERIODS << std::endl
+                << "TIMER_LENGTH: ";
+      if (TIMER_LENGTH > 0)
+        std::cout << TIMER_LENGTH;
+      else
+        std::cout << "NONE";
+      std::cout << std::endl << "NUM_PASSES: " << NUM_PASSES << std::endl
+                << "WINDOW_SIZE: " << WINDOW_SIZE << std::endl
+                << "MODIFIER_WEIGHT: " << MODIFIER_WEIGHT << std::endl
+                << "WARM_START: ";
+      if (WARM_START)
+        std::cout << "true";
+      else
+        std::cout << "false";
+      std::cout << std::endl << "ONLY_NEGATIVE: ";
+      if (ONLY_NEGATIVE)
+        std::cout << "true";
+      else
+        std::cout << "false";
+      std::cout << std::endl << "WINDOW_SEARCH_TIME: " << WINDOW_SEARCH_TIME
+                << std::endl << "TOP_PERCENT: " << TOP_PERCENT
+                << std::endl << "LIMIT_MULTIPLIER: " << LIMIT_MULTIPLIER
+                << std::endl << "RES_CUTOFF: " << RES_CUTOFF;
+    
+      std::cout << std::endl << std::endl;
+    
+    }
+};
+
+#endif
+

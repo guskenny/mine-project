@@ -1,0 +1,30 @@
+
+------------------------------
+Network width: 5
+Network depth: 5
+Number of nodes: 25
+Number of arcs: 52
+
+Boykov-Kolmogorov time: 0 ms
+
+Time to find closure: 0 ms
+
+Total run time: 0 ms
+
+------------------------------
+
+------------------------------
+Network width: 1000
+Network depth: 20
+Number of nodes: 20000
+Number of arcs: 56962
+
+Boykov-Kolmogorov time: 90 ms
+
+Time to find closure: 20 ms
+
+Total run time: 90 ms
+
+------------------------------
+srun: Job step aborted: Waiting up to 2 seconds for job step to finish.
+slurmstepd: *** JOB 1010918 CANCELLED AT 2016-06-30T11:36:40 *** on hs2

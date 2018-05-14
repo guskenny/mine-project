@@ -1,0 +1,2726 @@
+**** running newman1 ****
+
+Algorithm settings:
+-------------------
+RECORD_DATA: true
+RECORD_RUN: false
+TEMP_FLAG: false
+TEST_SOL_MERGE: false
+RECORD_PASS_TIME: false
+RANDOM_SEARCH: true
+SCALED_RESOURCE: 1
+GREEDY_PLUS: false
+PROCESS_THRESHOLD: 0
+MIN_DIFF_TO_PROCESS: 1e-05
+TIMER_LENGTH: NONE
+NUM_PASSES: 0
+NUM_ITER: 10
+WINDOW_SIZE: 2
+VNS_WINDOW_LIMIT: 0
+REDUCED_BLOCKS: 1
+MODIFIER_WEIGHT: 0
+WARM_START: true
+ONLY_NEGATIVE: false
+WINDOW_SEARCH_TIME: 5400
+TOP_PERCENT: 1
+LIMIT_MULTIPLIER: 1
+P_SELECTION: 0.5
+RES_CUTOFF: 0.4
+OBJ_UB: 0
+WALL_SEARCH_TIME: 0
+CPU_SEARCH_TIME: 0
+CONVERGE_STOP: 2
+
+setting up model.. done!
+setting up max closure factory.. done!
+fixing non-upit blocks.. done!
+setting profits.. done!
+solution merger initialised
+RandomSearch initialised
+
+******* ITERATION 1 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+1060 blocks mined
+2.32659e+07 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 6 actual number of periods  4
+Solution found by solver was feasible!
+
+ done!
+
+[32;1m***** NEW BEST OBJECTIVE FOUND! *****[0m
+
+
+******* ITERATION 2 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+1060 blocks mined
+2.30816e+07 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 6 actual number of periods  4
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 3 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+1060 blocks mined
+2.33478e+07 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 6 actual number of periods  4
+Solution found by solver was feasible!
+
+ done!
+
+[32;1m***** NEW BEST OBJECTIVE FOUND! *****[0m
+
+
+******* ITERATION 4 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+1060 blocks mined
+2.31935e+07 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 6 actual number of periods  4
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 5 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+1060 blocks mined
+2.33443e+07 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 6 actual number of periods  4
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 6 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+1060 blocks mined
+2.31326e+07 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 6 actual number of periods  4
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 7 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+1060 blocks mined
+2.32916e+07 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 6 actual number of periods  4
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 8 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+1060 blocks mined
+2.30582e+07 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 6 actual number of periods  4
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 9 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+1060 blocks mined
+2.31883e+07 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 6 actual number of periods  4
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 10 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+1060 blocks mined
+2.32086e+07 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 6 actual number of periods  4
+Solution found by solver was feasible!
+
+ done!
+Extracting solution from Sol_Int...
+*** testing pack/extract functions ***
+
+packed/extracted obj: 2.33478e+07
+
+*** running slideWindow() ***
+
+Window size: 2
+
+slideWindow() complete! Data available in timeobj.csv
+
+
+original best objective: 2.33478e+07, found at iteration 3
+
+improved objective: 0
+
+# CPU time        0.012 sec.  Wall:0
+*** period 0 ***
+blocks mined in period: 414
+cumulative blocks mined: 414
+destination 0: 242
+destination 1: 172
+resource 0 usage (2e+06): 1.99651e+06
+resource 1 usage (1.1e+06): 781709
+profit for period: 3.48448e+06
+cumulative profits: 3.48448e+06
+
+*** period 1 ***
+blocks mined in period: 359
+cumulative blocks mined: 773
+destination 0: 192
+destination 1: 167
+resource 0 usage (2e+06): 1.9973e+06
+resource 1 usage (1.1e+06): 917924
+profit for period: 8.54671e+06
+cumulative profits: 1.20312e+07
+
+*** period 2 ***
+blocks mined in period: 247
+cumulative blocks mined: 1020
+destination 0: 53
+destination 1: 194
+resource 0 usage (2e+06): 1.39901e+06
+resource 1 usage (1.1e+06): 1.09882e+06
+profit for period: 9.50685e+06
+cumulative profits: 2.1538e+07
+
+*** period 3 ***
+blocks mined in period: 40
+cumulative blocks mined: 1060
+destination 0: 1
+destination 1: 39
+resource 0 usage (2e+06): 226560
+resource 1 usage (1.1e+06): 220896
+profit for period: 1.80977e+06
+cumulative profits: 2.33478e+07
+
+*** period 4 ***
+blocks mined in period: 0
+cumulative blocks mined: 1060
+destination 0: 0
+destination 1: 0
+resource 0 usage (2e+06): 0
+resource 1 usage (1.1e+06): 0
+profit for period: 0
+cumulative profits: 2.33478e+07
+
+*** period 5 ***
+blocks mined in period: 0
+cumulative blocks mined: 1060
+destination 0: 0
+destination 1: 0
+resource 0 usage (2e+06): 0
+resource 1 usage (1.1e+06): 0
+profit for period: 0
+cumulative profits: 2.33478e+07
+
+
+Algorithm settings:
+-------------------
+RECORD_DATA: true
+RECORD_RUN: false
+TEMP_FLAG: false
+TEST_SOL_MERGE: false
+RECORD_PASS_TIME: false
+RANDOM_SEARCH: true
+SCALED_RESOURCE: 1
+GREEDY_PLUS: false
+PROCESS_THRESHOLD: 0
+MIN_DIFF_TO_PROCESS: 1e-05
+TIMER_LENGTH: NONE
+NUM_PASSES: 0
+NUM_ITER: 10
+WINDOW_SIZE: 2
+VNS_WINDOW_LIMIT: 0
+REDUCED_BLOCKS: 1
+MODIFIER_WEIGHT: 0
+WARM_START: true
+ONLY_NEGATIVE: false
+WINDOW_SEARCH_TIME: 5400
+TOP_PERCENT: 1
+LIMIT_MULTIPLIER: 1
+P_SELECTION: 0.5
+RES_CUTOFF: 0.4
+OBJ_UB: 0
+WALL_SEARCH_TIME: 0
+CPU_SEARCH_TIME: 0
+CONVERGE_STOP: 2
+
+# CPU time        0.012 sec.  Wall:0
+**** running zuck_small ****
+
+Algorithm settings:
+-------------------
+RECORD_DATA: true
+RECORD_RUN: false
+TEMP_FLAG: false
+TEST_SOL_MERGE: false
+RECORD_PASS_TIME: false
+RANDOM_SEARCH: true
+SCALED_RESOURCE: 1
+GREEDY_PLUS: false
+PROCESS_THRESHOLD: 0
+MIN_DIFF_TO_PROCESS: 1e-05
+TIMER_LENGTH: NONE
+NUM_PASSES: 0
+NUM_ITER: 10
+WINDOW_SIZE: 2
+VNS_WINDOW_LIMIT: 0
+REDUCED_BLOCKS: 1
+MODIFIER_WEIGHT: 0
+WARM_START: true
+ONLY_NEGATIVE: false
+WINDOW_SEARCH_TIME: 5400
+TOP_PERCENT: 1
+LIMIT_MULTIPLIER: 1
+P_SELECTION: 0.5
+RES_CUTOFF: 0.4
+OBJ_UB: 0
+WALL_SEARCH_TIME: 0
+CPU_SEARCH_TIME: 0
+CONVERGE_STOP: 2
+
+setting up model.. done!
+setting up max closure factory.. done!
+fixing non-upit blocks.. done!
+setting profits.. done!
+solution merger initialised
+RandomSearch initialised
+
+******* ITERATION 1 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+9400 blocks mined
+5.63146e+08 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 20 actual number of periods  17
+Solution found by solver was feasible!
+
+ done!
+
+[32;1m***** NEW BEST OBJECTIVE FOUND! *****[0m
+
+
+******* ITERATION 2 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+9400 blocks mined
+5.77862e+08 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 20 actual number of periods  17
+Solution found by solver was feasible!
+
+ done!
+
+[32;1m***** NEW BEST OBJECTIVE FOUND! *****[0m
+
+
+******* ITERATION 3 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+9400 blocks mined
+5.76206e+08 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 20 actual number of periods  17
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 4 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+9400 blocks mined
+5.69061e+08 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 20 actual number of periods  17
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 5 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+9400 blocks mined
+5.68385e+08 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 20 actual number of periods  17
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 6 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+9400 blocks mined
+5.8346e+08 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 20 actual number of periods  17
+Solution found by solver was feasible!
+
+ done!
+
+[32;1m***** NEW BEST OBJECTIVE FOUND! *****[0m
+
+
+******* ITERATION 7 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+9400 blocks mined
+5.68248e+08 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 20 actual number of periods  17
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 8 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+9400 blocks mined
+5.89206e+08 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 20 actual number of periods  17
+Solution found by solver was feasible!
+
+ done!
+
+[32;1m***** NEW BEST OBJECTIVE FOUND! *****[0m
+
+
+******* ITERATION 9 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+9400 blocks mined
+5.98173e+08 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 20 actual number of periods  17
+Solution found by solver was feasible!
+
+ done!
+
+[32;1m***** NEW BEST OBJECTIVE FOUND! *****[0m
+
+
+******* ITERATION 10 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+9400 blocks mined
+5.84322e+08 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 20 actual number of periods  17
+Solution found by solver was feasible!
+
+ done!
+Extracting solution from Sol_Int...
+*** testing pack/extract functions ***
+
+packed/extracted obj: 5.98173e+08
+
+*** running slideWindow() ***
+
+Window size: 2
+
+slideWindow() complete! Data available in timeobj.csv
+
+
+original best objective: 5.98173e+08, found at iteration 9
+
+improved objective: 0
+
+# CPU time        0.248 sec.  Wall:0
+*** period 0 ***
+blocks mined in period: 1728
+cumulative blocks mined: 1728
+destination 0: 1357
+destination 1: 371
+resource 0 usage (6e+07): 5.99539e+07
+resource 1 usage (2e+07): 1.21339e+07
+profit for period: -1.62021e+07
+cumulative profits: -1.62021e+07
+
+*** period 1 ***
+blocks mined in period: 981
+cumulative blocks mined: 2709
+destination 0: 677
+destination 1: 304
+resource 0 usage (6e+07): 5.99715e+07
+resource 1 usage (2e+07): 1.97868e+07
+profit for period: 1.14359e+07
+cumulative profits: -4.76614e+06
+
+*** period 2 ***
+blocks mined in period: 872
+cumulative blocks mined: 3581
+destination 0: 583
+destination 1: 289
+resource 0 usage (6e+07): 5.63799e+07
+resource 1 usage (2e+07): 1.99923e+07
+profit for period: 2.26206e+07
+cumulative profits: 1.78545e+07
+
+*** period 3 ***
+blocks mined in period: 816
+cumulative blocks mined: 4397
+destination 0: 517
+destination 1: 299
+resource 0 usage (6e+07): 5.32236e+07
+resource 1 usage (2e+07): 1.99671e+07
+profit for period: 3.40384e+07
+cumulative profits: 5.18929e+07
+
+*** period 4 ***
+blocks mined in period: 616
+cumulative blocks mined: 5013
+destination 0: 324
+destination 1: 292
+resource 0 usage (6e+07): 4.09615e+07
+resource 1 usage (2e+07): 1.99987e+07
+profit for period: 4.86789e+07
+cumulative profits: 1.00572e+08
+
+*** period 5 ***
+blocks mined in period: 580
+cumulative blocks mined: 5593
+destination 0: 286
+destination 1: 294
+resource 0 usage (6e+07): 3.89242e+07
+resource 1 usage (2e+07): 1.99354e+07
+profit for period: 5.10241e+07
+cumulative profits: 1.51596e+08
+
+*** period 6 ***
+blocks mined in period: 557
+cumulative blocks mined: 6150
+destination 0: 264
+destination 1: 293
+resource 0 usage (6e+07): 3.74162e+07
+resource 1 usage (2e+07): 2e+07
+profit for period: 5.6549e+07
+cumulative profits: 2.08145e+08
+
+*** period 7 ***
+blocks mined in period: 439
+cumulative blocks mined: 6589
+destination 0: 147
+destination 1: 292
+resource 0 usage (6e+07): 3.01734e+07
+resource 1 usage (2e+07): 1.99745e+07
+profit for period: 5.21108e+07
+cumulative profits: 2.60256e+08
+
+*** period 8 ***
+blocks mined in period: 433
+cumulative blocks mined: 7022
+destination 0: 142
+destination 1: 291
+resource 0 usage (6e+07): 2.97457e+07
+resource 1 usage (2e+07): 1.99724e+07
+profit for period: 5.19718e+07
+cumulative profits: 3.12228e+08
+
+*** period 9 ***
+blocks mined in period: 375
+cumulative blocks mined: 7397
+destination 0: 87
+destination 1: 288
+resource 0 usage (6e+07): 2.62771e+07
+resource 1 usage (2e+07): 1.99395e+07
+profit for period: 5.19662e+07
+cumulative profits: 3.64194e+08
+
+*** period 10 ***
+blocks mined in period: 353
+cumulative blocks mined: 7750
+destination 0: 62
+destination 1: 291
+resource 0 usage (6e+07): 2.49087e+07
+resource 1 usage (2e+07): 1.99489e+07
+profit for period: 5.18887e+07
+cumulative profits: 4.16082e+08
+
+*** period 11 ***
+blocks mined in period: 323
+cumulative blocks mined: 8073
+destination 0: 38
+destination 1: 285
+resource 0 usage (6e+07): 2.30273e+07
+resource 1 usage (2e+07): 1.99667e+07
+profit for period: 4.32059e+07
+cumulative profits: 4.59288e+08
+
+*** period 12 ***
+blocks mined in period: 322
+cumulative blocks mined: 8395
+destination 0: 36
+destination 1: 286
+resource 0 usage (6e+07): 2.29813e+07
+resource 1 usage (2e+07): 1.99746e+07
+profit for period: 4.06656e+07
+cumulative profits: 4.99954e+08
+
+*** period 13 ***
+blocks mined in period: 296
+cumulative blocks mined: 8691
+destination 0: 13
+destination 1: 283
+resource 0 usage (6e+07): 2.13023e+07
+resource 1 usage (2e+07): 1.99866e+07
+profit for period: 3.43256e+07
+cumulative profits: 5.3428e+08
+
+*** period 14 ***
+blocks mined in period: 285
+cumulative blocks mined: 8976
+destination 0: 6
+destination 1: 279
+resource 0 usage (6e+07): 2.06023e+07
+resource 1 usage (2e+07): 1.99825e+07
+profit for period: 2.83838e+07
+cumulative profits: 5.62663e+08
+
+*** period 15 ***
+blocks mined in period: 294
+cumulative blocks mined: 9270
+destination 0: 2
+destination 1: 292
+resource 0 usage (6e+07): 2.10519e+07
+resource 1 usage (2e+07): 1.99735e+07
+profit for period: 2.48565e+07
+cumulative profits: 5.8752e+08
+
+*** period 16 ***
+blocks mined in period: 130
+cumulative blocks mined: 9400
+destination 0: 0
+destination 1: 130
+resource 0 usage (6e+07): 9.229e+06
+resource 1 usage (2e+07): 8.5258e+06
+profit for period: 1.06527e+07
+cumulative profits: 5.98173e+08
+
+*** period 17 ***
+blocks mined in period: 0
+cumulative blocks mined: 9400
+destination 0: 0
+destination 1: 0
+resource 0 usage (6e+07): 0
+resource 1 usage (2e+07): 0
+profit for period: 0
+cumulative profits: 5.98173e+08
+
+*** period 18 ***
+blocks mined in period: 0
+cumulative blocks mined: 9400
+destination 0: 0
+destination 1: 0
+resource 0 usage (6e+07): 0
+resource 1 usage (2e+07): 0
+profit for period: 0
+cumulative profits: 5.98173e+08
+
+*** period 19 ***
+blocks mined in period: 0
+cumulative blocks mined: 9400
+destination 0: 0
+destination 1: 0
+resource 0 usage (6e+07): 0
+resource 1 usage (2e+07): 0
+profit for period: 0
+cumulative profits: 5.98173e+08
+
+
+Algorithm settings:
+-------------------
+RECORD_DATA: true
+RECORD_RUN: false
+TEMP_FLAG: false
+TEST_SOL_MERGE: false
+RECORD_PASS_TIME: false
+RANDOM_SEARCH: true
+SCALED_RESOURCE: 1
+GREEDY_PLUS: false
+PROCESS_THRESHOLD: 0
+MIN_DIFF_TO_PROCESS: 1e-05
+TIMER_LENGTH: NONE
+NUM_PASSES: 0
+NUM_ITER: 10
+WINDOW_SIZE: 2
+VNS_WINDOW_LIMIT: 0
+REDUCED_BLOCKS: 1
+MODIFIER_WEIGHT: 0
+WARM_START: true
+ONLY_NEGATIVE: false
+WINDOW_SEARCH_TIME: 5400
+TOP_PERCENT: 1
+LIMIT_MULTIPLIER: 1
+P_SELECTION: 0.5
+RES_CUTOFF: 0.4
+OBJ_UB: 0
+WALL_SEARCH_TIME: 0
+CPU_SEARCH_TIME: 0
+CONVERGE_STOP: 2
+
+# CPU time        0.248 sec.  Wall:0
+**** running marvin ****
+
+Algorithm settings:
+-------------------
+RECORD_DATA: true
+RECORD_RUN: false
+TEMP_FLAG: false
+TEST_SOL_MERGE: false
+RECORD_PASS_TIME: false
+RANDOM_SEARCH: true
+SCALED_RESOURCE: 1
+GREEDY_PLUS: false
+PROCESS_THRESHOLD: 0
+MIN_DIFF_TO_PROCESS: 1e-05
+TIMER_LENGTH: NONE
+NUM_PASSES: 0
+NUM_ITER: 10
+WINDOW_SIZE: 2
+VNS_WINDOW_LIMIT: 0
+REDUCED_BLOCKS: 1
+MODIFIER_WEIGHT: 0
+WARM_START: true
+ONLY_NEGATIVE: false
+WINDOW_SEARCH_TIME: 5400
+TOP_PERCENT: 1
+LIMIT_MULTIPLIER: 1
+P_SELECTION: 0.5
+RES_CUTOFF: 0.4
+OBJ_UB: 0
+WALL_SEARCH_TIME: 0
+CPU_SEARCH_TIME: 0
+CONVERGE_STOP: 2
+
+setting up model.. done!
+setting up max closure factory.. done!
+fixing non-upit blocks.. done!
+setting profits.. done!
+solution merger initialised
+RandomSearch initialised
+
+******* ITERATION 1 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+21408 blocks mined
+-2.97157e+08 total mine value
+
+
+Checking solution from solver...
+
+ERROR: blocks 4 and 3634 violated precedence constraint
+	 pred 3634 is in period 19 and succ. 4 is in period 0
+Solution found by solver was infeasible!
+
+ done!
+
+[32;1m***** NEW BEST OBJECTIVE FOUND! *****[0m
+
+
+******* ITERATION 2 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+21404 blocks mined
+-2.965e+08 total mine value
+
+
+Checking solution from solver...
+
+ERROR: blocks 3 and 2749 violated precedence constraint
+	 pred 2749 is in period 17 and succ. 3 is in period 0
+Solution found by solver was infeasible!
+
+ done!
+
+[32;1m***** NEW BEST OBJECTIVE FOUND! *****[0m
+
+
+******* ITERATION 3 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+21407 blocks mined
+-3.02685e+08 total mine value
+
+
+Checking solution from solver...
+
+ERROR: blocks 3 and 2749 violated precedence constraint
+	 pred 2749 is in period 19 and succ. 3 is in period 0
+Solution found by solver was infeasible!
+
+ done!
+
+******* ITERATION 4 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+21420 blocks mined
+-2.84829e+08 total mine value
+
+
+Checking solution from solver...
+
+ERROR: blocks 3 and 3633 violated precedence constraint
+	 pred 3633 is in period 19 and succ. 3 is in period 0
+Solution found by solver was infeasible!
+
+ done!
+
+[32;1m***** NEW BEST OBJECTIVE FOUND! *****[0m
+
+
+******* ITERATION 5 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+21407 blocks mined
+-2.84759e+08 total mine value
+
+
+Checking solution from solver...
+
+ERROR: blocks 3 and 2749 violated precedence constraint
+	 pred 2749 is in period 19 and succ. 3 is in period 0
+Solution found by solver was infeasible!
+
+ done!
+
+[32;1m***** NEW BEST OBJECTIVE FOUND! *****[0m
+
+
+******* ITERATION 6 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+21429 blocks mined
+-3.10467e+08 total mine value
+
+
+Checking solution from solver...
+
+ERROR: blocks 3 and 3633 violated precedence constraint
+	 pred 3633 is in period 18 and succ. 3 is in period 0
+Solution found by solver was infeasible!
+
+ done!
+
+******* ITERATION 7 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+21420 blocks mined
+-3.00991e+08 total mine value
+
+
+Checking solution from solver...
+
+ERROR: blocks 3 and 3633 violated precedence constraint
+	 pred 3633 is in period 19 and succ. 3 is in period 0
+Solution found by solver was infeasible!
+
+ done!
+
+******* ITERATION 8 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+21429 blocks mined
+-3.10263e+08 total mine value
+
+
+Checking solution from solver...
+
+ERROR: blocks 4 and 3634 violated precedence constraint
+	 pred 3634 is in period 19 and succ. 4 is in period 0
+Solution found by solver was infeasible!
+
+ done!
+
+******* ITERATION 9 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+21409 blocks mined
+-2.86646e+08 total mine value
+
+
+Checking solution from solver...
+
+ERROR: blocks 4 and 3634 violated precedence constraint
+	 pred 3634 is in period 18 and succ. 4 is in period 0
+Solution found by solver was infeasible!
+
+ done!
+
+******* ITERATION 10 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+21440 blocks mined
+-3.1714e+08 total mine value
+
+
+Checking solution from solver...
+
+ERROR: blocks 5 and 1820 violated precedence constraint
+	 pred 1820 is in period 19 and succ. 5 is in period 0
+Solution found by solver was infeasible!
+
+ done!
+Extracting solution from Sol_Int...
+*** testing pack/extract functions ***
+
+packed/extracted obj: -2.84759e+08
+
+*** running slideWindow() ***
+
+Window size: 2
+
+slideWindow() complete! Data available in timeobj.csv
+
+
+original best objective: -2.84759e+08, found at iteration 5
+
+improved objective: 0
+
+# CPU time        1.284 sec.  Wall:1
+*** period 0 ***
+blocks mined in period: 2368
+cumulative blocks mined: 2368
+destination 0: 2325
+destination 1: 43
+resource 0 usage (6e+07): 5.99912e+07
+resource 1 usage (2e+07): 1.46674e+06
+profit for period: -5.21891e+07
+cumulative profits: -5.21891e+07
+
+*** period 1 ***
+blocks mined in period: 1428
+cumulative blocks mined: 3796
+destination 0: 1367
+destination 1: 61
+resource 0 usage (6e+07): 5.99722e+07
+resource 1 usage (2e+07): 3.37998e+06
+profit for period: -4.42141e+07
+cumulative profits: -9.64032e+07
+
+*** period 2 ***
+blocks mined in period: 1146
+cumulative blocks mined: 4942
+destination 0: 1080
+destination 1: 66
+resource 0 usage (6e+07): 5.99752e+07
+resource 1 usage (2e+07): 4.24825e+06
+profit for period: -3.7631e+07
+cumulative profits: -1.34034e+08
+
+*** period 3 ***
+blocks mined in period: 1048
+cumulative blocks mined: 5990
+destination 0: 966
+destination 1: 82
+resource 0 usage (6e+07): 5.99585e+07
+resource 1 usage (2e+07): 5.38839e+06
+profit for period: -2.9098e+07
+cumulative profits: -1.63132e+08
+
+*** period 4 ***
+blocks mined in period: 997
+cumulative blocks mined: 6987
+destination 0: 919
+destination 1: 78
+resource 0 usage (6e+07): 5.99509e+07
+resource 1 usage (2e+07): 5.39655e+06
+profit for period: -2.56102e+07
+cumulative profits: -1.88742e+08
+
+*** period 5 ***
+blocks mined in period: 978
+cumulative blocks mined: 7965
+destination 0: 887
+destination 1: 91
+resource 0 usage (6e+07): 5.99723e+07
+resource 1 usage (2e+07): 6.3781e+06
+profit for period: -2.07878e+07
+cumulative profits: -2.0953e+08
+
+*** period 6 ***
+blocks mined in period: 969
+cumulative blocks mined: 8934
+destination 0: 876
+destination 1: 93
+resource 0 usage (6e+07): 5.99727e+07
+resource 1 usage (2e+07): 6.62943e+06
+profit for period: -1.60013e+07
+cumulative profits: -2.25531e+08
+
+*** period 7 ***
+blocks mined in period: 963
+cumulative blocks mined: 9897
+destination 0: 851
+destination 1: 112
+resource 0 usage (6e+07): 5.99916e+07
+resource 1 usage (2e+07): 8.00335e+06
+profit for period: -1.08254e+07
+cumulative profits: -2.36357e+08
+
+*** period 8 ***
+blocks mined in period: 963
+cumulative blocks mined: 10860
+destination 0: 870
+destination 1: 93
+resource 0 usage (6e+07): 5.99922e+07
+resource 1 usage (2e+07): 6.6621e+06
+profit for period: -1.12359e+07
+cumulative profits: -2.47593e+08
+
+*** period 9 ***
+blocks mined in period: 960
+cumulative blocks mined: 11820
+destination 0: 856
+destination 1: 104
+resource 0 usage (6e+07): 5.99844e+07
+resource 1 usage (2e+07): 7.48951e+06
+profit for period: -5.9618e+06
+cumulative profits: -2.53555e+08
+
+*** period 10 ***
+blocks mined in period: 961
+cumulative blocks mined: 12781
+destination 0: 869
+destination 1: 92
+resource 0 usage (6e+07): 5.99425e+07
+resource 1 usage (2e+07): 6.63513e+06
+profit for period: -8.15471e+06
+cumulative profits: -2.61709e+08
+
+*** period 11 ***
+blocks mined in period: 962
+cumulative blocks mined: 13743
+destination 0: 873
+destination 1: 89
+resource 0 usage (6e+07): 5.99652e+07
+resource 1 usage (2e+07): 6.39205e+06
+profit for period: -7.22144e+06
+cumulative profits: -2.68931e+08
+
+*** period 12 ***
+blocks mined in period: 958
+cumulative blocks mined: 14701
+destination 0: 857
+destination 1: 101
+resource 0 usage (6e+07): 5.99659e+07
+resource 1 usage (2e+07): 7.27717e+06
+profit for period: -4.93221e+06
+cumulative profits: -2.73863e+08
+
+*** period 13 ***
+blocks mined in period: 956
+cumulative blocks mined: 15657
+destination 0: 841
+destination 1: 115
+resource 0 usage (6e+07): 5.99426e+07
+resource 1 usage (2e+07): 8.28502e+06
+profit for period: -2.69707e+06
+cumulative profits: -2.7656e+08
+
+*** period 14 ***
+blocks mined in period: 959
+cumulative blocks mined: 16616
+destination 0: 856
+destination 1: 103
+resource 0 usage (6e+07): 5.99883e+07
+resource 1 usage (2e+07): 7.42969e+06
+profit for period: -2.35862e+06
+cumulative profits: -2.78919e+08
+
+*** period 15 ***
+blocks mined in period: 959
+cumulative blocks mined: 17575
+destination 0: 859
+destination 1: 100
+resource 0 usage (6e+07): 5.99751e+07
+resource 1 usage (2e+07): 7.2154e+06
+profit for period: -3.29021e+06
+cumulative profits: -2.82209e+08
+
+*** period 16 ***
+blocks mined in period: 957
+cumulative blocks mined: 18532
+destination 0: 845
+destination 1: 112
+resource 0 usage (6e+07): 5.99828e+07
+resource 1 usage (2e+07): 8.0577e+06
+profit for period: -194663
+cumulative profits: -2.82404e+08
+
+*** period 17 ***
+blocks mined in period: 959
+cumulative blocks mined: 19491
+destination 0: 855
+destination 1: 104
+resource 0 usage (6e+07): 5.99674e+07
+resource 1 usage (2e+07): 7.50056e+06
+profit for period: -1.51904e+06
+cumulative profits: -2.83923e+08
+
+*** period 18 ***
+blocks mined in period: 958
+cumulative blocks mined: 20449
+destination 0: 849
+destination 1: 109
+resource 0 usage (6e+07): 5.99649e+07
+resource 1 usage (2e+07): 7.8617e+06
+profit for period: -269796
+cumulative profits: -2.84192e+08
+
+*** period 19 ***
+blocks mined in period: 957
+cumulative blocks mined: 21406
+destination 0: 849
+destination 1: 108
+resource 0 usage (6e+07): 5.99436e+07
+resource 1 usage (2e+07): 7.80462e+06
+profit for period: -566544
+cumulative profits: -2.84759e+08
+
+
+Algorithm settings:
+-------------------
+RECORD_DATA: true
+RECORD_RUN: false
+TEMP_FLAG: false
+TEST_SOL_MERGE: false
+RECORD_PASS_TIME: false
+RANDOM_SEARCH: true
+SCALED_RESOURCE: 1
+GREEDY_PLUS: false
+PROCESS_THRESHOLD: 0
+MIN_DIFF_TO_PROCESS: 1e-05
+TIMER_LENGTH: NONE
+NUM_PASSES: 0
+NUM_ITER: 10
+WINDOW_SIZE: 2
+VNS_WINDOW_LIMIT: 0
+REDUCED_BLOCKS: 1
+MODIFIER_WEIGHT: 0
+WARM_START: true
+ONLY_NEGATIVE: false
+WINDOW_SEARCH_TIME: 5400
+TOP_PERCENT: 1
+LIMIT_MULTIPLIER: 1
+P_SELECTION: 0.5
+RES_CUTOFF: 0.4
+OBJ_UB: 0
+WALL_SEARCH_TIME: 0
+CPU_SEARCH_TIME: 0
+CONVERGE_STOP: 2
+
+# CPU time        1.284 sec.  Wall:1
+**** running zuck medium ****
+
+Algorithm settings:
+-------------------
+RECORD_DATA: true
+RECORD_RUN: false
+TEMP_FLAG: false
+TEST_SOL_MERGE: false
+RECORD_PASS_TIME: false
+RANDOM_SEARCH: true
+SCALED_RESOURCE: 1
+GREEDY_PLUS: false
+PROCESS_THRESHOLD: 0
+MIN_DIFF_TO_PROCESS: 1e-05
+TIMER_LENGTH: NONE
+NUM_PASSES: 0
+NUM_ITER: 10
+WINDOW_SIZE: 2
+VNS_WINDOW_LIMIT: 0
+REDUCED_BLOCKS: 1
+MODIFIER_WEIGHT: 0
+WARM_START: true
+ONLY_NEGATIVE: false
+WINDOW_SEARCH_TIME: 5400
+TOP_PERCENT: 1
+LIMIT_MULTIPLIER: 1
+P_SELECTION: 0.5
+RES_CUTOFF: 0.4
+OBJ_UB: 0
+WALL_SEARCH_TIME: 0
+CPU_SEARCH_TIME: 0
+CONVERGE_STOP: 2
+
+setting up model.. done!
+setting up max closure factory.. done!
+fixing non-upit blocks.. done!
+setting profits.. done!
+solution merger initialised
+RandomSearch initialised
+
+******* ITERATION 1 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+29277 blocks mined
+4.39055e+08 total mine value
+
+
+Checking solution from solver...
+
+Solution found by solver was feasible!
+
+ done!
+
+[32;1m***** NEW BEST OBJECTIVE FOUND! *****[0m
+
+
+******* ITERATION 2 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+29277 blocks mined
+4.34378e+08 total mine value
+
+
+Checking solution from solver...
+
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 3 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+29277 blocks mined
+4.39286e+08 total mine value
+
+
+Checking solution from solver...
+
+Solution found by solver was feasible!
+
+ done!
+
+[32;1m***** NEW BEST OBJECTIVE FOUND! *****[0m
+
+
+******* ITERATION 4 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+29277 blocks mined
+4.30914e+08 total mine value
+
+
+Checking solution from solver...
+
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 5 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+29277 blocks mined
+4.32443e+08 total mine value
+
+
+Checking solution from solver...
+
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 6 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+29277 blocks mined
+4.25886e+08 total mine value
+
+
+Checking solution from solver...
+
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 7 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+29277 blocks mined
+4.361e+08 total mine value
+
+
+Checking solution from solver...
+
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 8 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+29277 blocks mined
+4.40373e+08 total mine value
+
+
+Checking solution from solver...
+
+Solution found by solver was feasible!
+
+ done!
+
+[32;1m***** NEW BEST OBJECTIVE FOUND! *****[0m
+
+
+******* ITERATION 9 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+29277 blocks mined
+4.28296e+08 total mine value
+
+
+Checking solution from solver...
+
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 10 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+29277 blocks mined
+4.35874e+08 total mine value
+
+
+Checking solution from solver...
+
+Solution found by solver was feasible!
+
+ done!
+Extracting solution from Sol_Int...
+*** testing pack/extract functions ***
+
+packed/extracted obj: 4.40373e+08
+
+*** running slideWindow() ***
+
+Window size: 2
+
+slideWindow() complete! Data available in timeobj.csv
+
+
+original best objective: 4.40373e+08, found at iteration 8
+
+improved objective: 0
+
+# CPU time        2.648 sec.  Wall:3
+*** period 0 ***
+blocks mined in period: 3391
+cumulative blocks mined: 3391
+destination 0: 2835
+destination 1: 556
+resource 0 usage (1.8e+07): 1.79976e+07
+resource 1 usage (8e+06): 2.35179e+06
+profit for period: -4.42784e+07
+cumulative profits: -4.42784e+07
+
+*** period 1 ***
+blocks mined in period: 3638
+cumulative blocks mined: 7029
+destination 0: 2879
+destination 1: 759
+resource 0 usage (1.8e+07): 1.79975e+07
+resource 1 usage (8e+06): 6.21391e+06
+profit for period: -1.42037e+07
+cumulative profits: -5.84821e+07
+
+*** period 2 ***
+blocks mined in period: 3704
+cumulative blocks mined: 10733
+destination 0: 2868
+destination 1: 836
+resource 0 usage (1.8e+07): 1.79981e+07
+resource 1 usage (8e+06): 7.16904e+06
+profit for period: -7.26207e+06
+cumulative profits: -6.57441e+07
+
+*** period 3 ***
+blocks mined in period: 3778
+cumulative blocks mined: 14511
+destination 0: 2884
+destination 1: 894
+resource 0 usage (1.8e+07): 1.79987e+07
+resource 1 usage (8e+06): 7.83677e+06
+profit for period: -7.33921e+06
+cumulative profits: -7.30833e+07
+
+*** period 4 ***
+blocks mined in period: 3663
+cumulative blocks mined: 18174
+destination 0: 2713
+destination 1: 950
+resource 0 usage (1.8e+07): 1.7083e+07
+resource 1 usage (8e+06): 7.99898e+06
+profit for period: -757359
+cumulative profits: -7.38407e+07
+
+*** period 5 ***
+blocks mined in period: 2308
+cumulative blocks mined: 20482
+destination 0: 1410
+destination 1: 898
+resource 0 usage (1.8e+07): 1.08466e+07
+resource 1 usage (8e+06): 7.99998e+06
+profit for period: 5.90981e+07
+cumulative profits: -1.47426e+07
+
+*** period 6 ***
+blocks mined in period: 1275
+cumulative blocks mined: 21757
+destination 0: 497
+destination 1: 778
+resource 0 usage (1.8e+07): 6.16833e+06
+resource 1 usage (8e+06): 7.99098e+06
+profit for period: 1.06079e+08
+cumulative profits: 9.13364e+07
+
+*** period 7 ***
+blocks mined in period: 1109
+cumulative blocks mined: 22866
+destination 0: 344
+destination 1: 765
+resource 0 usage (1.8e+07): 5.31536e+06
+resource 1 usage (8e+06): 7.98939e+06
+profit for period: 8.42952e+07
+cumulative profits: 1.75632e+08
+
+*** period 8 ***
+blocks mined in period: 1071
+cumulative blocks mined: 23937
+destination 0: 303
+destination 1: 768
+resource 0 usage (1.8e+07): 5.1172e+06
+resource 1 usage (8e+06): 7.9991e+06
+profit for period: 8.13443e+07
+cumulative profits: 2.56976e+08
+
+*** period 9 ***
+blocks mined in period: 1131
+cumulative blocks mined: 25068
+destination 0: 291
+destination 1: 840
+resource 0 usage (1.8e+07): 5.48704e+06
+resource 1 usage (8e+06): 7.99761e+06
+profit for period: 6.7366e+07
+cumulative profits: 3.24342e+08
+
+*** period 10 ***
+blocks mined in period: 1248
+cumulative blocks mined: 26316
+destination 0: 391
+destination 1: 857
+resource 0 usage (1.8e+07): 6.2392e+06
+resource 1 usage (8e+06): 7.9883e+06
+profit for period: 2.67833e+07
+cumulative profits: 3.51125e+08
+
+*** period 11 ***
+blocks mined in period: 984
+cumulative blocks mined: 27300
+destination 0: 228
+destination 1: 756
+resource 0 usage (1.8e+07): 4.81742e+06
+resource 1 usage (8e+06): 7.99504e+06
+profit for period: 2.09302e+07
+cumulative profits: 3.72055e+08
+
+*** period 12 ***
+blocks mined in period: 806
+cumulative blocks mined: 28106
+destination 0: 84
+destination 1: 722
+resource 0 usage (1.8e+07): 3.82574e+06
+resource 1 usage (8e+06): 7.99831e+06
+profit for period: 2.41421e+07
+cumulative profits: 3.96197e+08
+
+*** period 13 ***
+blocks mined in period: 748
+cumulative blocks mined: 28854
+destination 0: 31
+destination 1: 717
+resource 0 usage (1.8e+07): 3.49706e+06
+resource 1 usage (8e+06): 7.99002e+06
+profit for period: 2.65049e+07
+cumulative profits: 4.22702e+08
+
+*** period 14 ***
+blocks mined in period: 423
+cumulative blocks mined: 29277
+destination 0: 0
+destination 1: 423
+resource 0 usage (1.8e+07): 1.9251e+06
+resource 1 usage (8e+06): 5.05754e+06
+profit for period: 1.76709e+07
+cumulative profits: 4.40373e+08
+
+
+Algorithm settings:
+-------------------
+RECORD_DATA: true
+RECORD_RUN: false
+TEMP_FLAG: false
+TEST_SOL_MERGE: false
+RECORD_PASS_TIME: false
+RANDOM_SEARCH: true
+SCALED_RESOURCE: 1
+GREEDY_PLUS: false
+PROCESS_THRESHOLD: 0
+MIN_DIFF_TO_PROCESS: 1e-05
+TIMER_LENGTH: NONE
+NUM_PASSES: 0
+NUM_ITER: 10
+WINDOW_SIZE: 2
+VNS_WINDOW_LIMIT: 0
+REDUCED_BLOCKS: 1
+MODIFIER_WEIGHT: 0
+WARM_START: true
+ONLY_NEGATIVE: false
+WINDOW_SEARCH_TIME: 5400
+TOP_PERCENT: 1
+LIMIT_MULTIPLIER: 1
+P_SELECTION: 0.5
+RES_CUTOFF: 0.4
+OBJ_UB: 0
+WALL_SEARCH_TIME: 0
+CPU_SEARCH_TIME: 0
+CONVERGE_STOP: 2
+
+# CPU time        2.648 sec.  Wall:3
+**** running kd ****
+
+Algorithm settings:
+-------------------
+RECORD_DATA: true
+RECORD_RUN: false
+TEMP_FLAG: false
+TEST_SOL_MERGE: false
+RECORD_PASS_TIME: false
+RANDOM_SEARCH: true
+SCALED_RESOURCE: 1
+GREEDY_PLUS: false
+PROCESS_THRESHOLD: 0
+MIN_DIFF_TO_PROCESS: 1e-05
+TIMER_LENGTH: NONE
+NUM_PASSES: 0
+NUM_ITER: 10
+WINDOW_SIZE: 2
+VNS_WINDOW_LIMIT: 0
+REDUCED_BLOCKS: 1
+MODIFIER_WEIGHT: 0
+WARM_START: true
+ONLY_NEGATIVE: false
+WINDOW_SEARCH_TIME: 5400
+TOP_PERCENT: 1
+LIMIT_MULTIPLIER: 1
+P_SELECTION: 0.5
+RES_CUTOFF: 0.4
+OBJ_UB: 0
+WALL_SEARCH_TIME: 0
+CPU_SEARCH_TIME: 0
+CONVERGE_STOP: 2
+
+setting up model.. done!
+setting up max closure factory.. done!
+fixing non-upit blocks.. done!
+setting profits.. done!
+solution merger initialised
+RandomSearch initialised
+
+******* ITERATION 1 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+14153 blocks mined
+3.37234e+08 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 12 actual number of periods  10
+Solution found by solver was feasible!
+
+ done!
+
+[32;1m***** NEW BEST OBJECTIVE FOUND! *****[0m
+
+
+******* ITERATION 2 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+14153 blocks mined
+3.34401e+08 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 12 actual number of periods  10
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 3 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+14153 blocks mined
+3.34432e+08 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 12 actual number of periods  10
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 4 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+14153 blocks mined
+3.35427e+08 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 12 actual number of periods  10
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 5 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+14153 blocks mined
+3.35331e+08 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 12 actual number of periods  10
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 6 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+14153 blocks mined
+3.3492e+08 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 12 actual number of periods  10
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 7 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+14153 blocks mined
+3.34894e+08 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 12 actual number of periods  10
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 8 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+14153 blocks mined
+3.35081e+08 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 12 actual number of periods  10
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 9 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+14153 blocks mined
+3.35199e+08 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 12 actual number of periods  10
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 10 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+14153 blocks mined
+3.36604e+08 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 12 actual number of periods  10
+Solution found by solver was feasible!
+
+ done!
+Extracting solution from Sol_Int...
+*** testing pack/extract functions ***
+
+packed/extracted obj: 3.37234e+08
+
+*** running slideWindow() ***
+
+Window size: 2
+
+slideWindow() complete! Data available in timeobj.csv
+
+
+original best objective: 3.37234e+08, found at iteration 1
+
+improved objective: 0
+
+# CPU time        0.372 sec.  Wall:0
+*** period 0 ***
+blocks mined in period: 3872
+cumulative blocks mined: 3872
+destination 0: 3255
+destination 1: 617
+resource 0 usage (1e+07): 9.99438e+06
+profit for period: 2.24541e+07
+cumulative profits: 2.24541e+07
+
+*** period 1 ***
+blocks mined in period: 1700
+cumulative blocks mined: 5572
+destination 0: 1083
+destination 1: 617
+resource 0 usage (1e+07): 9.99246e+06
+profit for period: 4.48587e+07
+cumulative profits: 6.73128e+07
+
+*** period 2 ***
+blocks mined in period: 1543
+cumulative blocks mined: 7115
+destination 0: 926
+destination 1: 617
+resource 0 usage (1e+07): 9.99522e+06
+profit for period: 4.64033e+07
+cumulative profits: 1.13716e+08
+
+*** period 3 ***
+blocks mined in period: 1247
+cumulative blocks mined: 8362
+destination 0: 630
+destination 1: 617
+resource 0 usage (1e+07): 9.9987e+06
+profit for period: 4.63787e+07
+cumulative profits: 1.60095e+08
+
+*** period 4 ***
+blocks mined in period: 1304
+cumulative blocks mined: 9666
+destination 0: 688
+destination 1: 616
+resource 0 usage (1e+07): 9.99036e+06
+profit for period: 4.06383e+07
+cumulative profits: 2.00733e+08
+
+*** period 5 ***
+blocks mined in period: 1213
+cumulative blocks mined: 10879
+destination 0: 598
+destination 1: 615
+resource 0 usage (1e+07): 9.98658e+06
+profit for period: 3.59595e+07
+cumulative profits: 2.36693e+08
+
+*** period 6 ***
+blocks mined in period: 1111
+cumulative blocks mined: 11990
+destination 0: 496
+destination 1: 615
+resource 0 usage (1e+07): 9.98598e+06
+profit for period: 3.05152e+07
+cumulative profits: 2.67208e+08
+
+*** period 7 ***
+blocks mined in period: 1048
+cumulative blocks mined: 13038
+destination 0: 432
+destination 1: 616
+resource 0 usage (1e+07): 9.99252e+06
+profit for period: 2.74407e+07
+cumulative profits: 2.94649e+08
+
+*** period 8 ***
+blocks mined in period: 719
+cumulative blocks mined: 13757
+destination 0: 103
+destination 1: 616
+resource 0 usage (1e+07): 9.98592e+06
+profit for period: 2.69857e+07
+cumulative profits: 3.21634e+08
+
+*** period 9 ***
+blocks mined in period: 396
+cumulative blocks mined: 14153
+destination 0: 11
+destination 1: 385
+resource 0 usage (1e+07): 6.2553e+06
+profit for period: 1.55998e+07
+cumulative profits: 3.37234e+08
+
+*** period 10 ***
+blocks mined in period: 0
+cumulative blocks mined: 14153
+destination 0: 0
+destination 1: 0
+resource 0 usage (1e+07): 0
+profit for period: 0
+cumulative profits: 3.37234e+08
+
+*** period 11 ***
+blocks mined in period: 0
+cumulative blocks mined: 14153
+destination 0: 0
+destination 1: 0
+resource 0 usage (1e+07): 0
+profit for period: 0
+cumulative profits: 3.37234e+08
+
+
+Algorithm settings:
+-------------------
+RECORD_DATA: true
+RECORD_RUN: false
+TEMP_FLAG: false
+TEST_SOL_MERGE: false
+RECORD_PASS_TIME: false
+RANDOM_SEARCH: true
+SCALED_RESOURCE: 1
+GREEDY_PLUS: false
+PROCESS_THRESHOLD: 0
+MIN_DIFF_TO_PROCESS: 1e-05
+TIMER_LENGTH: NONE
+NUM_PASSES: 0
+NUM_ITER: 10
+WINDOW_SIZE: 2
+VNS_WINDOW_LIMIT: 0
+REDUCED_BLOCKS: 1
+MODIFIER_WEIGHT: 0
+WARM_START: true
+ONLY_NEGATIVE: false
+WINDOW_SEARCH_TIME: 5400
+TOP_PERCENT: 1
+LIMIT_MULTIPLIER: 1
+P_SELECTION: 0.5
+RES_CUTOFF: 0.4
+OBJ_UB: 0
+WALL_SEARCH_TIME: 0
+CPU_SEARCH_TIME: 0
+CONVERGE_STOP: 2
+
+# CPU time        0.376 sec.  Wall:0
+**** running zuck_large ****
+
+Algorithm settings:
+-------------------
+RECORD_DATA: true
+RECORD_RUN: false
+TEMP_FLAG: false
+TEST_SOL_MERGE: false
+RECORD_PASS_TIME: false
+RANDOM_SEARCH: true
+SCALED_RESOURCE: 1
+GREEDY_PLUS: false
+PROCESS_THRESHOLD: 0
+MIN_DIFF_TO_PROCESS: 1e-05
+TIMER_LENGTH: NONE
+NUM_PASSES: 0
+NUM_ITER: 10
+WINDOW_SIZE: 2
+VNS_WINDOW_LIMIT: 0
+REDUCED_BLOCKS: 1
+MODIFIER_WEIGHT: 0
+WARM_START: true
+ONLY_NEGATIVE: false
+WINDOW_SEARCH_TIME: 5400
+TOP_PERCENT: 1
+LIMIT_MULTIPLIER: 1
+P_SELECTION: 0.5
+RES_CUTOFF: 0.4
+OBJ_UB: 0
+WALL_SEARCH_TIME: 0
+CPU_SEARCH_TIME: 0
+CONVERGE_STOP: 2
+
+setting up model.. done!
+setting up max closure factory.. done!
+fixing non-upit blocks.. done!
+setting profits.. done!
+solution merger initialised
+RandomSearch initialised
+
+******* ITERATION 1 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+96821 blocks mined
+4.16643e+07 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 30 actual number of periods  25
+Solution found by solver was feasible!
+
+ done!
+
+[32;1m***** NEW BEST OBJECTIVE FOUND! *****[0m
+
+
+******* ITERATION 2 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+96821 blocks mined
+4.17856e+07 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 30 actual number of periods  25
+Solution found by solver was feasible!
+
+ done!
+
+[32;1m***** NEW BEST OBJECTIVE FOUND! *****[0m
+
+
+******* ITERATION 3 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+96821 blocks mined
+4.16665e+07 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 30 actual number of periods  25
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 4 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+96821 blocks mined
+4.17665e+07 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 30 actual number of periods  25
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 5 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+96821 blocks mined
+4.16902e+07 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 30 actual number of periods  25
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 6 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+96821 blocks mined
+4.17742e+07 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 30 actual number of periods  25
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 7 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+96821 blocks mined
+4.1784e+07 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 30 actual number of periods  25
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 8 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+96821 blocks mined
+4.18667e+07 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 30 actual number of periods  25
+Solution found by solver was feasible!
+
+ done!
+
+[32;1m***** NEW BEST OBJECTIVE FOUND! *****[0m
+
+
+******* ITERATION 9 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+96821 blocks mined
+4.17652e+07 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 30 actual number of periods  25
+Solution found by solver was feasible!
+
+ done!
+
+******* ITERATION 10 of 10 *******
+
+running randomSearch.. 
+testing dataset: done!
+
+Random search completed!
+
+96821 blocks mined
+4.17513e+07 total mine value
+
+
+Checking solution from solver...
+
+WARNING: Number of periods do not match!
+ period in sol = 30 actual number of periods  25
+Solution found by solver was feasible!
+
+ done!
+Extracting solution from Sol_Int...
+*** testing pack/extract functions ***
+
+packed/extracted obj: 4.18667e+07
+
+*** running slideWindow() ***
+
+Window size: 2
+
+slideWindow() complete! Data available in timeobj.csv
+
+
+original best objective: 4.18667e+07, found at iteration 8
+
+improved objective: 0
+
+# CPU time        3.796 sec.  Wall:4
+*** period 0 ***
+blocks mined in period: 5201
+cumulative blocks mined: 5201
+destination 0: 2974
+destination 1: 2227
+resource 0 usage (3e+06): 2.45586e+06
+resource 1 usage (1.2e+06): 1.19972e+06
+profit for period: 3.24094e+06
+cumulative profits: 3.24094e+06
+
+*** period 1 ***
+blocks mined in period: 5384
+cumulative blocks mined: 10585
+destination 0: 3157
+destination 1: 2227
+resource 0 usage (3e+06): 2.58084e+06
+resource 1 usage (1.2e+06): 1.1995e+06
+profit for period: 2.80811e+06
+cumulative profits: 6.04905e+06
+
+*** period 2 ***
+blocks mined in period: 5038
+cumulative blocks mined: 15623
+destination 0: 2812
+destination 1: 2226
+resource 0 usage (3e+06): 2.47749e+06
+resource 1 usage (1.2e+06): 1.19959e+06
+profit for period: 2.71099e+06
+cumulative profits: 8.76004e+06
+
+*** period 3 ***
+blocks mined in period: 5000
+cumulative blocks mined: 20623
+destination 0: 2773
+destination 1: 2227
+resource 0 usage (3e+06): 2.48132e+06
+resource 1 usage (1.2e+06): 1.19997e+06
+profit for period: 2.52012e+06
+cumulative profits: 1.12802e+07
+
+*** period 4 ***
+blocks mined in period: 4838
+cumulative blocks mined: 25461
+destination 0: 2611
+destination 1: 2227
+resource 0 usage (3e+06): 2.41195e+06
+resource 1 usage (1.2e+06): 1.19947e+06
+profit for period: 2.35793e+06
+cumulative profits: 1.36381e+07
+
+*** period 5 ***
+blocks mined in period: 4762
+cumulative blocks mined: 30223
+destination 0: 2535
+destination 1: 2227
+resource 0 usage (3e+06): 2.37571e+06
+resource 1 usage (1.2e+06): 1.19969e+06
+profit for period: 2.26875e+06
+cumulative profits: 1.59068e+07
+
+*** period 6 ***
+blocks mined in period: 4529
+cumulative blocks mined: 34752
+destination 0: 2302
+destination 1: 2227
+resource 0 usage (3e+06): 2.26596e+06
+resource 1 usage (1.2e+06): 1.19954e+06
+profit for period: 2.12482e+06
+cumulative profits: 1.80317e+07
+
+*** period 7 ***
+blocks mined in period: 4402
+cumulative blocks mined: 39154
+destination 0: 2176
+destination 1: 2226
+resource 0 usage (3e+06): 2.20704e+06
+resource 1 usage (1.2e+06): 1.19994e+06
+profit for period: 2.04331e+06
+cumulative profits: 2.0075e+07
+
+*** period 8 ***
+blocks mined in period: 4309
+cumulative blocks mined: 43463
+destination 0: 2083
+destination 1: 2226
+resource 0 usage (3e+06): 2.1587e+06
+resource 1 usage (1.2e+06): 1.19957e+06
+profit for period: 1.96693e+06
+cumulative profits: 2.20419e+07
+
+*** period 9 ***
+blocks mined in period: 4194
+cumulative blocks mined: 47657
+destination 0: 1968
+destination 1: 2226
+resource 0 usage (3e+06): 2.10083e+06
+resource 1 usage (1.2e+06): 1.1999e+06
+profit for period: 1.85926e+06
+cumulative profits: 2.39012e+07
+
+*** period 10 ***
+blocks mined in period: 4135
+cumulative blocks mined: 51792
+destination 0: 1910
+destination 1: 2225
+resource 0 usage (3e+06): 2.06312e+06
+resource 1 usage (1.2e+06): 1.19963e+06
+profit for period: 1.79059e+06
+cumulative profits: 2.56918e+07
+
+*** period 11 ***
+blocks mined in period: 4063
+cumulative blocks mined: 55855
+destination 0: 1837
+destination 1: 2226
+resource 0 usage (3e+06): 2.02636e+06
+resource 1 usage (1.2e+06): 1.19978e+06
+profit for period: 1.70871e+06
+cumulative profits: 2.74005e+07
+
+*** period 12 ***
+blocks mined in period: 3900
+cumulative blocks mined: 59755
+destination 0: 1674
+destination 1: 2226
+resource 0 usage (3e+06): 1.93946e+06
+resource 1 usage (1.2e+06): 1.19993e+06
+profit for period: 1.63143e+06
+cumulative profits: 2.90319e+07
+
+*** period 13 ***
+blocks mined in period: 3792
+cumulative blocks mined: 63547
+destination 0: 1567
+destination 1: 2225
+resource 0 usage (3e+06): 1.88432e+06
+resource 1 usage (1.2e+06): 1.19989e+06
+profit for period: 1.54059e+06
+cumulative profits: 3.05725e+07
+
+*** period 14 ***
+blocks mined in period: 3795
+cumulative blocks mined: 67342
+destination 0: 1571
+destination 1: 2224
+resource 0 usage (3e+06): 1.88065e+06
+resource 1 usage (1.2e+06): 1.1998e+06
+profit for period: 1.48242e+06
+cumulative profits: 3.20549e+07
+
+*** period 15 ***
+blocks mined in period: 3708
+cumulative blocks mined: 71050
+destination 0: 1484
+destination 1: 2224
+resource 0 usage (3e+06): 1.83866e+06
+resource 1 usage (1.2e+06): 1.19963e+06
+profit for period: 1.38877e+06
+cumulative profits: 3.34437e+07
+
+*** period 16 ***
+blocks mined in period: 3558
+cumulative blocks mined: 74608
+destination 0: 1334
+destination 1: 2224
+resource 0 usage (3e+06): 1.76646e+06
+resource 1 usage (1.2e+06): 1.19956e+06
+profit for period: 1.30472e+06
+cumulative profits: 3.47484e+07
+
+*** period 17 ***
+blocks mined in period: 3520
+cumulative blocks mined: 78128
+destination 0: 1297
+destination 1: 2223
+resource 0 usage (3e+06): 1.74414e+06
+resource 1 usage (1.2e+06): 1.19948e+06
+profit for period: 1.20716e+06
+cumulative profits: 3.59556e+07
+
+*** period 18 ***
+blocks mined in period: 3476
+cumulative blocks mined: 81604
+destination 0: 1252
+destination 1: 2224
+resource 0 usage (3e+06): 1.72213e+06
+resource 1 usage (1.2e+06): 1.19977e+06
+profit for period: 1.0989e+06
+cumulative profits: 3.70545e+07
+
+*** period 19 ***
+blocks mined in period: 3250
+cumulative blocks mined: 84854
+destination 0: 1026
+destination 1: 2224
+resource 0 usage (3e+06): 1.62783e+06
+resource 1 usage (1.2e+06): 1.19981e+06
+profit for period: 1.03448e+06
+cumulative profits: 3.80889e+07
+
+*** period 20 ***
+blocks mined in period: 3043
+cumulative blocks mined: 87897
+destination 0: 819
+destination 1: 2224
+resource 0 usage (3e+06): 1.53931e+06
+resource 1 usage (1.2e+06): 1.19956e+06
+profit for period: 969209
+cumulative profits: 3.90582e+07
+
+*** period 21 ***
+blocks mined in period: 2798
+cumulative blocks mined: 90695
+destination 0: 574
+destination 1: 2224
+resource 0 usage (3e+06): 1.44022e+06
+resource 1 usage (1.2e+06): 1.19994e+06
+profit for period: 896908
+cumulative profits: 3.99551e+07
+
+*** period 22 ***
+blocks mined in period: 2615
+cumulative blocks mined: 93310
+destination 0: 391
+destination 1: 2224
+resource 0 usage (3e+06): 1.36349e+06
+resource 1 usage (1.2e+06): 1.19986e+06
+profit for period: 835177
+cumulative profits: 4.07902e+07
+
+*** period 23 ***
+blocks mined in period: 2430
+cumulative blocks mined: 95740
+destination 0: 205
+destination 1: 2225
+resource 0 usage (3e+06): 1.28818e+06
+resource 1 usage (1.2e+06): 1.19987e+06
+profit for period: 756711
+cumulative profits: 4.15469e+07
+
+*** period 24 ***
+blocks mined in period: 1081
+cumulative blocks mined: 96821
+destination 0: 20
+destination 1: 1061
+resource 0 usage (3e+06): 581178
+resource 1 usage (1.2e+06): 571995
+profit for period: 319711
+cumulative profits: 4.18667e+07
+
+*** period 25 ***
+blocks mined in period: 0
+cumulative blocks mined: 96821
+destination 0: 0
+destination 1: 0
+resource 0 usage (3e+06): 0
+resource 1 usage (1.2e+06): 0
+profit for period: 0
+cumulative profits: 4.18667e+07
+
+*** period 26 ***
+blocks mined in period: 0
+cumulative blocks mined: 96821
+destination 0: 0
+destination 1: 0
+resource 0 usage (3e+06): 0
+resource 1 usage (1.2e+06): 0
+profit for period: 0
+cumulative profits: 4.18667e+07
+
+*** period 27 ***
+blocks mined in period: 0
+cumulative blocks mined: 96821
+destination 0: 0
+destination 1: 0
+resource 0 usage (3e+06): 0
+resource 1 usage (1.2e+06): 0
+profit for period: 0
+cumulative profits: 4.18667e+07
+
+*** period 28 ***
+blocks mined in period: 0
+cumulative blocks mined: 96821
+destination 0: 0
+destination 1: 0
+resource 0 usage (3e+06): 0
+resource 1 usage (1.2e+06): 0
+profit for period: 0
+cumulative profits: 4.18667e+07
+
+*** period 29 ***
+blocks mined in period: 0
+cumulative blocks mined: 96821
+destination 0: 0
+destination 1: 0
+resource 0 usage (3e+06): 0
+resource 1 usage (1.2e+06): 0
+profit for period: 0
+cumulative profits: 4.18667e+07
+
+
+Algorithm settings:
+-------------------
+RECORD_DATA: true
+RECORD_RUN: false
+TEMP_FLAG: false
+TEST_SOL_MERGE: false
+RECORD_PASS_TIME: false
+RANDOM_SEARCH: true
+SCALED_RESOURCE: 1
+GREEDY_PLUS: false
+PROCESS_THRESHOLD: 0
+MIN_DIFF_TO_PROCESS: 1e-05
+TIMER_LENGTH: NONE
+NUM_PASSES: 0
+NUM_ITER: 10
+WINDOW_SIZE: 2
+VNS_WINDOW_LIMIT: 0
+REDUCED_BLOCKS: 1
+MODIFIER_WEIGHT: 0
+WARM_START: true
+ONLY_NEGATIVE: false
+WINDOW_SEARCH_TIME: 5400
+TOP_PERCENT: 1
+LIMIT_MULTIPLIER: 1
+P_SELECTION: 0.5
+RES_CUTOFF: 0.4
+OBJ_UB: 0
+WALL_SEARCH_TIME: 0
+CPU_SEARCH_TIME: 0
+CONVERGE_STOP: 2
+
+# CPU time        3.808 sec.  Wall:4

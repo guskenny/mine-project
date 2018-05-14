@@ -1,0 +1,261 @@
+#include "SinglePSolver.h"
+#include "SinglePModel.h"
+
+SinglePSolver::SinglePSolver(int argc,const char **argv){
+
+  solverType = CPLEX_T; // default is cplex
+  solveRelaxed= false;
+
+  //numPeriods = 8;
+
+  // determine solver type and if relaxed
+  for(int c=1;c<argc-1;++c){
+    std::string flag=argv[c];
+    if(flag=="-c")
+      solverType = CPLEX_T;
+    else if(flag=="-r")
+	    solveRelaxed = true;
+//    else
+//	    std::cerr<<"WARNING: unknown flag " << flag << " ignored\n";
+  }
+
+  // set up new problem model from data file
+  probModel = new SinglePModel(argv[argc-1]);
+
+  numPeriods = probModel->getNPeriod();
+  
+  // solve UPIT problem and get variables to fix
+  UpitSolver uSolve = UpitSolver(*probModel);
+  uSolve.solve();
+  std::map<int,int> fixed;
+  uSolve.getFixed(fixed);
+  
+  MaxClosureFactory mcfactory;
+
+  for(int i=0;i<argc;++i){
+  	if(argv[i][0] == '-' && argv[i][1] != '-')
+  	    switch(argv[i][1]){
+  		case 'n': case 'b': case 'e': case 'p':
+  		case 'N': case 'B': case 'E': case 'P':
+  		    mcfactory.setOption(argv[i][1]);
+  		    break;
+      default:
+          mcfactory.setOption('B');
+    }
+  }
+  
+  MCSolver = mcfactory(probModel->graph, fixed);
+  MCSolver->setProfit(probModel->getProfit());
+}
+
+SinglePSolver::SinglePSolver(const Daten &prob){
+
+  solverType = CPLEX_T; // default is cplex
+  solveRelaxed = false;
+
+  numPeriods = 2;
+  // solve UPIT problem and fix variables
+  UpitSolver uSolve = UpitSolver(prob);
+  uSolve.solve();
+  std::map<int,int> fixed;
+  uSolve.getFixed(fixed);
+
+  // create new problem model
+  probModel = new SinglePModel(prob);
+  MaxClosureFactory mcfactory;
+  mcfactory.setOption('B');
+  MCSolver = mcfactory(probModel->graph, fixed);
+  MCSolver->setProfit(probModel->getProfit());
+}
+
+
+void SinglePSolver::initModel(qol::MIPSolver &mip, 
+    std::vector<qol::Variable> &x, 
+    std::vector<std::vector<qol::Variable> > &y, 
+    std::vector<Block> * blocks){
+  
+  const int nB = probModel->getNBlock();
+  const int r_max = probModel->getnResources();
+  const int d_max = probModel->getnDestination();
+
+  // decision variables
+  for(int b=0; b<nB; b++){
+    x[b]=mip.addVar(0,1,0.0,qol::Variable::BINARY, // LB,UB,cost
+		      boost::str(boost::format("x%03d")%b));
+    
+    y[b].resize(d_max);
+      
+    for(int d=0;d<d_max;++d){
+      double profit=(*blocks)[b].getProfit(d);
+      //profit /= (1+rate);
+      y[b][d]=mip.addVar(0,1,-profit,qol::Variable::CONTINUOUS,
+			    boost::str(boost::format("y%d_%d")%b%d));
+      // could write objective as sum expression but this is faster and easy
+    }
+  }
+
+  // type of constraints
+  /*Precedence (7) (but using different definition of x */
+  for(int a=0; a<nB; a++){
+    std::vector<int> * pred = (*blocks)[a].getPreds();
+    int n = (*blocks)[a].getNumPred();
+    for(int p=0; p<n; p++){
+      int b = (*pred)[p];
+      mip.addConstraint(x[b] >= x[a]).setName("pre%d_%d",b,a);
+    }
+  }
+
+  /* SumDest (8) */
+  for(int b=0; b<nB; b++){
+    qol::Expression sumY;
+    for(int d=0; d<d_max; d++)
+      sumY += y[b][d];
+    qol::Expression rhs=x[b];
+    mip.addConstraint( sumY == rhs ).setName("dest%d",b);
+  }
+
+  /* Resource constraints (10) */
+  for(int r=0; r<r_max; r++){
+    char cType = probModel->getResConstrType(r, 0);
+    qol::Expression expr;
+    for(int b=0; b<nB; b++){
+      for(int d=0; d<d_max; d++){
+        double coef = (*blocks)[b].getRCoef(d,r);
+        if(fabs(coef) > 1e-5) expr += coef*y[b][d];
+      }
+    }
+    if(cType == 'L'){
+      mip.addConstraint(expr <= probModel->getLimit(r, 0)).setName("R%d",r);
+    }else if(cType == 'G'){
+      mip.addConstraint(expr >= probModel->getLimit(r, 0)).setName("R%d",r);
+    }else{
+      std::cerr << "ERROR: resource constraint type " << cType << " not implemented - IGNORED\n";
+    }
+  }
+}
+
+void SinglePSolver::updateVars(qol::MIPSolver &mip, 
+    const std::vector<qol::Variable> &x, 
+    const std::vector<std::vector<qol::Variable> > &y, 
+    const std::vector<int> &fixed, int period){
+  
+  const double rate = probModel->getDiscountRate();
+  const int d_max = probModel->getnDestination();
+  
+  for (size_t b=0; b < fixed.size(); ++b){
+    if (fixed[b]){
+      mip.setVarLB(x[b],1);
+    }
+    else{
+      if (!fixed[b] && period > 0){
+        for(int d=0;d<d_max;++d){
+          double discounted_profit = mip.getObjCoeff(y[b][d]) / (1+rate);
+          mip.setObjCoeff(y[b][d], discounted_profit);
+        }
+      }   
+    }
+  }
+}
+
+void SinglePSolver::updateConstraints(qol::MIPSolver &mip, int period){
+  
+  int n_constr = mip.nConstr();
+  std::cout << "n_constr: " << n_constr << std::endl;
+  const int r_max = probModel->getnResources();
+  //int change_count = 0;
+  int r = r_max;
+  for (size_t i=n_constr-1; i > 0; --i){
+    qol::ConstraintMIP constr = mip.getConstr(i);
+//    std::string name = mip.getConstrName(constr);
+//    if (name.front() == 'R'){
+//      std::cout << "constr" << i << ".name: " << name << std::endl;
+//      name.erase(name.begin());
+//      int r = atoi(name.c_str());
+//      mip.setRHS(constr, (probModel->getLimit(r,0) * (period+1)));
+      mip.setRHS(constr, (probModel->getLimit(--r,0) * (period+1)));
+      std::cout << "constr" << i << ".RHS = " << mip.getRHS(constr) << std::endl; 
+      if (r == 0)
+        break;
+//    }
+  }
+}
+
+// set up MIP and solve
+int SinglePSolver::solve(){
+
+  qol::MIPSolver *mipPtr=0; // pointer to qol MIP solver
+
+  const int nB = probModel->getNBlock();
+  const int d_max = probModel->getnDestination();
+  std::vector<Block> * blocks=probModel->getBlock();
+
+  std::string lpFile="",solnFile = probModel->getName()+".sol";
+ 
+  try{
+    // set verbosity
+    qol::Parameters param;
+    param.setParamVal(qol::VERBOSITY,1);
+    
+    // vector to maintain fixed blocks
+    std::vector<int> fixed(nB, 0);
+
+    // determine solver type
+    if(solverType == GUROBI_T)
+      mipPtr = new qol::GurobiFormulation();
+    else if(solverType == CPLEX_T)
+    //if(solverType == CPLEX_T)
+	    mipPtr = new qol::CplexFormulation();
+    
+    // create MIPSolver object
+    qol::MIPSolver &mip=*mipPtr;
+    mip.setParameters(param);
+
+    std::vector<qol::Variable> x(nB);
+    std::vector<std::vector<qol::Variable> > y(nB);
+
+    initModel(mip, x, y, blocks);
+    
+    for (int t = 0; t < numPeriods; ++t){
+
+      std::cout << "\n*** TIME POINT " << t << " ***\n" << std::endl;
+    
+      updateVars(mip, x, y, fixed, t);
+      updateConstraints(mip, t);
+      
+      if(lpFile != ""){
+        mip.writeLP(lpFile.c_str());
+        std::cout << "Wrote " << lpFile << std::endl;
+      }
+      qol::CpuTimer timer;
+      qol::Status status = solveRelaxed ? mip.solveRelaxed() : mip.solveExact(); 
+      std::cout << boost::format("Completed in %.2f sec CPU / %.2f sec wall. Objective = %f\n"
+  			       ) % timer.elapsedSeconds() % timer.elapsedWallTime() % (-mip.getObjective());
+  
+      double obj_value = -mip.getObjective();
+      std::ofstream fp_out;
+      fp_out.open(solnFile.c_str()); //, std::ios::app);
+      if(fp_out.is_open()){
+        std::cout << "Writing solution to " << solnFile << std::endl;
+        fp_out<< "# Status          "<<status<< std::endl;
+        fp_out<< "# CPU time        "<<timer.elapsedSeconds()<<" sec.  Wall:"<< timer.elapsedWallTime() <<std::endl;
+        fp_out<< "# Objective Value "<< obj_value << std::endl;
+        fp_out<< "# Block destination yval"<<std::endl;
+        /* solution file format blocks -> destinations -> time non-zero y value*/
+        for(int b=0; b<y.size(); b++){
+  	      for(int d=0;d<d_max;++d){
+  	        if(mip.getPrimal(y[b][d]) > 1e-5){
+  	          fp_out << b << " " << d << " " << mip.getPrimal(y[b][d]) << std::endl;
+              fixed[b] = 1;
+            }
+  	      }
+        }
+        fp_out.close();	 
+      }
+    } // end for loop
+
+  } // end try statement
+  catch (qol::Exception & ex) { std::cerr << "Error: " << ex.what() << std::endl; }
+  catch (...) { std::cerr << "Unknown Error Occured" << std::endl;}
+  return 0;
+
+}

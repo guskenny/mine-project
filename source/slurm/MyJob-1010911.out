@@ -1,0 +1,44 @@
+
+------------------------------
+Network width: 5
+Network depth: 5
+Number of nodes: 25
+Number of arcs: 52
+
+Boykov-Kolmogorov time: 0 ms
+
+Time to find closure: 0 ms
+
+Total run time: 0 ms
+
+------------------------------
+
+------------------------------
+Network width: 1000
+Network depth: 20
+Number of nodes: 20000
+Number of arcs: 56962
+
+Boykov-Kolmogorov time: 130 ms
+
+Time to find closure: 30 ms
+
+Total run time: 130 ms
+
+------------------------------
+
+------------------------------
+Network width: 10000
+Network depth: 50
+Number of nodes: 500000
+Number of arcs: 1469902
+
+Boykov-Kolmogorov time: 3280 ms
+
+Time to find closure: 550 ms
+
+Total run time: 3280 ms
+
+------------------------------
+srun: Job step aborted: Waiting up to 2 seconds for job step to finish.
+slurmstepd: *** JOB 1010911 CANCELLED AT 2016-06-30T11:37:02 *** on hs1

@@ -1,0 +1,1052 @@
+#include "SinglePSolver.h"
+#include "SinglePModel.h"
+
+// this is the default one
+SinglePSolver::SinglePSolver(int argc,const char **argv){
+
+//  getSettings();
+  sh = SettingsHandler();
+  sh.printSettings();
+  
+  solverType = CPLEX_T; // default is cplex
+  solveRelaxed= false;
+
+  // determine solver type and if relaxed
+  for(int c=1;c<argc-1;++c){
+    std::string flag=argv[c];
+    if(flag=="-c")
+      solverType = CPLEX_T;
+    else if(flag=="-r")
+	    solveRelaxed = true;
+  }
+
+  // set up new problem model from data file
+  std::cout << "setting up model.." << std::flush;
+  probModel = new SinglePModel(argv[argc-1]);
+  std::cout << " done!" << std::endl;
+
+  std::cout << "setting up max closure factory.. " << std::flush;
+  MaxClosureFactory mcfactory;
+
+  for(int i=0;i<argc;++i){
+  	if(argv[i][0] == '-' && argv[i][1] != '-')
+  	    switch(argv[i][1]){
+  		case 'n': case 'b': case 'e': case 'p':
+  		case 'N': case 'B': case 'E': case 'P':
+  		    mcfactory.setOption(argv[i][1]);
+  		    break;
+      default:
+          mcfactory.setOption('B');
+    }
+  }
+
+  std::cout << "done!" << std::endl;
+  
+  std::cout << "fixing non-upit blocks.. " << std::flush;
+  MCSolver = mcfactory(probModel->graph);
+  std::cout << "done!" << std::endl << "setting profits.. " << std::flush;
+  MCSolver->setProfit(probModel->getProfit());
+  std::cout << "done!" << std::endl;
+}
+
+SinglePSolver::SinglePSolver(const Daten &prob){
+
+  solverType = CPLEX_T; // default is cplex
+  solveRelaxed = false;
+
+  //numPeriods = 2;
+  // solve UPIT problem and fix variables
+  UpitSolver uSolve = UpitSolver(prob);
+  uSolve.solve();
+  std::map<int,int> fixed;
+  uSolve.getFixed(fixed);
+
+  // create new problem model
+  probModel = new SinglePModel(prob);
+
+  MaxClosureFactory mcfactory;
+  mcfactory.setOption('B');
+  MCSolver = mcfactory(probModel->graph, fixed);
+  MCSolver->setProfit(probModel->getProfit());
+}
+
+std::vector<double> SinglePSolver::propagateResidual(){//Preprocess &pp){
+
+  std::vector<Block> * blocks=probModel->getBlock();
+  const int nB = probModel->getNBlock();
+  const int d_max = probModel->getnDestination();
+
+  std::vector<int> succ_count(nB, 0);
+  std::vector<double> value(nB, 0.0);
+
+  // initialise succ_count and value vectors
+  for (size_t a = 0; a < nB; ++a){
+    int numPreds = (*blocks)[a].getNumPred();
+    std::vector<int> * pred = (*blocks)[a].getPreds();
+    value[a] = residualProfit[a];
+    for (size_t p=0; p < numPreds; ++p){
+      int b = (*pred)[p];
+      succ_count[b]++;
+    }
+  }
+
+  // find list of blocks with no successors
+  std::vector<int> backPropQ;
+  for (size_t b = 0; b < nB; ++b){
+    if (succ_count[b] == 0)
+      backPropQ.push_back(b);
+  }
+
+    std::random_device rd; //seed generator
+    std::mt19937_64 generator{rd()}; //generator initialized with seed from rd
+    //the range is inclusive, so this produces numbers in range [0, 10), same as before
+    std::uniform_int_distribution<> dist{0, 99};     
+
+  // iterate over backPropQ and randomly distribute among predecessors
+  for (size_t a = 0; a < backPropQ.size(); ++a){
+    int numPreds = (*blocks)[backPropQ[a]].getNumPred();
+    std::vector<int> *pred = (*blocks)[backPropQ[a]].getPreds();
+    
+    // generate vector of random numbers to split profits
+    std::vector<int> randVec;
+    randVec.resize(numPreds);
+    double r_sum = 0.0;
+    for (size_t i=0; i < randVec.size(); ++i){
+      randVec[i] = dist(generator);
+      r_sum += randVec[i];
+    }
+    // scale random vector so it adds up to 1
+    std::vector<double> scaledVec;
+    scaledVec.resize(randVec.size());
+    for (size_t i=0; i < scaledVec.size(); ++i){
+      scaledVec[i] = randVec[i]/r_sum;
+    }
+
+    for (size_t p = 0; p < numPreds; ++p){
+      int b = (*pred)[p];
+      value[b] += value[backPropQ[a]] * scaledVec[p];
+      if ((--succ_count[b]) == 0)
+        backPropQ.push_back(b);
+    }
+  }
+  
+  return value;
+}
+
+
+std::vector<double> SinglePSolver::getFutureProfit(){
+
+  std::vector<Block> * blocks=probModel->getBlock();
+  const int nB = probModel->getNBlock();
+  const int d_max = probModel->getnDestination();
+
+  std::vector<int> succ_count(nB, 0);
+  std::vector<double> value(nB, 0.0);
+
+  // initialise succ_count and value vectors
+  for (size_t a = 0; a < nB; ++a){
+    int numPreds = (*blocks)[a].getNumPred();
+    std::vector<int> * pred = (*blocks)[a].getPreds();
+    double maxProfit = 0;
+    for (size_t d=0; d < d_max; ++d){
+      double profit = (*blocks)[a].getProfit(d);
+      if (profit > maxProfit)
+        maxProfit = profit;
+    }
+    value[a] = maxProfit;
+    for (size_t p=0; p < numPreds; ++p){
+      int b = (*pred)[p];
+      succ_count[b]++;
+    }
+  }
+
+  // find list of blocks with no successors
+  std::vector<int> backPropQ;
+  for (size_t b = 0; b < nB; ++b){
+    if (succ_count[b] == 0)
+      backPropQ.push_back(b);
+  }
+
+  // iterate over backPropQ
+  for (size_t a = 0; a < backPropQ.size(); ++a){
+    int numPreds = (*blocks)[backPropQ[a]].getNumPred();
+    std::vector<int> *pred = (*blocks)[backPropQ[a]].getPreds();
+    double splitProfit = value[backPropQ[a]] / numPreds;
+    for (size_t p = 0; p < numPreds; ++p){
+      int b = (*pred)[p];
+      value[b] += splitProfit;
+      if ((--succ_count[b]) == 0)
+        backPropQ.push_back(b);
+    }
+  }
+  
+  return value;
+}
+
+void SinglePSolver::initModel(qol::MIPSolver &mip, 
+    std::vector<qol::Variable> &x, 
+    std::vector<std::vector<qol::Variable> > &y, 
+    std::vector<Block> * blocks,
+    std::vector<double> &profitModifier,
+    const BranchNode_info &probInfo){
+  
+  const int nB = probModel->getNBlock();
+  const int r_max = probModel->getnResources();
+  const int d_max = probModel->getnDestination();
+
+  std::cout << "setting up decision variables.. " << std::flush;
+  // decision variables
+  for(int b=0; b<nB; b++){
+    bool mineable = false;
+    //if (probInfo.time[b][0] == 0 && included[b]){
+    //  mineable = true;
+    // }
+
+    if (mineable){
+      x[b]=mip.addVar(0,1,0.0,qol::Variable::BINARY, // LB,UB,cost
+		        boost::str(boost::format("x%03d")%b));
+    }
+    else {
+      x[b]=mip.addVar(0,0,0.0,qol::Variable::BINARY, // LB,UB,cost
+		        boost::str(boost::format("x%03d")%b));
+    }
+
+    y[b].resize(d_max);
+      
+    for(int d=0;d<d_max;++d){
+      // add modified profit to each destination
+      double profit=(*blocks)[b].getProfit(d) + profitModifier[b] * sh.MODIFIER_WEIGHT;
+      //profit /= (1+rate);
+      if (mineable){
+        y[b][d]=mip.addVar(0,1,-profit,qol::Variable::CONTINUOUS,
+			      boost::str(boost::format("y%d_%d")%b%d));
+      }
+      else {
+         y[b][d]=mip.addVar(0,0,-profit,qol::Variable::CONTINUOUS,
+			      boost::str(boost::format("y%d_%d")%b%d));
+      }
+      // could write objective as sum expression but this is faster and easy
+    }
+  }
+
+  std::cout << "done!" << std::endl;
+  std::cout << "setting up constraints:" << std::endl << "\tprecedence.. " << std::flush;
+  // type of constraints
+  /*Precedence (7) (but using different definition of x */
+  for(int a=0; a<nB; a++){
+    std::vector<int> * pred = (*blocks)[a].getPreds();
+    int n = (*blocks)[a].getNumPred();
+    for(int p=0; p<n; p++){
+      int b = (*pred)[p];
+      mip.addConstraint(x[b] >= x[a]).setName("pre%d_%d",b,a);
+    }
+  }
+
+  std::cout << "done!" << std::endl << "\tsumdest.. " << std::flush;
+  /* SumDest (8) */
+  for(int b=0; b<nB; b++){
+    qol::Expression sumY;
+    for(int d=0; d<d_max; d++)
+      sumY += y[b][d];
+    qol::Expression rhs=x[b];
+    mip.addConstraint( sumY == rhs ).setName("dest%d",b);
+  }
+  std::cout << "done!" << std::endl << "\tresource.. " << std::flush;
+
+  /* Resource constraints (10) */
+  for(int r=0; r<r_max; r++){
+    char cType = probModel->getResConstrType(r, 0);
+    qol::Expression expr;
+    for(int b=0; b<nB; b++){
+      for(int d=0; d<d_max; d++){
+        double coef = (*blocks)[b].getRCoef(d,r);
+        if(fabs(coef) > 1e-5) 
+          expr += coef*y[b][d];
+      }
+    }
+    double res_limit = probModel->getLimit(r,0) / sh.MINI_PERIODS;
+    if(cType == 'L'){
+      mip.addConstraint(expr <= res_limit).setName("R%d",r);
+    }else if(cType == 'G'){
+      mip.addConstraint(expr >= res_limit).setName("R%d",r);
+    }else{
+      std::cerr << "ERROR: resource constraint type " << cType 
+        << " not implemented - IGNORED\n";
+    }
+  }
+  std::cout << "done!" << std::endl;
+}
+
+void SinglePSolver::updateVars(qol::MIPSolver &mip, 
+  const std::vector<qol::Variable> &x, 
+  const std::vector<std::vector<qol::Variable> > &y, 
+  const std::vector<int> &fixed, 
+  const std::vector<int> &old_fixed, 
+  const std::vector<std::vector<double> > &y_fixed, int period,
+  const BranchNode_info &probInfo,
+  const std::vector<bool> &included){
+  
+  const double rate = probModel->getDiscountRate();
+  const int d_max = probModel->getnDestination();
+
+
+  for (size_t b=0; b < fixed.size(); ++b){
+
+    // unfix all variables in current window that are to be included
+    if (included[b] && period >= probInfo.time[b][0] && period < (probInfo.time[b][1]-1)){
+      if (mip.getVarUB(x[b]) == 0){
+        mip.setVarUB(x[b],1);        
+      }
+      for (size_t d=0;d<d_max;++d){
+        if (mip.getVarUB(y[b][d]) == 0){
+          mip.setVarUB(y[b][d],1);
+        }
+      }
+    }
+
+    if (fixed[b] >= 0 && old_fixed[b] < 0){ // only fix vars that havent been fixed
+      mip.setVarLB(x[b],1);
+      for (size_t d=0; d < d_max; ++d){
+        mip.setVarLB(y[b][d], y_fixed[b][d]);
+        //mip.setVarUB(y[b][d], y_fixed[b][d]);
+      }
+    }
+    else{
+      if (fixed[b] < 0 && period > 0){ // update profits with discount rate
+        for(int d=0;d<d_max;++d){
+          double discounted_profit = mip.getObjCoeff(y[b][d]) / (1+rate);
+          mip.setObjCoeff(y[b][d], discounted_profit);
+        }
+      }   
+    }
+  }
+}
+
+std::vector<double> SinglePSolver::getConstrUse(const qol::MIPSolver &mip){
+  
+  int n_constr = mip.nConstr();
+  const int r_max = probModel->getnResources();
+  int r = r_max;
+  std::vector<double> constrUse (r_max, 0.0);
+
+  for (size_t i=n_constr-1; i > 0; --i){
+    qol::ConstraintMIP constr = mip.getConstr(i);
+      double prevRHS = mip.getRHS(constr);
+      constrUse[--r] = mip.getPrimal(constr);
+      if (r == 0)
+        break;
+  }
+  return constrUse;
+}
+
+
+void SinglePSolver::updateConstraints(qol::MIPSolver &mip,
+    const std::vector<double> &constrUse, 
+    const std::vector<double> &prevUse){
+  
+  int n_constr = mip.nConstr();
+  //std::cout << "n_constr: " << n_constr << std::endl;
+  const int r_max = probModel->getnResources();
+  int r_count = 0;
+  for (size_t i=n_constr-1; i > 0; --i){
+    qol::ConstraintMIP constr = mip.getConstr(i);
+    std::string name = mip.getConstrName(constr);
+    if (name.front() == 'R'){
+      //std::cout << "constr" << i << ".name: " << name << std::endl;
+      name.erase(name.begin());
+      int r = atoi(name.c_str());
+      double prevRHS = mip.getRHS(constr);
+      //std::cout << "constr" << i << ".RHS = " << prevRHS << std::endl;
+      mip.setRHS(constr, prevRHS + (constrUse[r] - prevUse[r]));
+      //std::cout << "previous time period use: " << constrUse[r] - prevUse[r] << std::endl;
+      //std::cout << "new constr" << i << ".RHS = " 
+//          << mip.getRHS(constr) << std::endl << std::endl;
+      if (r_count++ == r_max)
+        break;
+    }
+  }
+}
+
+// function to calculate true objective, as opposed to modified profit
+double SinglePSolver::getTrueObj(const Sol_Int &sol){
+  const int nB = probModel->getNBlock();
+  const int d_max = probModel->getnDestination();
+  const double rate = probModel->getDiscountRate();
+  std::vector<Block> * blocks=probModel->getBlock();
+
+  double trueObj = 0.0;
+  
+  for (size_t b = 0; b < nB; ++b){
+    if (sol.x[b] != -1){
+      int true_period = (int)sol.x[b] / sh.MINI_PERIODS;
+      for (size_t d = 0; d < d_max; ++d){
+        double blockProfit = (*blocks)[b].getProfit(d);
+        trueObj += (blockProfit/pow(1+rate,true_period))*sol.y[b][d];
+      }
+    }
+  }
+  return trueObj; 
+}
+
+// set up MIP and solve
+int SinglePSolver::solve(){
+
+  qol::CpuTimer timer;
+
+  qol::MIPSolver *mipPtr=0; // pointer to qol MIP solver
+
+  const int nB = probModel->getNBlock();
+  const int t_max = probModel->getNPeriod();
+  const int d_max = probModel->getnDestination();
+  const int r_max = probModel->getnResources();
+  std::vector<Block> * blocks=probModel->getBlock();
+
+  std::string lpFile="";// ,solnFile = probModel->getName()+".sol";
+
+   try{
+    // set verbosity
+    qol::Parameters param;
+    param.setParamVal(qol::VERBOSITY,1);
+    
+    // vector to maintain fixed blocks
+    std::vector<int> fixed(nB, -1); // -1 means not fixed
+    std::vector<int> old_fixed(nB, -1);
+    std::vector<std::vector<double> > y_fixed(nB, std::vector<double> (d_max, -1));
+
+    std::vector<bool> mined (nB,false);
+
+    // determine solver type
+    //if(solverType == GUROBI_T)
+    //  mipPtr = new qol::GurobiFormulation();
+    //else if(solverType == CPLEX_T)
+    if(solverType == CPLEX_T)
+	    mipPtr = new qol::CplexFormulation();
+    
+    // create MIPSolver object
+    qol::MIPSolver &mip=*mipPtr;
+    mip.setParameters(param);
+
+    std::vector<qol::Variable> x(nB);
+    std::vector<std::vector<qol::Variable> > y(nB);
+
+    std::cout << "Problem has " << nB << " blocks" << std::endl;
+
+    BranchNode_info probInfo(nB,t_max,d_max,r_max);
+
+    Preprocess pp((*probModel),probInfo,mined,sh,true); 
+    
+
+    // propagate the residual profit to create a profit modifier
+    //std::cout << "propagating residual.." << std::flush;
+    std::vector<double> profitModifier(nB,0.0);
+    //profitModifier = propagateResidual(pp);
+    //std::cout << " done!" << std::endl;
+
+    initModel(mip, x, y, blocks, profitModifier, probInfo);
+
+    double obj_value = 0;
+    
+    // vector to track previous time period use of resources
+    std::vector<double> prevUse(r_max, 0.0);
+
+    int numPeriods = t_max * sh.MINI_PERIODS;
+
+    for (int t = 0; t < numPeriods; ++t){
+
+      std::cout << "\n*** TIME POINT " << t << " ***\n" << std::endl;
+  
+      std::vector<bool> included;
+      pp.getMostValuableCones(t,included,mined);
+   
+      std::vector<double> constrUse;
+
+      if (t > 0){
+        constrUse = getConstrUse(mip);
+      }
+      
+      updateVars(mip, x, y, fixed, old_fixed, y_fixed, t, probInfo,included);
+     
+      old_fixed = fixed; // update old fixed list
+      
+      if (t > 0){
+        updateConstraints(mip, constrUse, prevUse);
+        //updateConstraints(mip);
+      }
+      
+      prevUse = constrUse;
+
+      if(lpFile != ""){
+        mip.writeLP(lpFile.c_str());
+        std::cout << "Wrote " << lpFile << std::endl;
+      }
+      qol::Status status = solveRelaxed ? mip.solveRelaxed() : mip.solveExact(); 
+      std::cout << boost::format("Completed in %.2f sec CPU / %.2f sec wall. Objective = %f\n"
+  			       ) % timer.elapsedSeconds() % timer.elapsedWallTime() % (-mip.getObjective());
+ 
+      obj_value = -mip.getObjective();
+      
+      std::string solnFile = probModel->getName()+"_"+std::to_string(t)+".sol";
+
+      std::ofstream fp_out;
+      fp_out.open(solnFile.c_str()); //, std::ios::app);
+
+      size_t block_count = 0;
+      std::vector<size_t> d_count(d_max,0);
+
+      if(fp_out.is_open()){
+        std::cout << "Writing solution to " << solnFile << std::endl;
+        fp_out<< "# Status          "<<status<< std::endl;
+        fp_out<< "# CPU time        "<<timer.elapsedSeconds()
+          <<" sec.  Wall:"<< timer.elapsedWallTime() <<std::endl;
+        fp_out<< "# Objective Value "<< obj_value << std::endl;
+
+        fp_out<< "# Block destination time yval"<<std::endl;
+        /* solution file format blocks -> destinations -> time non-zero y value*/
+        for(int b=0; b<y.size(); b++){
+  	      for(int d=0;d<d_max;++d){
+  	        if(mip.getPrimal(y[b][d]) > 1e-5){
+              mined[b] = true;
+              if (old_fixed[b] < 0){
+                d_count[d]++;
+                block_count++;
+                fixed[b] = t;
+                y_fixed[b][d] = mip.getPrimal(y[b][d]);
+              }
+  	          fp_out << b << " " << d << " " << fixed[b] << " " 
+                << mip.getPrimal(y[b][d]) << std::endl;
+           }
+  	      }
+        }
+        fp_out.close();	 
+      }
+
+      // update fixEarliest
+      pp.fixEarliest(mined,t);
+
+      std::cout << "\nMined " << block_count << " blocks in period " << t << std::endl;
+      
+      for (size_t d=0; d<d_max;++d)
+        std::cout << d_count[d] << " blocks sent to destination " << d << std::endl;
+      
+
+      // test solution for feasibility
+      Sol_Int test_sol(nB, d_max);
+      int max_period = 0;    
+  
+      for (size_t b = 0; b < fixed.size(); ++b){
+        test_sol.x[b] = (int)fixed[b] / sh.MINI_PERIODS;
+        if (fixed[b] / sh.MINI_PERIODS > max_period){
+          max_period = fixed[b] / sh.MINI_PERIODS;
+        }
+        for (size_t d=0; d < d_max; ++d){
+    	    if(mip.getPrimal(y[b][d]) > 1e-5){
+            test_sol.y[b][d] = mip.getPrimal(y[b][d]); 
+          }
+        }
+      }
+      
+      double trueObj = getTrueObj(test_sol);
+
+      //test_sol.obj = obj_value;
+      test_sol.obj = trueObj;
+      
+      test_sol.nT = max_period + 1;
+
+      std::cout << "\nTrue objective: " << trueObj << std::endl;
+  
+      std::cout << "\nChecking solution from solver...\n" << std::endl;
+      
+      bool test_error = verify((*probModel), test_sol);
+  
+      std::cout << "Solution found by solver was ";
+      if (!test_error)
+        std::cout << "feasible!\n" << std::endl;
+      else{
+        std::cout << "infeasible!\n" << std::endl;
+        throw qol::Exception("Infeasible solution!");
+      }
+
+      if (t == numPeriods-1){
+
+
+        std::vector<std::vector<std::vector<double> > > Y_sol;
+        std::cout << "Extracting solution from Sol_Int..." << std::endl;
+        extractSol(test_sol,Y_sol);
+
+        std::cout << "*** testing pack/extract functions ***\n" << std::endl;
+        
+        Sol_Int packedSol(nB, d_max);
+        
+        packSol(Y_sol, packedSol);
+
+        double packedObj = getTrueObj(packedSol);
+
+        std::cout << "packed/extracted obj: " << packedObj << std::endl;
+
+        std::cout << "\n*** running slideWindow() ***\n"<< std::endl;
+        
+
+        double improvedObj = slideWindow(Y_sol);
+        std::cout << "\noriginal objective: " << trueObj << std::endl;
+        std::cout << "\nimproved objective: " << improvedObj << std::endl;
+
+        std::cout << "# CPU time        "<<timer.elapsedSeconds()
+          <<" sec.  Wall:"<< timer.elapsedWallTime() <<std::endl;
+        
+        sh.printSettings();
+      }
+
+    } // end for loop
+  } // end try statement
+  catch (qol::Exception & ex) { std::cerr << "Error: " << ex.what() << std::endl; }
+  catch (...) { std::cerr << "Unknown Error Occured" << std::endl;}
+  
+  delete mipPtr;
+  return 0;
+}
+
+
+void SinglePSolver::extractSol(const Sol_Int &sol, std::vector<std::vector<std::vector<double> > > &Y_sol){
+
+  const int nB = probModel->getNBlock();
+  const int t_max = probModel->getNPeriod();
+  const int d_max = probModel->getnDestination();
+
+  // reset Y solution vector
+  Y_sol.clear();
+
+  Y_sol.resize(nB, 
+      std::vector<std::vector<double> >(t_max * sh.MINI_PERIODS, 
+        std::vector<double>(d_max, 0.0)));
+
+  for (size_t b=0; b<nB; ++b){
+    if (sol.x[b] >= 0){
+      for (size_t d=0; d<d_max; ++d){
+        Y_sol[b][sol.x[b]][d] = sol.y[b][d];
+      }
+    }
+  }
+} 
+
+void SinglePSolver::packSol(const std::vector<std::vector<std::vector<double> > > &Y_sol, Sol_Int &sol){
+  const int nB = probModel->getNBlock();
+  const int t_max = probModel->getNPeriod();
+  const int d_max = probModel->getnDestination();
+
+
+  sol.init(nB, d_max);
+
+  for (size_t b=0;b<nB;++b){
+    bool mined = false;
+    for (size_t t=0;t<t_max * sh.MINI_PERIODS;++t){
+      for (size_t d=0;d<d_max;++d){
+        if (Y_sol[b][t][d] > 0.0){
+          sol.y[b][d] = Y_sol[b][t][d];
+          sol.x[b] = (int) t / sh.MINI_PERIODS;
+          mined = true;
+        }
+      }
+    }
+    if (!mined)
+      sol.x[b] = -1;
+  }
+
+  sol.nT = t_max;
+  sol.obj = getTrueObj(sol);
+
+}
+
+double SinglePSolver::slideWindow(std::vector<std::vector<std::vector<double> > > &Y_sol){
+
+  const int t_max = probModel->getNPeriod() * sh.MINI_PERIODS;
+
+  std::cout << "Window size: " << sh.WINDOW_SIZE << std::endl;
+  std::vector<double> objectives;
+    
+  double obj = 0.0;
+  
+  for (size_t i=0;i<sh.NUM_PASSES;++i){
+
+    std::cout << "*** running foward pass " << i+1 << " ***" << std::endl;
+  
+    for (size_t t=0; t<t_max-sh.WINDOW_SIZE; ++t){
+      obj = improveWindow(Y_sol, t);
+      std::cout << "\nImproved objective: " << obj << std::endl;
+      objectives.push_back(obj);
+
+      std::cout << "\nChecking solution from solver...\n" << std::endl;
+      
+      Sol_Int test_sol;
+      packSol(Y_sol, test_sol);
+
+      test_sol.nT = (int) t_max / sh.MINI_PERIODS;
+      
+      bool test_error = verify((*probModel), test_sol);
+  
+      std::cout << "Solution found by solver was ";
+      if (!test_error)
+        std::cout << "feasible!\n" << std::endl;
+      else{
+        std::cout << "infeasible!\n" << std::endl;
+        throw qol::Exception("Infeasible solution!");
+      }
+    }
+
+    std::cout << "\n*** running backward pass "<< i+1 << " ***" << std::endl;
+  
+    for (size_t t=t_max-sh.WINDOW_SIZE-1; t>0; --t){
+      obj = improveWindow(Y_sol, t);
+      std::cout << "\nImproved objective: " << obj << std::endl;
+      objectives.push_back(obj);
+
+      Sol_Int test_sol;
+      packSol(Y_sol, test_sol);
+
+      test_sol.nT = t_max;
+
+      bool test_error = verify((*probModel), test_sol);
+  
+      std::cout << "Solution found by solver was ";
+      if (!test_error)
+        std::cout << "feasible!\n" << std::endl;
+      else{
+        std::cout << "infeasible!\n" << std::endl;
+        throw qol::Exception("Infeasible solution!");
+      }
+    }
+ 
+
+  }
+
+  std::cout << "\nslideWindow() complete, objective values:" << std::endl;
+  for (size_t i=0; i<objectives.size(); ++i)
+    std::cout << objectives[i] << std::endl;
+
+  std::cout << std::endl;
+
+  return obj;
+}
+
+double SinglePSolver::improveWindow(std::vector<std::vector<std::vector<double> > > &Y_sol, int time){
+  // set up some parameters
+  const int nB = probModel->getNBlock();
+  const int t_max = probModel->getNPeriod() * sh.MINI_PERIODS;
+  const int d_max = probModel->getnDestination();
+  const int r_max = probModel->getnResources();
+  const double rate = probModel->getDiscountRate();
+  std::vector<Block> * blocks=probModel->getBlock();
+
+  bool last_window = false;
+  double t_obj = 0.0;
+
+  std::vector<std::vector<double> > Xt(nB, 
+      std::vector<double>(sh.WINDOW_SIZE+1,0.0)); // X vector over time horizon
+
+  std::vector<bool> freed(nB, false); // freed blocks within time points
+  int b_count = 0; // freed block count
+
+  std::cout << "Fixing blocks before " << time << " and after " 
+            << time+sh.WINDOW_SIZE-1 << std::endl;
+
+
+  // TODO: try freeing only negative blocks, check if d in Y_sol[b][t][d] is negative
+  //       also try putting a threshold on whether a block gets processed
+
+  for (size_t b=0; b<nB; ++b){
+    for (size_t t=time; t<time+sh.WINDOW_SIZE+1;++t){ // iterate only within window
+      for (size_t d=0; d<d_max; ++d){
+        if (Y_sol[b][t][d] > 0.0){
+          //if (sh.ONLY_NEGATIVE){
+          //  double profit=(*blocks)[b].getProfit(d);
+          //  if (profit > 0){
+                Xt[b][t-time] = 1.0;
+          //    }
+          //}
+          freed[b] = true;
+          b_count++;
+        } 
+      } 
+    }
+  }
+
+  std::cout << b_count << " blocks freed.." << std::endl;
+  
+  t_obj = MIP_window(freed, time, time+sh.WINDOW_SIZE, Y_sol, Xt, last_window, b_count);
+
+  std::cout << "repairing objective.." << std::endl;
+
+  Sol_Int temp_sol;
+
+  packSol(Y_sol, temp_sol);
+
+  t_obj = getTrueObj(temp_sol);
+
+  return t_obj;
+
+} 
+
+double SinglePSolver::MIP_window(const std::vector<bool> &freed,
+                      int mod_tmin, int mod_tmax,
+                      std::vector<std::vector<std::vector<double> > > &Y_sol,
+                      const std::vector<std::vector<double> > &X,
+                      bool last_window, int b_count){
+
+  qol::CpuTimer timer;
+  
+  // set up some parameters
+  const int nB = probModel->getNBlock();
+  const int t_max = probModel->getNPeriod() * sh.MINI_PERIODS;
+  const int d_max = probModel->getnDestination();
+  const int r_max = probModel->getnResources();
+  const double rate = probModel->getDiscountRate();
+  std::vector<Block> * blocks=probModel->getBlock();
+
+  std::string lpFile="";// ,solnFile = probModel->getName()+".sol";
+  
+  qol::MIPSolver *mipPtrW = 0;
+
+  qol::Parameters param;
+  param.setParamVal(qol::VERBOSITY,1);
+  if (sh.WINDOW_SEARCH_TIME > 0)
+    param.setParamVal(qol::TIMELIMIT,sh.WINDOW_SEARCH_TIME);
+  //param.setParamVal(qol::RELGAP, 0.02);
+
+  mipPtrW = new qol::CplexFormulation();
+
+  qol::MIPSolver &model = *mipPtrW;
+
+  model.setParameters(param);
+
+  std::vector<std::vector<qol::Variable> > Xvar(nB);
+  std::vector<std::vector<std::vector<qol::Variable> > > Yvar(nB);
+
+  std::cout << "Setting up extended model ... " << std::endl;
+
+  int time = mod_tmax - mod_tmin+1;
+  double obj = 0.0;
+
+  // create variables and set them to binary
+  // only allow positive values for blocks that exist
+  for (size_t b=0; b<nB; ++b){
+    Xvar[b].resize(time);
+    Yvar[b].resize(time);
+
+    // TODO: get profit and adjust it for current time period maybe
+    //       by switching the order between d and t iterators otherwise just
+    //       compute profit on the fly - DONE (computed on fly)
+
+    for (size_t t=0; t<time; t++){
+      std::ostringstream Xvar_label;
+      Xvar_label << "x_" << b << "_" << t << std::endl;
+     
+      if (freed[b]){
+        //if(X[b][t] == 1.0)
+        //  Xvar[b][t] = model.addVar(1,1,0,qol::Variable::BINARY, Xvar_label.str());
+        //else
+          Xvar[b][t] = model.addVar(0,1,0,qol::Variable::BINARY, Xvar_label.str());
+      }
+      else
+        Xvar[b][t] = model.addVar(0,0,0,qol::Variable::BINARY, Xvar_label.str());
+
+      //std::cout << "adding xvar.. " << std::flush;
+      //if (WARM_START)
+      //  model.setPrimalStart(Xvar[b][t], X[b][t]);
+      //std::cout << "done!" << std::endl;
+
+
+      Yvar[b][t].resize(d_max);
+      for (size_t d=0;d<d_max;++d){
+        std::ostringstream Yvar_label;
+        Yvar_label << "y_" << b << "_" << t << "_" << d << std::endl;
+        
+        if (freed[b]){
+          double block_profit = (*blocks)[b].getProfit(d);
+          double profit = block_profit/pow(1+rate,t);
+          Yvar[b][t][d] = model.addVar(0,1,-profit,qol::Variable::CONTINUOUS, Yvar_label.str());
+        }
+        else
+          Yvar[b][t][d] = model.addVar(0,0,0,qol::Variable::CONTINUOUS, Yvar_label.str());
+
+        //std::cout << "adding yvar.. " << std::flush;
+        //if (WARM_START)
+        //  model.setPrimalStart(Yvar[b][t][d], Y_sol[b][t+mod_tmin][d]);
+        //std::cout << "done!" << std::endl;
+      }
+    }
+  }
+  
+  if (sh.WARM_START){
+    for (size_t b=0;b<nB;++b){
+      for (size_t t=0;t<time;++t){
+        //model.setPrimalStart(Xvar[b][t],X[b][t]);
+        for (size_t d=0;d<d_max;++d){
+          model.setPrimalStart(Yvar[b][t][d],Y_sol[b][t][d]);
+        }
+      }
+    }
+  }
+
+
+  // constraints
+  // precedence (7)
+  for (size_t a=0; a<nB; ++a){
+    if (!freed[a])
+      continue; // block a not used
+    std::vector<int> * pred = (*blocks)[a].getPreds();
+    int n = (*blocks)[a].getNumPred();
+    for (size_t p=0; p<n; ++p){
+      int b = (*pred)[p];
+      if (!freed[b])
+        continue;
+      for (size_t t=0; t<time; t++){
+        model.addConstraint(Xvar[a][t] <= Xvar[b][t]).setName("x_%d_%d_leq_x_%d_%d",a,t,b,t);
+      }
+    }
+  }
+
+  // SumDest (8)
+  for (size_t b=0; b<nB; ++b){
+    if(!freed[b])
+      continue;
+    for (size_t t=0; t<time; ++t){
+      qol::Expression sumY;
+      for (size_t d=0; d<d_max; ++d){
+        sumY += Yvar[b][t][d];
+      }
+      qol::Expression rhs = Xvar[b][t];
+      if (t > 0) rhs -= Xvar[b][t-1];
+      model.addConstraint( sumY == rhs ).setName("dest_%d_%d",b,t);
+    }
+  }
+
+  // block remains done (9)
+  for (size_t b = 0; b<nB; ++b){
+    for (size_t t = 0; t<time-1; ++t){
+      std::ostringstream remain_label;
+      remain_label << "xt_" << b << "_" << t << std::endl;
+      model.addConstraint( Xvar[b][t] <= Xvar[b][t+1] ).setName("xt_%d_%d",b,t);
+    }
+  }
+
+  // last window constraint to ensure every block completes
+  for(size_t b=0; b<nB && !last_window; b++){
+    if(freed[b]){
+      qol::Expression xbt_minus1 = Xvar[b][time-1];
+      model.addConstraint( xbt_minus1 == 1).setName("lxw_%d",b);
+    }
+  }
+
+  // Resource constraints (10) 
+  for(size_t r=0; r<r_max; r++){
+    for (size_t t=0; t<time; ++t){
+      char cType = probModel->getResConstrType(r, t);
+      qol::Expression expr;
+      for(size_t b=0; b<nB; b++){
+        if (!freed[b])
+          continue;
+        for(size_t d=0; d<d_max; d++){
+          double coef = (*blocks)[b].getRCoef(d,r);
+          if(fabs(coef) > 1e-5) 
+            expr += coef*Yvar[b][t][d];
+        }
+      }
+      double res_limit = probModel->getLimit(r,(int)t/sh.MINI_PERIODS) / sh.MINI_PERIODS;
+      if(cType == 'L'){
+        model.addConstraint(expr <= res_limit).setName("RL%d_%d",r,t);
+      }else if(cType == 'G'){
+        model.addConstraint(expr >= res_limit).setName("RG%d_%d",r,t);
+      }else{
+        std::cerr << "ERROR: resource constraint type " << cType 
+          << " not implemented - IGNORED\n";
+      }
+    }
+  }
+
+  // objective function
+  // TODO: check objective function, might have to go back and change all the 
+  //       variables to have their proper objective values
+ 
+  
+  if(lpFile != ""){
+    model.writeLP(lpFile.c_str());
+    std::cout << "Wrote " << lpFile << std::endl;
+  }
+ 
+  qol::Status status; 
+  bool timeout = true;
+
+  while (timeout){
+    try {
+      timeout = false;
+      status = solveRelaxed ? model.solveRelaxed() : model.solveExact();
+    }
+    catch (qol::Exception & ex) { 
+      std::cout << "Unable to find good solution in specified time, resolving!" << std::endl;
+      timeout = true;   
+    }
+  }
+
+  std::cout << boost::format("Completed in %.2f sec CPU / %.2f sec wall. Objective = %f\n"
+		       ) % timer.elapsedSeconds() % timer.elapsedWallTime() % (-model.getObjective());
+
+  obj = -model.getObjective();
+  
+  std::string solnFile = probModel->getName()+"_window"+".sol";
+
+  std::ofstream fp_out;
+  fp_out.open(solnFile.c_str()); //, std::ios::app);
+
+  size_t block_count = 0;
+  std::vector<size_t> d_count(d_max,0);
+
+  if(fp_out.is_open()){
+    std::cout << "Writing solution to " << solnFile << std::endl;
+    fp_out<< "# Status          "<<status<< std::endl;
+    fp_out<< "# CPU time        "<<timer.elapsedSeconds()
+      <<" sec.  Wall:"<< timer.elapsedWallTime() <<std::endl;
+    fp_out<< "# Objective Value "<< obj << std::endl;
+  }
+
+  std::vector<int> update_count(d_max,0);
+
+  //update Y_sol
+  for (size_t b=0; b<nB; ++b){
+    double b_sum = 0.0;
+    for (size_t t =0; t<time; ++t){
+      for (size_t d=0; d<d_max; ++d){
+        if (model.getPrimal(Yvar[b][t][d]) != Y_sol[b][t+mod_tmin][d]){
+          update_count[d]++;
+        }
+
+        if (model.getPrimal(Yvar[b][t][d]) > 1e-5){
+          Y_sol[b][t+mod_tmin][d] = model.getPrimal(Yvar[b][t][d]);
+        }
+        else
+          Y_sol[b][t+mod_tmin][d] = 0.0;
+
+        b_sum += Y_sol[b][t+mod_tmin][d];
+      }
+    }
+    if(b_sum - 1.0 > 0.00001){
+      std::cout << std::setprecision(20) << "\n\t\tWarning 1:: Block: " << b 
+	         << " is used too often, sum: " << b_sum << ", violaton at: " << std::endl;
+	    for(int t =0; t<t_max; t++){
+	      for(int d =0; d<d_max; d++){
+	        if(Y_sol[b][t][d] > 0.0){
+            std::cout << "\t\t\tTime: " << t << ", dest: " << d << std::endl;
+	        }
+	      }
+	    }
+    }
+  }
+
+  std::cout << std::endl;
+  for (size_t d=0;d<d_max;++d)
+    std::cout << update_count[d] << " from dest " << d << " updated" << std::endl;
+  
+  std::cout << std::endl;
+  delete mipPtrW;
+  return obj;
+
+}
+

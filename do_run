@@ -1,0 +1,53 @@
+#!/bin/bash
+
+#rm ./objfiles/*
+
+#for ((i=0;i<30;i++)) do
+#echo " "
+#echo "newman1 - $i"
+#./QOLpcpsp -c -B Data/newman1
+#done
+
+#for ((i=0;i<30;i++)) do
+#echo " "
+#echo "zuck_small - $i"
+#./QOLpcpsp -c -B Data/zuck_small
+#done
+
+#for ((i=0;i<2;i++)) do
+#echo " "
+#echo "kd - $i"
+#./QOLpcpsp -c -B Data/kd
+#done
+
+#for ((i=0;i<30;i++)) do
+#echo " "
+#echo "zuck_medium - $i"
+#./QOLpcpsp -c -B Data/zuck_medium
+#done
+
+#for ((i=0;i<30;i++)) do
+#echo " "
+#echo "marvin - $i"
+#./QOLpcpsp -c -B Data/marvin
+#done
+
+#for ((i=0;i<15;i++)) do
+#echo " "
+#echo "zuck_large - $i"
+#./QOLpcpsp -c -B Data/zuck_large
+#done
+
+echo "**** running newman1 ****"
+./QOLpcpsp -c -B Data/newman1
+echo "**** running zuck_small ****"
+./QOLpcpsp -c -B Data/zuck_small
+echo "**** running marvin ****"
+./QOLpcpsp -c -B Data/marvin
+echo "**** running zuck medium ****"
+./QOLpcpsp -c -B Data/zuck_medium
+echo "**** running kd ****"
+./QOLpcpsp -c -B Data/kd
+echo "**** running zuck_large ****"
+./QOLpcpsp -c -B Data/zuck_large
+

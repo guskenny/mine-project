@@ -1,0 +1,108 @@
+
+------------------------------
+Network width: 5
+Network depth: 5
+Number of nodes: 25
+Number of arcs: 52
+
+Time to read file: 0 ms
+Time to build graph: 0 ms
+
+Boykov-Kolmogorov time: 0 ms
+Push-relabel time: 0 ms
+
+Time to find closure: 0 ms
+
+Total run time: 0 ms
+
+------------------------------
+
+------------------------------
+Network width: 1000
+Network depth: 20
+Number of nodes: 20000
+Number of arcs: 56962
+
+Time to read file: 260 ms
+Time to build graph: 100 ms
+
+Boykov-Kolmogorov time: 110 ms
+Push-relabel time: 560 ms
+
+Time to find closure: 20 ms
+
+Total run time: 690 ms
+
+------------------------------
+
+------------------------------
+Network width: 10000
+Network depth: 50
+Number of nodes: 500000
+Number of arcs: 1469902
+
+Time to read file: 6000 ms
+Time to build graph: 2360 ms
+
+Boykov-Kolmogorov time: 3020 ms
+Push-relabel time: 22690 ms
+
+Time to find closure: 510 ms
+
+Total run time: 26220 ms
+
+------------------------------
+
+------------------------------
+Network width: 50000
+Network depth: 50
+Number of nodes: 2500000
+Number of arcs: 7349902
+
+Time to read file: 29640 ms
+Time to build graph: 13550 ms
+
+Boykov-Kolmogorov time: 14700 ms
+Push-relabel time: 124530 ms
+
+Time to find closure: 3660 ms
+
+Total run time: 142890 ms
+
+------------------------------
+
+------------------------------
+Network width: 50000
+Network depth: 100
+Number of nodes: 5000000
+Number of arcs: 14849802
+
+Time to read file: 55520 ms
+Time to build graph: 26730 ms
+
+Boykov-Kolmogorov time: 29690 ms
+Push-relabel time: 272960 ms
+
+Time to find closure: 6230 ms
+
+Total run time: 308880 ms
+
+------------------------------
+
+------------------------------
+Network width: 100000
+Network depth: 100
+Number of nodes: 10000000
+Number of arcs: 29699802
+
+Time to read file: 117250 ms
+Time to build graph: 59600 ms
+
+Boykov-Kolmogorov time: 70410 ms
+Push-relabel time: 663760 ms
+
+Time to find closure: 23350 ms
+
+Total run time: 757520 ms
+
+------------------------------
