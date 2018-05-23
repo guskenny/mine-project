@@ -257,10 +257,10 @@ void SinglePSolver::getSeeds(BranchNode_info blank_info, std::vector<Sol_Int> &s
     }
 }
 
-void SinglePSolver::saveSols(const std::vector<Sol_Int> &sols){
+void SinglePSolver::saveSols(const std::vector<Sol_Int> &sols, std::string path_name){
   const int nB = probModel->getNBlock();
   for (int i = 0; i < sols.size(); ++i){
-    std::string path_name = "./init_sols/" + probModel->getName();
+    path_name = path_name + probModel->getName();
     std::ofstream solfile;
     std::string sol_idx = std::to_string(i);
     if (i < 10){
@@ -843,6 +843,8 @@ void SinglePSolver::doMerge(SolutionMerger &sm, const std::vector<Sol_Int>&sols,
   // sm.simpleMerge(sols,include,fixed);
   sm.fullMerge(sols,include,fixed, groups, group_map);
 
+  sols.clear();
+
   if (sh.RECORD_DATA){
     std::ofstream group_out;
     group_out.open("./tracking_data/" + probModel->getName() + "/GROUPS.csv",std::ios_base::app);
@@ -916,6 +918,9 @@ int SinglePSolver::serialMergeSolve(){
     seed_out[i] << "! SWAPS " << sh.SA_ITER << std::endl;
     seed_out[i] << "! NUM_MERGES " << sh.NUM_ITER << std::endl;
     seed_out[i] << "! MAX_SUB_SWAPS " << sh.MAX_SUB_SWAPS << std::endl;
+    seed_out[i] << "! MIP_TIMEOUT " << sh.WINDOW_SEARCH_TIME << std::endl;
+    seed_out[i] << "! MIP_REL_GAP " << sh.MIP_GAP << std::endl;
+
 
     // output files for recording best solutions
     seed_out[i+1].open("./tracking_data/" + probModel->getName() + "/SEED_"+std::to_string(i)+"_BEST.csv");
@@ -999,6 +1004,9 @@ int SinglePSolver::serialMergeSolve(){
 
     // number of merges
     for (int iter = 0; (iter < sh.NUM_ITER) && !flag; ++iter){
+      std::vector<std::vector<double> > data_out(4, std::vector<double>(merge_pop_size));
+      std::vector<int> idx_order(merge_pop_size);
+      int order_count = 0;
 
       sols.clear();
       sols = std::vector<Sol_Int>(merge_pop_size);
@@ -1009,8 +1017,16 @@ int SinglePSolver::serialMergeSolve(){
 
       std::cout << "seed solution: " << seeds[0].obj << std::endl;
 
-      #pragma omp parallel for shared(best_sol)
-      for (int i = 0; i < merge_pop_size; ++i){
+      // save seed solution
+      sols[0] = seeds[0];
+
+      data_out[0][0] = sols[0].obj;
+      data_out[1][0] = best_sol.obj;
+      data_out[2][0] = record_timer.elapsedSeconds();
+      data_out[3][0] = record_timer.elapsedWallTime();
+
+      #pragma omp parallel for shared(best_sol,order_count)
+      for (int i = 1; i < merge_pop_size; ++i){
         Sol_Int sol = seeds[0];
         computeResUse(sol);
 
@@ -1048,13 +1064,11 @@ int SinglePSolver::serialMergeSolve(){
         }
 
         if (sh.RECORD_DATA){
-          // for (int i = 0; i < sols.size(); ++i){
-            outfile << sol.obj << std::endl;
-            seed_out[0] << sol.obj << std::endl;
-            seed_out[1] << best_sol.obj << std::endl;
-            time_out[0] << record_timer.elapsedSeconds() << std::endl;
-            time_out[1] << record_timer.elapsedWallTime() << std::endl;
-          // }
+          data_out[0][i] = sol.obj;
+          data_out[1][i] = best_sol.obj;
+          data_out[2][i] = record_timer.elapsedSeconds();
+          data_out[3][i] = record_timer.elapsedWallTime();
+          idx_order[i] = order_count++;
         }
 
         if (!sh.QUIET){
@@ -1091,7 +1105,32 @@ int SinglePSolver::serialMergeSolve(){
         // add branch solution to population of solutions
         sols[i] = sol;
       }
+      
+      if (sh.RECORD_DATA){
+        // sort data by order_count
+        std::priority_queue<std::pair<int, int> > q;
+        for (int i = 0; i < data_out[0].size(); ++i) {
+          // q.push(std::pair<double, int >(-data_out[2][i], i));
+          q.push(std::pair<double, int >(-idx_order[i], i));
+        }
 
+        double best_obj = -1e20;
+
+        while(!q.empty()) {
+          int data_idx = q.top().second;
+          seed_out[0] << data_out[0][data_idx] << std::endl;
+          if (data_out[1][data_idx] > best_obj){
+            seed_out[1] << data_out[1][data_idx] << std::endl;
+            best_obj = data_out[1][data_idx];
+          }
+          else{
+            seed_out[1] << best_obj << std::endl;
+          }
+          time_out[0] << data_out[2][data_idx] << std::endl;
+          time_out[1] << data_out[3][data_idx] << std::endl;
+          q.pop();
+        }
+      }
 
       // output total time taken to generate population
       std::cout << "\ntime taken to generate population: " << over_timer.elapsedSeconds() - start_swap << std::endl << std::endl;
@@ -1212,6 +1251,16 @@ int SinglePSolver::serialMergeSolve(){
       std::cout << "# CPU time        "<<over_timer.elapsedSeconds()
         <<" sec.  Wall:"<< over_timer.elapsedWallTime() <<std::endl;
 
+std::cout << "writing solution file to ./sol_files/" << probModel->getName() << "_0.sol... " << std::flush;
+
+std::string path_name = "./sol_files/";
+
+std::vector<Sol_Int> temp_vec;
+temp_vec.push_back(best_sol);
+
+saveSols(temp_vec, path_name);
+
+std::cout << "done!" << std::endl;
 
 
 } // end full run

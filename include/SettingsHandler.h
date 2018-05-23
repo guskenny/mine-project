@@ -17,6 +17,7 @@ class SettingsHandler {
     bool RECORD_PASS_TIME=0;
     bool RANDOM_SEARCH=0;
     double SCALED_RESOURCE=1.0;
+    double MIP_GAP=0.0;
     size_t FIND_DEPTH_TRIALS=1000;
     size_t BOUND_DEPTH=1;
     double SA_ALPHA=0.99;
@@ -115,6 +116,10 @@ class SettingsHandler {
         }
         else if (setting.compare("SCALED_RESOURCE") == 0){
           SCALED_RESOURCE = stof(value);
+          continue;
+        }
+        else if (setting.compare("MIP_GAP") == 0){
+          MIP_GAP = stof(value);
           continue;
         }
         else if (setting.compare("FIND_DEPTH_TRIALS") == 0){
@@ -314,6 +319,7 @@ class SettingsHandler {
         std::cout << "false";
       std::cout << std::endl << "NUM_TOTAL_RUNS: " << NUM_TOTAL_RUNS
                 << std::endl << "SCALED_RESOURCE: " << SCALED_RESOURCE
+                << std::endl << "MIP_GAP: " << MIP_GAP
                 << std::endl << "FIND_DEPTH_TRIALS: " << FIND_DEPTH_TRIALS
                 << std::endl << "BOUND_DEPTH: " << BOUND_DEPTH
                 << std::endl << "SA_ALPHA: " << SA_ALPHA

@@ -33,6 +33,8 @@ cpu_times=[0 for _ in range(len(args)-1)]
 wall_times=[0 for _ in range(len(args)-1)]
 groups=[0 for _ in range(len(args)-1)]
 max_sub_swaps=[0 for _ in range(len(args)-1)]
+mip_timeout=[0 for _ in range(len(args)-1)]
+mip_rel_gap=[0 for _ in range(len(args)-1)]
 
 wall_times_idx = -1
 times_idx = -1
@@ -55,6 +57,8 @@ for infile_name in args[1:]:
                     cpu_times[args.index(infile_name)-1] = float(split_line[VALUE])
                 if split_line[LABEL] == "WALL_TIME":
                     wall_times[args.index(infile_name)-1] = float(split_line[VALUE])
+                if split_line[LABEL] == "MIP_REL_GAP":
+                    mip_rel_gap[args.index(infile_name)-1] = float(split_line[VALUE])
                 if split_line[LABEL] == "NAME":
                     names[args.index(infile_name)-1] = split_line[VALUE]
                 if split_line[LABEL] == "POP_SIZE":
@@ -69,6 +73,8 @@ for infile_name in args[1:]:
                     swaps[args.index(infile_name)-1] = int(split_line[VALUE])
                 if split_line[LABEL] == "MAX_SUB_SWAPS":
                     max_sub_swaps[args.index(infile_name)-1] = int(split_line[VALUE])
+                if split_line[LABEL] == "MIP_TIMEOUT":
+                    mip_timeout[args.index(infile_name)-1] = int(split_line[VALUE])
                 if split_line[LABEL] == "NUM_MERGES":
                     num_merges[args.index(infile_name)-1] = int(split_line[VALUE])
                 if split_line[LABEL] == "RESTARTS":
@@ -82,8 +88,8 @@ for infile_name in args[1:]:
                 y.append(float(line))
             except ValueError:
                 continue;
-
-            y_max = max(y_max, float(line))
+	    if args.index(infile_name) == 1:
+            	y_max = max(y_max, float(line))
 
     y_vals.append(y)
 
@@ -97,6 +103,9 @@ else:
     box_text = box_text + "\nNUM_MERGES: " + str(int(len(y_vals[0])/pop_size[0] - restarts[0]))\
     + "\nRESTARTS: " + str(restarts[0])
 
+box_text = box_text +"\nMIP_TIMEOUT: " + str(mip_timeout[0]) + " sec"\
+                    +"\nMIP_REL_GAP: " + str(mip_rel_gap[0]*100) + "%"
+
 if wall_times_idx > -1:
     box_text = box_text + "\nWALL_TIME: " + str(y_vals[wall_times_idx][-1]) + " sec"
 else:
@@ -107,7 +116,7 @@ if times_idx > -1:
 else:
     box_text = box_text + "\nCPU_TIME: " + str(cpu_times[0]) + " sec"
 
-fig,ax1 = plt.subplots(1)
+fig,ax1 = plt.subplots(figsize=(12,8))
 
 ax1.set_ylabel('Objective value')
 
@@ -144,10 +153,12 @@ for y_idx in range(len(y_vals)):
         ax1.plot(range(len(y_vals[y_idx])),y_vals[y_idx], linewidth=lines[y_idx],color=COLOURS[y_idx], marker=line_type, mew=0, ls=line_style, ms=marker_size)
         x_max = max(x_max,len(y_vals[y_idx]))
 
-ax1.grid(True)
+ax1.minorticks_on()
+ax1.grid(True,which='major')
+ax1.grid(True,which='minor', linestyle='--',alpha=0.5)
 
 ax.yaxis.set_visible(False)
-ax.text(0.96,0.06, box_text,transform=ax.transAxes, fontsize=16,
+ax.text(0.96,0.06, box_text,transform=ax.transAxes, fontsize=14,
 bbox={'facecolor':'white', 'alpha':0.5, 'pad':10}, ha='right', va='bottom')
 
 ax1.set_xlim(right=x_max)

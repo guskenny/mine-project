@@ -33,6 +33,7 @@
 //#include <math.h>
 // #include <ncurses.h>
 #include <sstream>
+#include <queue>
 
 typedef std::pair<double, int> p_mined_pair;
 
@@ -66,7 +67,7 @@ class SinglePSolver{
     void getSeeds(BranchNode_info blank_info,std::vector<Sol_Int> &seeds);
     void computeUPIT(BranchNode_info &base_info, std::vector<int> &include);
 
-    void saveSols(const std::vector<Sol_Int> &sols);
+    void saveSols(const std::vector<Sol_Int> &sols, std::string path_name);
     bool loadSols(std::vector<Sol_Int> &sols);
 
     int forkMergeSolve();

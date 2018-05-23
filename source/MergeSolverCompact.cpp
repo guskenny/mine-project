@@ -54,9 +54,9 @@ void MergeSolverCompact::solve(Sol_Int &sol){
     qol::Parameters param;
     param.setParamVal(qol::VERBOSITY,1);
     // if (rel_gap)
-    //   param.setParamVal(qol::RELGAP,0.1);
+      // param.setParamVal(qol::RELGAP,0.1);
     // else
-    //   param.setParamVal(qol::RELGAP,0.001);
+      param.setParamVal(qol::RELGAP,sh.MIP_GAP);
 
     if (sh.WINDOW_SEARCH_TIME > 0)
       param.setParamVal(qol::TIMELIMIT,sh.WINDOW_SEARCH_TIME);

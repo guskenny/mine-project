@@ -54,6 +54,7 @@ class LocalSearch{
     void repairSolution(Sol_Int &sol);
 
     void swapWalk(Sol_Int &sol);
+    void goodSwap(Sol_Int &sol);
 
     void runTests(Sol_Int &sol);
 

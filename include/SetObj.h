@@ -27,11 +27,15 @@ class SetObj{
       set_data.clear();
     };
 
+    bool empty(){
+      return set_data.empty();
+    }
+
     bool is_element(int idx){
       return (idx_data[idx] > -1);
     }
 
-    int get_set_size(){
+    int size(){
       return set_data.size();
     }
 
@@ -64,18 +68,37 @@ class SetObj{
       }
     };
 
-    void getUnion(const SetObj &src){
+    void makeUnion(const SetObj &src){
       for (int i = 0; i < src.set_data.size(); ++i){
         addElement(src.set_data[i]);
       }
     };
 
-    void getDiff(const SetObj &src){
+    void setMinus(const SetObj &src){
       for (int i = 0; i < src.set_data.size(); ++i){
         removeElement(src.set_data[i]);
       }
     };
 
+    SetObj getIntersection(const SetObj &src){
+      SetObj temp(num_elements);
+
+      if (src.size() > set_data.size()){
+        for (int i = 0; i < src.set_data.size(); ++i){
+          if (is_element(src.set_data[i])){
+            temp.addElement(src.set_data[i]);
+          }
+        }
+      }
+      else{
+        for (int i = 0; i < set_data.size(); ++i){
+          if (src.is_element(set_data[i])){
+            temp.addElement(set_data[i]);
+          }
+        }
+      }
+      return temp;
+    };
 
     ~SetObj(){};
 };

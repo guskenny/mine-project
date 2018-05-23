@@ -189,8 +189,8 @@ void LocalSearch::repairSolution(Sol_Int &sol){
         // computing cone from cone tip in direction dir
         computeCone(sol, cone_tip, cone, cone_profit, cone_res_use,
           dir, cone_depth);
-        if ((cone_profit/cone.get_set_size()) > best_profit){
-          best_profit = (cone_profit/cone.get_set_size());
+        if ((cone_profit/cone.size()) > best_profit){
+          best_profit = (cone_profit/cone.size());
           // std::cout << "updating best profit to "<< best_profit << "!" << std::endl;
           best_tip = cone_tip;
         }
@@ -237,6 +237,216 @@ void LocalSearch::repairSolution(Sol_Int &sol){
   catch (qol::Exception & ex) { std::cerr << "Error: " << ex.what() << std::endl; }
   catch (...) { std::cerr << "Unknown Error Occured" << std::endl;}
 
+}
+
+// TODO: force a bunch of "good" swaps and then run the fixing swaps for like 10000 times...
+void LocalSearch::goodSwap(Sol_Int &sol){
+  const int nB = model->graph.getNumNodes();
+  const int r_max = model->getnResources();
+  const int t_max = model->getNPeriod();
+
+  // std::ofstream sol_tracker;
+  // sol_tracker.open("sol_tracker.csv", std::ios_base::app);
+  //
+  // std::ofstream sol_tracker_base;
+  // sol_tracker_base.open("sol_tracker_base.csv", std::ios_base::app);
+
+  double base_obj = sol.obj;
+
+  // set up data structures
+  SetObj cone(nB);
+  if (!sh.QUIET){
+    std::cout << "Beginning goodSwap:" << std::endl;
+  }
+  std::vector<SetObj> period_blocks(t_max+1, SetObj(nB));
+  for (int b = 0; b < nB; ++b){
+      period_blocks[sol.x[b]].addElement(b);
+  }
+
+  // std::cout << "testing period_blocks... " << std::flush;
+  for (int b = 0; b < nB; ++b){
+    if (!period_blocks[sol.x[b]].is_element(b)){
+      std::cout << "error: block " << b << " not in period_blocks["<< sol.x[b] << "]!!" << std::endl;
+      std::cin.get();
+    }
+  }
+  // std::cout << "done!" << std::endl;
+
+  std::vector<long double> cone_res_use(NUM_DIRS,0.0);
+  long double cone_profit = 0.0;
+  int swap_period = -1;
+
+  std::vector<double> res_limits(r_max,0.0);
+
+  for (size_t r = 0;r < r_max; ++r){
+    res_limits[r] = model->getLimit(r, 0);
+  }
+
+  double best_obj = 0.0;
+  int cone_depth = 0;
+
+  bool skip = false;
+
+  int skips = 0;
+
+  // iterate for number of swaps
+  for (int swap = 0; swap < sh.SA_ITER && sol.obj < sh.OBJ_UB; ++swap){
+    for (int sub_swap = 0; sub_swap < sh.FULL_RUNS && sol.obj < sh.OBJ_UB; ++sub_swap){
+      Sol_Int backup_sol = sol;
+      std::vector<SetObj> backup_period_blocks = period_blocks;
+      // if (swap % 3 == 0){
+      //   sol_tracker << sol.obj << std::endl;
+      //   sol_tracker_base << base_obj << std::endl;
+      // }
+      // get random block for cone tip
+      std::uniform_int_distribution<int> uni(0,nB-1);
+      int cone_tip = uni(rng);
+      // if invalid block, select again
+      while (sol.x[cone_tip] == t_max || !include[cone_tip]){
+        cone_tip = uni(rng);
+      }
+
+      int period = sol.x[cone_tip];
+      std::vector<int> boundary(nB,0);
+      int dir = getDirection();
+
+      // if cone in period 0, direction forced forwards
+      if (period == 0){
+        dir = FORWARD;
+      }
+      if (period == t_max-1){
+        dir = BACKWARD;
+      }
+
+      int best_tip = cone_tip;
+      // best_profit is direction dependent, if backwards we want to move the blocks with the least profit density
+      long double best_profit = -1e50;
+
+      for (int s = 0; s < sh.SWAP_POP; ++s){
+        // computing cone from cone tip in direction dir
+        computeCone(sol, cone_tip, cone, cone_profit, cone_res_use,
+          dir, cone_depth);
+        if ((cone_profit/cone.size()) > best_profit){
+          best_profit = (cone_profit/cone.size());
+          // std::cout << "updating best profit to "<< best_profit << "!" << std::endl;
+          best_tip = cone_tip;
+        }
+        cone_tip = period_blocks[period].getRandomElement(rng);
+        // std::cout << "new cone tip: " << cone_tip << ", period: " << sol.x[cone_tip] << std::endl;
+      }
+
+      // computing cone from cone tip in direction dir
+      computeCone(sol, best_tip, cone, cone_profit, cone_res_use,
+        dir, cone_depth);
+
+      // swap blocks from current period to swap period and update resource usage
+      // profit and period_blocks
+      swapConePeriod(sol, period, dir, cone, cone_profit, cone_res_use, period_blocks);
+
+      // create vector with both current swap periods in
+      std::vector<int> swap_periods = {period, period + dir - !dir};
+
+      if (sh.AUTO_REPAIR){
+        repairSolution(sol);
+      }
+      else{
+        int sub_sub_swaps = 1;
+        bool flag = false;
+        // keep swapping while resources dont match up
+        while(!flag){
+          flag = true;
+          int temp_t = 0;
+          // check all resources to see if they are over the limit
+          for (int r = 0; r < r_max && flag; ++r){
+            for (int t = 0; t < swap_periods.size() && flag; ++t){
+              if (sol.res_use[swap_periods[t]][r] > model->getLimit(r, swap_periods[t])){
+                flag = false;
+                temp_t = t;
+                break;
+              }
+            }
+          }
+          if (!flag){
+            boundary = std::vector<int>(nB,0);
+            int temp_dir = dir != temp_t; // if t is 0 then temp_dir = dir, else temp_dir = !dir
+            int temp_p = swap_periods[temp_t];
+            // select random block from temp_p
+            int temp_b = period_blocks[temp_p].getRandomElement(rng);
+
+            best_tip = temp_b;
+            best_profit = -1e50;
+
+            for (int s = 0; s < sh.SWAP_POP && best_profit < 0; ++s){
+              // computing cone from cone tip in direction dir
+              computeCone(sol, temp_b, cone, cone_profit, cone_res_use,
+                temp_dir, cone_depth);
+              if ((cone_profit/cone.size()) > best_profit){
+                best_profit = (cone_profit/cone.size());
+                // std::cout << "updating best profit to "<< best_profit << "!" << std::endl;
+                best_tip = temp_b;
+              }
+              temp_b = period_blocks[temp_p].getRandomElement(rng);
+              // std::cout << "new cone tip: " << cone_tip << ", period: " << sol.x[cone_tip] << std::endl;
+            }
+
+
+            // compute cone in temp_dir direction
+            computeCone(sol, best_tip, cone, cone_profit, cone_res_use,
+              temp_dir, cone_depth);
+            // swap blocks from current period to swap period and update resource usage
+            // profit and period_blocks
+            swapConePeriod(sol, temp_p, temp_dir, cone, cone_profit, cone_res_use, period_blocks);
+            // std::cout << "swapping from " << swap_periods[0] << " to " << swap_periods[1] << ", current objective value: " << sol.obj << std::endl;
+
+            sub_sub_swaps++;
+            if (sub_sub_swaps > sh.MAX_SUB_SWAPS){
+              skips++;
+              // std::cout << "not frozen, just swapping from " << temp_p << " to " << int(temp_p + temp_dir - !temp_dir) << ", current objective value: " << sol.obj << std::endl;
+              // std::cout << "sub_sub_swaps over 100, skipping current sub_swap!" << std::endl;
+              // drop current sub-swap
+              swap--;
+              sol = backup_sol;
+              period_blocks = backup_period_blocks;
+              flag = true;
+              // std::cin.get();
+            }
+          }
+        }
+      }
+      // std::cout << "swapped from period " << swap_periods[0] << " to " << swap_periods[1] << std::endl;
+      // if (sub_sub_swaps > 1)
+      //   std::cout << "\033[32;1m";
+      // std::cout << "swap: " << swap << ", sub_swap: "<< sub_swap << ", " << sub_sub_swaps << " sub-sub-swaps made, current objective value: " << sol.obj << "\033[0m" << std::endl;
+
+      // // make new backup current sol
+      // try{
+      //   // std::cout << "\nChecking solution from solver...\n" << std::endl;
+      //
+      //   bool test_error = verify((*model), sol);
+      //
+      //   // std::cout << "Solution found by solver was ";
+      //   if (!test_error){
+      //     // std::cout << "feasible!\n" << std::endl;
+      //     // backup_sol = sol;
+      //     // backup_period_blocks = period_blocks;
+      //   }
+      //   else{
+      //     std::cout << "\033[31;1minfeasible!\033[0m\n" << std::endl;
+      //     std::cin.get();
+      //     throw qol::Exception("Infeasible solution!");
+      //     // sol = backup_sol;
+      //   }
+      // } // end try statement
+      // catch (qol::Exception & ex) { std::cerr << "Error: " << ex.what() << std::endl; }
+      // catch (...) { std::cerr << "Unknown Error Occured" << std::endl;}
+
+    }
+  }
+  if (!sh.QUIET){
+    std::cout << "number of skips: " << skips << std::endl;
+  }
+  // sol_tracker.close();
+  // sol_tracker_base.close();
 }
 
 void LocalSearch::swapWalk(Sol_Int &sol){
@@ -325,8 +535,8 @@ void LocalSearch::swapWalk(Sol_Int &sol){
         // computing cone from cone tip in direction dir
         computeCone(sol, cone_tip, cone, cone_profit, cone_res_use,
           dir, cone_depth);
-        if ((cone_profit/cone.get_set_size()) > best_profit){
-          best_profit = (cone_profit/cone.get_set_size());
+        if ((cone_profit/cone.size()) > best_profit){
+          best_profit = (cone_profit/cone.size());
           // std::cout << "updating best profit to "<< best_profit << "!" << std::endl;
           best_tip = cone_tip;
         }
@@ -351,6 +561,7 @@ void LocalSearch::swapWalk(Sol_Int &sol){
       else{
         int sub_sub_swaps = 1;
         bool flag = false;
+        bool stop_best=false;
         // keep swapping while resources dont match up
         while(!flag){
           flag = true;
@@ -372,38 +583,15 @@ void LocalSearch::swapWalk(Sol_Int &sol){
             // select random block from temp_p
             int temp_b = period_blocks[temp_p].getRandomElement(rng);
 
-            // SetObj temp_group(nB);
-            // for(int b = 0; b < nB; ++b){
-            //   if (sol.x[b] == temp_p)
-            //     temp_group.addElement(b);
-            // }
-            // int temp_b = temp_group.getRandomElement(rng);
-
-            // // testing swapping beause its going haywire
-            // std::cout << "random block " << temp_b << " selected from period " << temp_p << ", block actually in " << sol.x[temp_b] << " [" << swap_periods[0] << "," << swap_periods[1] << "]" << std::flush;
-            //
-            // if (temp_p != sol.x[temp_b]){
-            //     std::cout << ", block";
-            //     if (!period_blocks[temp_p].is_element(temp_b))
-            //       std::cout << " NOT";
-            //     std::cout << " in period_blocks[" << temp_p << "], and";
-            //     if (!period_blocks[sol.x[temp_b]].is_element(temp_b))
-            //       std::cout << " NOT";
-            //     std::cout << " in period_blocks[" << sol.x[temp_b] << "] ";
-            //     std::cout << "\033[31;1m*** ERROR ***\033[0m\n";
-            //     std::cin.get();
-            // }
-            // std::cout << std::endl;
-
             best_tip = temp_b;
             best_profit = -1e50;
 
-            for (int s = 0; s < sh.SWAP_POP && best_profit < 0; ++s){
+            for (int s = 0; s < sh.SWAP_POP && best_profit < 0 && !stop_best; ++s){
               // computing cone from cone tip in direction dir
               computeCone(sol, temp_b, cone, cone_profit, cone_res_use,
                 temp_dir, cone_depth);
-              if ((cone_profit/cone.get_set_size()) > best_profit){
-                best_profit = (cone_profit/cone.get_set_size());
+              if ((cone_profit/cone.size()) > best_profit){
+                best_profit = (cone_profit/cone.size());
                 // std::cout << "updating best profit to "<< best_profit << "!" << std::endl;
                 best_tip = temp_b;
               }
@@ -422,15 +610,20 @@ void LocalSearch::swapWalk(Sol_Int &sol){
 
             sub_sub_swaps++;
             if (sub_sub_swaps > sh.MAX_SUB_SWAPS){
-              skips++;
-              // std::cout << "not frozen, just swapping from " << temp_p << " to " << int(temp_p + temp_dir - !temp_dir) << ", current objective value: " << sol.obj << std::endl;
-              // std::cout << "sub_sub_swaps over 100, skipping current sub_swap!" << std::endl;
-              // drop current sub-swap
-              // swap--;
-              sol = backup_sol;
-              period_blocks = backup_period_blocks;
-              flag = true;
-              // std::cin.get();
+              if (!stop_best && sh.SWAP_POP > 0){
+                stop_best=true;
+              }
+              else{
+                skips++;
+                // std::cout << "not frozen, just swapping from " << temp_p << " to " << int(temp_p + temp_dir - !temp_dir) << ", current objective value: " << sol.obj << std::endl;
+                // std::cout << "sub_sub_swaps over 100, skipping current sub_swap!" << std::endl;
+                // drop current sub-swap
+                // swap--;
+                sol = backup_sol;
+                period_blocks = backup_period_blocks;
+                flag = true;
+                // std::cin.get();
+              }
             }
           }
         }
@@ -572,8 +765,8 @@ void LocalSearch::swapWalk(Sol_Int &sol){
 //               num_swaps++;
 //               // swapConePeriod(sol, swap_period, cone);
 //               period_swap = true;
-//               max_cone_size = std::max(max_cone_size, cone.get_set_size());
-//               tot_cone_size += cone.get_set_size();
+//               max_cone_size = std::max(max_cone_size, cone.size());
+//               tot_cone_size += cone.size();
 //               max_cone_depth = std::max(max_cone_depth, cone_depth);
 //               tot_cone_depth += cone_depth;
 //           }
