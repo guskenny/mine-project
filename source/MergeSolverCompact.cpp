@@ -223,8 +223,6 @@ void MergeSolverCompact::extractGroupSol(qol::MIPSolver &mip, Sol_Int &sol){
     }
   }
 
-
-
   //
   // for (int group = 0; group < nG; ++group){
   //   if (mip.getPrimal(x[group])){

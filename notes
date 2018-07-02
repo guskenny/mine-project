@@ -1,5 +1,16 @@
 NOTES:
 
+DECOMPOSITION USING ORTHOGONAL SOLUTIONS:
+=========================================
+
+- find groups that are always 0 or always 1
+- remove those groups from the model and find clusters of leftover groups
+- put clusters into MIP models with fixed groups
+- solve MIP models
+- integrate solutions to form one big solution
+- repair
+
+
 NOTES FROM MEETING 3/5/2018:
 ============================
 

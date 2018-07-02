@@ -27,6 +27,7 @@ class SettingsHandler {
     bool GREEDY_PLUS=0;
     size_t TIMER_LENGTH=0;
     bool LOAD_SEEDS=1;
+    size_t SOL_IDX=0;
     bool AUTO_REPAIR=0;
     size_t INIT_SEEDS=1;
     size_t NUM_SEEDS=1;
@@ -172,6 +173,10 @@ class SettingsHandler {
         }
         else if (setting.compare("LOAD_SEEDS") == 0){
           LOAD_SEEDS = stoi(value);
+          continue;
+        }
+        else if (setting.compare("SOL_IDX") == 0){
+          SOL_IDX = stoi(value);
           continue;
         }
         else if (setting.compare("AUTO_REPAIR") == 0){
@@ -346,6 +351,7 @@ class SettingsHandler {
           std::cout << "true";
         else
           std::cout << "false";
+      std::cout << std::endl << "NUM_TOTAL_RUNS: " << NUM_TOTAL_RUNS;
       std::cout << std::endl << "LOAD_SEEDS: ";
         if (LOAD_SEEDS)
           std::cout << "true";

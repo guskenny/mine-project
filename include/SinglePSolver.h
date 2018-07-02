@@ -67,7 +67,7 @@ class SinglePSolver{
     void getSeeds(BranchNode_info blank_info,std::vector<Sol_Int> &seeds);
     void computeUPIT(BranchNode_info &base_info, std::vector<int> &include);
 
-    void saveSols(const std::vector<Sol_Int> &sols, std::string path_name);
+    void saveSols(const std::vector<Sol_Int> &sols, std::string path_name, int merge=0);
     bool loadSols(std::vector<Sol_Int> &sols);
 
     int forkMergeSolve();

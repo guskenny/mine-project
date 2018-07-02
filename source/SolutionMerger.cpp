@@ -136,6 +136,30 @@ void SolutionMerger::fullMerge(const std::vector<Sol_Int>&sols,
     //
     // std::cout << "done!" << std::endl;
 
+    std::cout << "Finding fixed groups..." << std::flush;
+    std::vector<int> fixed_groups;
+    for (int group = 0; group < groups.size(); ++group){
+      bool fixed_group = true;
+      int base_val = (sols[0].x[groups[group][0]%nB] <= groups[group][0]/nB);
+      for (int sol = 1; sol < sols.size(); ++sol){
+        if((sols[sol].x[groups[group][0]%nB] <= groups[group][0]/nB) != base_val){
+          // not fixed
+          fixed_group = false;
+          break;
+        }
+      }
+      if (fixed_group){
+        fixed_groups.push_back(group);
+      }
+    }
+    std::cout << " done!" << std::endl;
+
+    std::cout << "\nFixed groups: "<< std::endl;
+    for (int i = 0; i < fixed_groups.size(); ++i){
+      std::cout << "group " << fixed_groups[i] << " - value: " << (sols[0].x[groups[fixed_groups[i]][0]%nB] <= groups[fixed_groups[i]][0]/nB) << ", size: " << groups[fixed_groups[i]].size() << std::endl;
+    }
+    std::cout << std::endl;
+
 
     int groups_count = 0;
     // int total_count = 0;

@@ -257,16 +257,24 @@ void SinglePSolver::getSeeds(BranchNode_info blank_info, std::vector<Sol_Int> &s
     }
 }
 
-void SinglePSolver::saveSols(const std::vector<Sol_Int> &sols, std::string path_name){
+void SinglePSolver::saveSols(const std::vector<Sol_Int> &sols, std::string path_name, int merge=0){
   const int nB = probModel->getNBlock();
+  path_name = path_name + probModel->getName();
   for (int i = 0; i < sols.size(); ++i){
-    path_name = path_name + probModel->getName();
     std::ofstream solfile;
     std::string sol_idx = std::to_string(i);
     if (i < 10){
       sol_idx = "0" + std::to_string(i);
     }
+
+    if (sols.size() == 1){
+      sol_idx = "0" + std::to_string(merge);
+    }
+
     std::string fname = path_name + "/" + probModel->getName() + "_" + sol_idx + ".sol";
+
+    std::cout << "i: " << i <<  ", writing solution " << sol_idx << ", fname: " << fname << "\n";
+
     solfile.open(fname);
     for (int b = 0; b < nB; ++b){
       solfile << sols[i].x[b] << std::endl;
@@ -284,13 +292,26 @@ bool SinglePSolver::loadSols(std::vector<Sol_Int> &sols){
 
   std::vector<double> obj_vals;
 
-  for (int i = 0; i < sh.NUM_SEEDS; ++i){
+    // for (int i = 0; i < sh.NUM_SEEDS; ++i){
     Sol_Int temp_sol(nB,0,r_max,t_max);
+
     std::string path_name = "./init_sols/" + probModel->getName();
-    std::string sol_idx = std::to_string(i);
-    if (i < 10){
-      sol_idx = "0" + std::to_string(i);
+
+    if (sh.RANDOM_SEARCH){
+      path_name = "./rand_sols/" + probModel->getName();
     }
+    
+    // std::string sol_idx = std::to_string(i);
+
+    // if (i < 10){
+    //   sol_idx = "0" + std::to_string(i);
+    // }
+
+    std::string sol_idx = std::to_string(sh.SOL_IDX);
+    if (sh.SOL_IDX < 10){
+      sol_idx = "0" + std::to_string(sh.SOL_IDX);
+    }
+
     std::string fname = path_name + "/" + probModel->getName() + "_" + sol_idx + ".sol";
     std::ifstream solfile(fname);
     if (!solfile.is_open()){
@@ -312,14 +333,17 @@ bool SinglePSolver::loadSols(std::vector<Sol_Int> &sols){
       return false;
     }
 
+    std::cout << fname << " loaded!\n";
+
     computeResUse(temp_sol);
     sols.push_back(temp_sol);
 
-    std::cout << "Adding solution " << i << " to seeds. Objective value: " << temp_sol.obj << std::endl;
+    std::cout << "Adding solution " << sh.SOL_IDX << " to seeds. Objective value: " << temp_sol.obj << std::endl;
     obj_vals.push_back(temp_sol.obj);
 
     solfile.close();
-  }
+  // }
+
   std::cout << sols.size() << " seeds loaded!" << std::endl;
   std::cout << "Best objective value: " << sols[0].obj << std::endl;
   std::cout << "Mean objective value of all seeds: " << my_math::calc_mean(obj_vals) << std::endl;
@@ -340,6 +364,7 @@ int SinglePSolver::forkMergeSolve(){
 
   std::ofstream outfile;
   std::ofstream red_data;
+
   std::vector<std::ofstream> time_out(sh.NUM_SEEDS+1);
 
   std::vector<std::ofstream> seed_out((sh.NUM_SEEDS+1)*2);
@@ -874,6 +899,8 @@ int SinglePSolver::serialMergeSolve(){
   std::vector<std::ofstream> time_out(2);
   std::vector<std::ofstream> restarts_out(1);
 
+  std::ofstream merge_obj;
+  merge_obj.open("./sol_files/" + probModel->getName() + "/merge_obj.csv");
 
   std::vector<std::ofstream> seed_out(4);
 
@@ -912,6 +939,7 @@ int SinglePSolver::serialMergeSolve(){
     seed_out[i] << "# PARALLEL MERGE - SEED " << i << std::endl;
     seed_out[i] << "# SA_ALPHA,SA_T_MIN,SA_ITER,FULL_RUNS,MERGE_POP_SIZE,NUM_ITER,ITER_INCR" << std::endl;
     seed_out[i] << "# " << sh.SA_ALPHA <<","<< sh.SA_T_MIN <<","<< sh.SA_ITER <<","<< sh.FULL_RUNS <<","<< sh.MERGE_POP_SIZE <<","<< sh.NUM_ITER << "," << sh.ITER_INCR << std::endl;
+    seed_out[i] << "! SOL_IDX " << sh.SOL_IDX << std::endl;
     seed_out[i] << "! LINE 1" << std::endl;
     seed_out[i] << "! NAME " << probModel->getName() << std::endl;
     seed_out[i] << "! POP_SIZE " << sh.MERGE_POP_SIZE << std::endl;
@@ -984,6 +1012,11 @@ int SinglePSolver::serialMergeSolve(){
       std::cout << "getting seeds.. "<<std::flush;
       getSeeds(base_info, seeds);
       std::cout << "done!" << std::endl;
+
+      // std::string path_name = "./rand_sols/";
+
+      // saveSols(seeds, path_name);
+      // return;
     }
 
     Sol_Int best_sol = seeds[0];
@@ -1024,6 +1057,13 @@ int SinglePSolver::serialMergeSolve(){
       data_out[1][0] = best_sol.obj;
       data_out[2][0] = record_timer.elapsedSeconds();
       data_out[3][0] = record_timer.elapsedWallTime();
+
+      // write out current solution
+      std::string path_name = "./sol_files/";
+      std::vector<Sol_Int> temp_vec;
+      temp_vec.push_back(seeds[0]);
+      saveSols(temp_vec, path_name, iter);
+      merge_obj << iter << " " << seeds[0].obj << std::endl;
 
       #pragma omp parallel for shared(best_sol,order_count)
       for (int i = 1; i < merge_pop_size; ++i){
@@ -1250,17 +1290,6 @@ int SinglePSolver::serialMergeSolve(){
 
       std::cout << "# CPU time        "<<over_timer.elapsedSeconds()
         <<" sec.  Wall:"<< over_timer.elapsedWallTime() <<std::endl;
-
-std::cout << "writing solution file to ./sol_files/" << probModel->getName() << "_0.sol... " << std::flush;
-
-std::string path_name = "./sol_files/";
-
-std::vector<Sol_Int> temp_vec;
-temp_vec.push_back(best_sol);
-
-saveSols(temp_vec, path_name);
-
-std::cout << "done!" << std::endl;
 
 
 } // end full run
