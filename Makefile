@@ -42,27 +42,6 @@ LIBS = -L${LIB}$ -lgurobi_c++ -lpthread -lm -lgurobi65
 .cpp.o:
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@; $(POSTCOMPILE);
 
-cpit: $(OBJ) $(QOL_LIB) source/cpit.o
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS)  -o $@ $^ $(QOL_LIBS)
-
-libpp.so: $(OBJ)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -shared -o $@ $^ $(QOL_LIBS)
-
-cumulative: $(OBJ) source/main.o
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS)  -o $@ $^ $(QOL_LIBS)
-
-bz_algorithm: $(OBJ) source/rlp.o source/lpr_bz.o source/bz.o
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS)  -o $@ $^ $(QOL_LIBS)
-
-lraco_opbs: $(OBJ) $(LR)/lraco_opbs.o
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS)  -o $@ $^ $(QOL_LIBS)
-
-max_flow: $(OBJ) source/max_flow_no_st.cpp
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ $^
-
-gen_graph: source/gengraph.cpp
-	$(CXX) source/gengraph.cpp -o gen_graph
-
 QOLcpit: $(OBJ) $(QOL_LIB) source/QOLcpit.o
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS)  -o $@ $^ $(QOL_LIBS)
 
