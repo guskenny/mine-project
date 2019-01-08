@@ -48,7 +48,16 @@
 			"file": "source/SinglePSolver.cpp",
 			"settings":
 			{
-				"buffer_size": 45710,
+				"buffer_size": 45774,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "source/SolutionMerger.cpp",
+			"settings":
+			{
+				"buffer_size": 23553,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -108,17 +117,6 @@
 			}
 		},
 		{
-			"contents": "#!/usr/bin/python3\nimport numpy, random\nfrom mayavi.mlab import *\n\ndef cMap(x,y,z):\n    #whatever logic you want for colors\n    return [random.random() for i in x]\n\ndef test_points3d():\n    t = numpy.linspace(0, 4*numpy.pi, 20)\n    cos = numpy.cos\n    sin = numpy.sin\n\n    x = sin(2*t)\n    y = cos(t)\n    z = cos(2*t)\n    s = cMap(x,y,z)\n\n    return points3d(x, y, z, s, colormap=\"spectral\", scale_factor=0.25)\n\nblerp = test_points3d()\nblerp.glyph.scale_mode = 'scale_by_vector'\n\nshow()",
-			"file": "mayavi_test2.py",
-			"file_size": 542,
-			"file_write_time": 131740734177603214,
-			"settings":
-			{
-				"buffer_size": 486,
-				"line_ending": "Unix"
-			}
-		},
-		{
 			"file": "mayavi_test3.py",
 			"settings":
 			{
@@ -137,22 +135,10 @@
 			}
 		},
 		{
-			"contents": "#include \"MergeSolverCompact.h\"\n\nMergeSolverCompact::MergeSolverCompact(const SettingsHandler sh, SinglePModel *probModel, Sol_Int &best_sol, std::vector<std::vector<int> > &groups, std::vector<int> &group_map, std::vector<int> &fixed, const std::vector<int> &include, std::ofstream *red_data) : probModel(probModel), best_sol(best_sol), sh(sh),  groups(groups), group_map(group_map), fixed(fixed), include(include), red_data(red_data) {\n\n  nB = probModel->getNBlock();\n  nG = groups.size();\n  nR = probModel->getnResources();\n  nT = probModel->getNPeriod();\n  rate = probModel->getDiscountRate();\n  rel_gap = true;\n\n  x_map = std::vector<std::vector<int> > (nB, std::vector<int> (nT, -1));\n\n  // int count = 0;\n  // for (int b = 0; b < nB; ++b){\n  //   for (int t = 0; t < nT; ++t){\n  //     if (fixed[t*nB + b] != 0){\n  //       x_map[b][t] = count++;\n  //     }\n  //   }\n  // }\n  //\n  // std::cout << std::endl << count << \" non-zero variables found\" << std::endl;\n  //\n  // // set up x vector for variables\n  // x = std::vector<qol::Variable> (count);\n\n  // initMergeModel();\n\n  std::cout << \"\\nMerge Solver initialised\" << std::endl;\n}\n\n\nvoid MergeSolverCompact::solve(Sol_Int &sol){\n  qol::CpuTimer timer;\n\n  qol::MIPSolver *mipPtr=0; // pointer to qol MIP solver\n\n  std::vector<Block> * blocks=probModel->getBlock();\n\n  std::string lpFile=\"\";// ,solnFile = probModel->getName()+\".sol\";\n\n  double bestObj = -1e9;\n\n  //  for (int iter = 0; iter < sh.NUM_ITER; ++iter){\n  //    std::cout << \"\\n******* ITERATION \" << iter << \" of \"\n  //              << sh.NUM_ITER << \" *******\\n\" << std::endl;\n  double trueObj = 0;\n\n  rel_gap = false;\n\n   try{\n    // set verbosity\n    qol::Parameters param;\n    param.setParamVal(qol::VERBOSITY,1);\n    // if (rel_gap)\n      // param.setParamVal(qol::RELGAP,0.1);\n    // else\n      param.setParamVal(qol::RELGAP,sh.MIP_GAP);\n\n    if (sh.WINDOW_SEARCH_TIME > 0)\n      param.setParamVal(qol::TIMELIMIT,sh.WINDOW_SEARCH_TIME);\n\n\n\n    // std::vector<bool> mined (nB,false);\n\n    // determine solver type\n    //if(solverType == GUROBI_T)\n    //  mipPtr = new qol::GurobiFormulation();\n    //else if(solverType == CPLEX_T)\n    // if(solverType == CPLEX_T)\n\t  mipPtr = new qol::CplexFormulation();\n\n    // create MIPSolver object\n    qol::MIPSolver &mip=*mipPtr;\n    mip.setParameters(param);\n\n    //std::vector<std::vector<qol::Variable> > y(nB);\n\n    std::cout << \"Problem has \" << nB << \" blocks\" << std::endl;\n\n\n    // initMergeModel(mip);\n\n    if (sh.GROUP_MERGE){\n      initMergeGroupModel(mip);\n    }\n    else{\n      initMergeSimpleModel(mip);\n    }\n\n    bool solveRelaxed = false;\n\n    qol::CpuTimer timer;\n    qol::Status status = solveRelaxed ? mip.solveRelaxed() : mip.solveExact();\n    std::cout << boost::format(\"Completed in %.2f sec CPU / %.2f sec wall. Objective = %f\\n\"\n\t\t\t       ) % timer.elapsedSeconds() % timer.elapsedWallTime() % (-mip.getObjective());\n\n\n   if (sh.GROUP_MERGE){\n     extractGroupSol(mip, sol);\n   }\n   else{\n     extractSimpleSol(mip, sol);\n   }\n\n    // for (int b = 0;b<nB;++b){\n    //   for (int t = 0; t<nT;++t){\n    //     if (mip.getPrimal(y[b][t]) > 1e-5){\n    //       sol.x[b] = t;\n    //     }\n    //   }\n    // }\n\n    std::cout << \"\\nTrue objective: \" << sol.obj << std::endl;\n\n    // std::cout << \"\\nChecking solution from solver...\\n\" << std::endl;\n    //\n    // bool test_error = verify((*probModel), sol);\n    //\n    // std::cout << \"Solution found by solver was \";\n    // if (!test_error)\n    //   std::cout << \"feasible!\\n\" << std::endl;\n    // else{\n    //   std::cout << \"infeasible!\\n\" << std::endl;\n    //   std::cin.get();\n    //   throw qol::Exception(\"Infeasible solution!\");\n    // }\n\n  //   std::ofstream fp_out;\n  //   fp_out.open(solnFile.c_str()); //, std::ios::app);\n  //   if(fp_out.is_open()){\n  //     std::cout << \"Writing solution to \" << solnFile << std::endl;\n  //     fp_out<< \"# Status          \"<<status<< std::endl;\n  //     fp_out<< \"# CPU time        \"<<timer.elapsedSeconds()<<\" sec.  Wall:\"<< timer.elapsedWallTime() <<std::endl;\n  //     fp_out<< \"# Objective Value \"<<-mip.getObjective() << std::endl;\n  //     fp_out<< \"# Block destination time yval\"<<std::endl;\n  //     /* solution file format blocks -> destinations -> time non-zero y value*/\n  //     for(int b=0; b<nB; b++){\n\t// for(int t=0;t<t_max;++t)\n\t//   for(int d=0;d<d_max;++d){\n\t//     if(mip.getPrimal(y[b][d][t]) > 1e-5)\n\t//       fp_out << b << \" \" << d << \" \" << t << \" \" << mip.getPrimal(y[b][d][t]) << std::endl;\n\t//   }\n  //     }\n  //     fp_out.close();\n    // }\n   } // end try statement\n  catch (qol::Exception & ex) { std::cerr << \"Error: \" << ex.what() << std::endl; }\n  catch (...) { std::cerr << \"Unknown Error Occured\" << std::endl;}\n\n  delete mipPtr;\n}\n\nvoid MergeSolverCompact::extractSimpleSol(qol::MIPSolver &mip, Sol_Int &sol){\n  // test solution for feasibility\n  sol.init(nB,nT);\n  sol.obj = -mip.getObjective();\n  sol.nT = nT;\n\n  // for (int b = 0;b<nB;++b){\n  //   for (int t = 0; t<nT;++t){\n  //     sol.x[b] = -1;\n  //   }\n  // }\n\n  for (int b = 0;b<nB;++b){\n    if (!include[b]){\n      continue;\n    }\n    int min_period = nT;\n    for (int t = 0; t<nT;++t){\n      if (x_map[b][t] < 0){\n        continue;\n      }\n      if (mip.getPrimal(x[x_map[b][t]]) > 1e-5){\n        min_period = std::min(min_period,t);\n      }\n    }\n    sol.x[b] = min_period;\n  }\n\n  // // test solution for feasibility\n  // sol.init(nB,nT);\n  // sol.obj = -mip.getObjective();\n  //\n  // // for (int b = 0;b<nB;++b){\n  // //   for (int t = 0; t<nT;++t){\n  // //     sol.x[b] = -1;\n  // //   }\n  // // }\n  //\n  // for (int b = 0;b<nB;++b){\n  //   // int min_period = nT;\n  //   for (int t = 0; t<nT;++t){\n  //     if (x_map[b][t] < 0){\n  //       continue;\n  //     }\n  //     if (mip.getPrimal(x[x_map[b][t]]) > 1e-5){\n  //       sol.x[b] = std::min(sol.x[b],t);\n  //     }\n  //   }\n  //   // sol.x[b] = min_period;\n  // }\n}\n\nvoid MergeSolverCompact::extractGroupSol(qol::MIPSolver &mip, Sol_Int &sol){\n  // test solution for feasibility\n  sol.init(nB,nT);\n  sol.obj = -mip.getObjective();\n\n  int groups_selected = 0;\n\n  for (int b = 0; b < nB; ++b){\n    if (!include[b]){\n      continue;\n    }\n    for (int t = 0; t < nT; ++t){\n      if (mip.getPrimal(x[group_map[nB*t + b]])){\n        sol.x[b] = std::min(sol.x[b],t);\n      }\n    }\n  }\n  \n  //\n  // for (int group = 0; group < nG; ++group){\n  //   if (mip.getPrimal(x[group])){\n  //     groups_selected++;\n  //     for (int member_idx = 0; member_idx < groups[group].size(); ++member_idx){\n  //       int member = groups[group][member_idx];\n  //       int block_idx = member % nB;\n  //       int period = member / nB;\n  //       sol.x[block_idx] = std::min(sol.x[block_idx],period);\n  //     }\n  //   }\n  // }\n  std::cout << groups_selected << \" groups selected of \" << nG << \" total groups\" << std::endl;\n}\n\nvoid MergeSolverCompact::initMergeGroupModel(qol::MIPSolver &mip){\n  std::cout << \"*** creating aggregate merge MIP model ***\" << std::endl;\n\n  std::vector<Block> * blocks=probModel->getBlock();\n\n  // for debugging\n  int num_prec_constr = 0;\n  int num_res_constr = 0;\n  int num_block_constr = 0;\n\n  // create adjacency matrix for precedence constraints so only one constraint is made per group pair\n  std::vector<std::vector<int> > group_matrix(nG, std::vector<int> (nG,0));\n\n  // create vector for cumulative group resource usages:\n  // vector size is |nG| x |nT| x |nR|\n  std::vector<std::vector<std::vector<long double> > > group_rCoef(nG, std::vector<std::vector<long double> >(nT, std::vector<long double>(nR, 0.0)));\n\n  // create vector for group profits\n  std::vector<long double> group_profits(groups.size());\n\n  // create variables for each group, need to do this before so precedence\n  // constraints can be created on the fly\n  for (int group = 0; group < nG; ++group){\n    x.push_back(mip.addVar(0,1,0,qol::Variable::BINARY,(boost::format(\"group_%s\") %group).str()));\n  }\n\n  // iterate over all groups\n  for (int group = 0; group < nG; ++group){\n    // value to hold cumulative profit for group\n    long double group_profit = 0;\n\n    // iterate over each member (block/time pair) in the group\n    for (int member = 0; member < groups[group].size(); ++member){\n      // get current block id and block object\n      int curr_member = groups[group][member];\n      int block_idx = curr_member % nB; // gets block id\n      int curr_period = curr_member/nB; // gets current period\n\n      // add predecessor constraints\n      std::vector<int> pred = (*blocks)[block_idx].getPred();\n      for (int p = 0; p < pred.size(); ++p){\n        // index of previous block\n        int prev_block = pred[p];\n        // index of block/time pair\n        int prev_member = curr_period * nB + prev_block;\n        int prev_group = group_map[prev_member];\n        // add precedence constraint if one doesn't exist\n        if (group != prev_group){ // no self arcs\n          if (!group_matrix[prev_group][group]){\n            mip.addConstraint(x[group] <= x[prev_group]).setName(\"pred_%d_%d\",group,prev_group);\n            num_prec_constr++;\n            group_matrix[prev_group][group] = 1; // update matrix to avoid duplicates\n          }\n        }\n      }\n\n      // add arc to same block in previous period\n      if (curr_period > 0){\n        int prev_member = curr_member - nB;\n        int prev_group = group_map[prev_member];\n        // add constraint if one doesn't exist\n        if (group != prev_group){ // no self arcs\n          // reversed because arrows are pointing back in time\n          if (!group_matrix[group][prev_group]){\n            mip.addConstraint(x[prev_group] <= x[group]).setName(\"block_%d_%d\",prev_group,group);\n            num_block_constr++;\n            group_matrix[group][prev_group] = 1; // update matrix\n          }\n        }\n      }\n\n      // calculate resource usage coefficient for member:\n      // if a block occurs in the group then the set of time points for that block\n      // within the group will be the interval [s, s+t, ..., t]\n      // if group is selected, then block is mined at time s, so the resource coefficients\n      // for that block will be added to the vector corresponding to period s\n      // in order to cancel out subsequent groups, the resource coefficients for the block\n      // must be subtracted from the vector corresponding to period t+1, this is because\n      // in order for the solution to be feasible, the next group must start at t+1\n\n      // calculate profit for each group:\n      // similar to resource usage, add the profit block for the first time the block\n      // appears in the group, and subtract the profit from the first period after last\n      // period that block appears in the group so that the next group's profit will be\n      // cancelled out\n\n      // check if period member is the first time the block appears in the group\n      if (curr_period == 0 || group != group_map[curr_member - nB]){\n        // add current block profit for current period to current group\n        long double block_profit=(*blocks)[block_idx].getProfit(0);\n        group_profit += block_profit/pow(1+rate,curr_period);\n        // add resources to resources vector for group in current period\n        for (int r = 0; r < nR; ++r){\n          group_rCoef[group][curr_period][r] += (*blocks)[block_idx].getRCoef(0, r);\n\n        }\n      }\n\n      // check if current period is the last time the block appears in the group\n      if (curr_period < nT-1){\n        if (group != group_map[curr_member + nB]){\n          // subtract current block profit for next period from current group\n          long double block_profit=(*blocks)[block_idx].getProfit(0);\n          group_profit -= block_profit/pow(1+rate,curr_period+1);\n          for (int r = 0; r < nR; ++r){\n            // subtract resources from resources vector in next period\n            group_rCoef[group][curr_period+1][r] -= (*blocks)[block_idx].getRCoef(0, r);\n          }\n        }\n      }\n    }\n\n    // set group cumulative profit\n    mip.setObjCoeff(x[group], (double)-group_profit);\n    group_profits[group] = group_profit;\n  }\n\n  // add resource constraints:\n  // for each resource and period, the sum of all the coefficients of all\n  // the groups must be less than the resource limit for that resource and period\n  for (int r=0; r < nR; ++r){\n    for (int t=0; t < nT; ++t){\n      qol::Expression expr;\n      for (int group=0; group < nG; ++group){\n        double coef = (double)group_rCoef[group][t][r];\n        if (fabs(coef) > 1e-5){\n          expr += coef*x[group];\n        }\n      }\n      mip.addConstraint(expr <= probModel->getLimit(r,t)).setName(\"R%d_%d\",r,t);\n      num_res_constr++;\n    }\n  }\n\n  // set MIP start solution\n  std::vector<double> start_vec(x.size(),0.0);\n\n  if (sh.FIX_BEST_GROUP){\n    int groups_fixed = 0;\n    std::vector<int> stack;\n    std::priority_queue<std::pair<double, int>> q;\n    for (int g = 0; g < groups.size(); ++g) {\n      q.push(std::pair<double, int>(group_profits[g]/groups[g].size(), g));\n    }\n    for (int i = 0; i < sh.FIX_BEST_GROUP; ++i) {\n      int ki = q.top().second;\n      double ks = q.top().first;\n      std::cout << \"fixing group \" << ki << \" group, \" << ks << \" = \"\n                << group_profits[ki] << \" / \" << groups[ki].size()\n                << \" variables\" << std::endl;\n      stack.push_back(ki);\n      q.pop();\n    }\n\n    // set all groups before (in space) and after (in time) of best group to 1\n    std::vector<int> visited(groups.size(), 0);\n    while(!stack.empty()){\n      int g = stack.back();\n      groups_fixed++;\n      stack.pop_back();\n      if (visited[g]){\n        continue;\n      }\n      visited[g] = 1;\n      mip.setVarLB(x[g],1);\n      start_vec[g] = 1;\n      // iterate over the column associated with current group to get predecessors\n      for (int i = 0; i < groups.size(); ++i){\n        if (group_matrix[i][g] && !visited[i]){\n          stack.push_back(i);\n        }\n      }\n    }\n    std::cout << groups_fixed << \" groups fixed in total\" << std::endl;\n  }\n\n  for (int b = 0; b<nB; ++b){\n    for (int t = 0; t<nT; ++t){\n      if (best_sol.x[b] <= t){\n        // mip.setPrimalStart(x[x_map[b][t]],1);\n        start_vec[group_map[nB * t + b]] = 1;\n      }\n    }\n  }\n\n  mip.setPrimalStart(start_vec);\n\n  // fix all zero and all 1 group\n  for (int i = 0; i < 2; ++i){\n    for (int member = 0; member < fixed.size(); ++member){\n      if (fixed[member] == i){\n        mip.setVarUB(x[group_map[member]],i);\n        mip.setVarLB(x[group_map[member]],i);\n        break;\n      }\n    }\n  }\n\n\n  // for debugging\n  std::cout << nG << \" variables for groups added\" << std::endl\n            << num_prec_constr << \" precedence constraints added\" << std::endl\n            << num_block_constr << \" block persistence constraints added\" << std::endl\n            << num_res_constr << \" resource constraints added\" << std::endl;\n}\n\n\n//TODO: revert back to only single variables\nvoid MergeSolverCompact::initMergeSimpleModel(qol::MIPSolver &mip){\n\n    std::vector<Block> * blocks=probModel->getBlock();\n\n    int one_fix = 0;\n    int skipped = 0;\n    int unfixed = 0;\n    int var_count = 0;\n\n    std::cout << \"setting up decision variables.. \" << std::flush;\n    // decision variables\n    for(int b=0; b<nB; b++){\n      double base_profit=(*blocks)[b].getProfit(0);\n      for (int t=0; t<nT; ++t){\n        if (fixed[t*nB + b] == 0){\n          skipped++;\n          continue;\n        }\n        // compute profit for x[b][t] -> profit for block minus profit for block in next period\n        double adjusted_profit = 0;\n        if (t < nT-1){\n          adjusted_profit = base_profit/pow(1+rate,t) - base_profit/pow(1+rate,t+1);\n        }\n        else{\n          adjusted_profit = base_profit/pow(1+rate,nT-1);\n        }\n        if (fixed[t*nB + b] < 0){\n          x.push_back(mip.addVar(0,1,-adjusted_profit,qol::Variable::BINARY, // LB,UB,cost\n              boost::str(boost::format(\"x%03d_%03d\")%b%t)));\n          unfixed++;\n        }\n        else if (fixed[t*nB + b] > 0){\n          x.push_back(mip.addVar(1,1,-adjusted_profit,qol::Variable::BINARY, // LB,UB,cost\n              boost::str(boost::format(\"x%03d_%03d\")%b%t)));\n          one_fix++;\n        }\n        x_map[b][t] = var_count++;\n      }\n    }\n\n    std::cout << \"done!\" << std::endl << \"setting bounds.. \" <<std::flush;\n    // unfix all variables in current window that are to be included\n\n    std::vector<double> start_vec(x.size(),0.0);\n\n    for (int b = 0; b<nB; ++b){\n      for (int t = 0; t<nT; ++t){\n        if (best_sol.x[b] <= t){\n          // mip.setPrimalStart(x[x_map[b][t]],1);\n          start_vec[x_map[b][t]] = 1;\n        }\n      }\n    }\n\n    mip.setPrimalStart(start_vec);\n\n    // for (int b = 0; b<nB; ++b){\n    //   if (best_sol.x[b] < 0){\n    //     continue;\n    //   }\n    //   for (int t = 0; t < nT; ++t){\n    //     if (t > merged.fixed[b][0]){\n    //       mip.setVarUB(x[b][t],1);\n    //       unfixed++;\n    //     }\n    //     if (t > merged.fixed[b][1]){\n    //       mip.setVarLB(x[b][t],1);\n    //       one_fix++;\n    //     }\n    //     if (best_sol.x[b] <= t){\n    //       mip.setPrimalStart(x[b][t],1);\n    //     }\n    //   }\n    // }\n\n    std::cout << \"done!\" << std::endl << std::endl << skipped << \" variables skipped\"\n              << std::endl << one_fix << \" variables fixed to one\"\n              << std::endl << unfixed << \" variables unfixed\"\n              << std::endl << x.size() << \" variables in MIP\"\n              << std::endl << nB*nT << \" variables in problem\" << std::endl;\n    std::cout << \"\\nsetting up constraints:\" << std::endl << \"precedence.. \" << std::flush;\n\n    skipped = 0;\n    int sum_skipped = 0;\n    // get successor list\n    std::vector<std::vector<int> > succ(nB, std::vector<int>());\n    for (int b=0; b<nB; ++b){\n      std::vector<int> * pred = (*blocks)[b].getPreds();\n      int n = (*blocks)[b].getNumPred();\n      for(int p=0; p<n; p++){\n        int b_prev = (*pred)[p];\n        succ[b_prev].push_back(b);\n      }\n    }\n\n    // put in precedence constraints using successors\n    for (int b=0; b<nB; ++b){\n      for (std::vector<int>::iterator it = succ[b].begin(); it != succ[b].end(); ++it){\n        for (int t=0; t < nT; ++t){\n          if (x_map[b][t] < 0 || x_map[*it][t] < 0 || fixed[t*nB + b] > 0){\n            skipped++;\n            continue;\n          }\n          mip.addConstraint(x[x_map[b][t]] >= x[x_map[*it][t]]).setName(\"pre%d_%d_%d\",b,*it,t);\n        }\n      }\n    }\n\n    //\n    // // type of constraints\n    // /*Precedence (7) (but using different definition of x */\n    // for(int a=0; a<nB; a++){\n    //   std::vector<int> * pred = (*blocks)[a].getPreds();\n    //   int n = (*blocks)[a].getNumPred();\n    //   for(int p=0; p<n; p++){\n    //     int b = (*pred)[p];\n    //     for (int t=0; t<nT; ++t){\n    //       mip.addConstraint(x[b][t] >= x[a][t]).setName(\"pre%d_%d_%d\",b,a,t);\n    //     }\n    //   }\n    // }\n    std::cout << \"done! (\" << skipped << \" precedence constraints skipped)\\n\" << std::endl << \"block remains done.. \" <<std::flush;\n\n    sum_skipped += skipped;\n    skipped = 0;\n    /* Block remains done (9) */\n    for(int b=0; b<nB; b++){\n      for(int t=1; t<nT; t++){\n        if (fixed[(t-1)*nB+b] == 0 || fixed[t*nB+b] == 1){\n          skipped++;\n          continue;\n        }\n        mip.addConstraint( x[x_map[b][t-1]] <= x[x_map[b][t]]).setName(\"xt%d_%d\",b,t);\n      }\n    }\n    std::cout << \"done! (\" << skipped << \" remain done constraints skipped)\\n\" << std::endl << \"resource.. \" <<std::flush;\n\n    sum_skipped += skipped;\n\n    (*red_data) << unfixed << \",\" << sum_skipped << std::endl;\n\n    skipped = 0;\n    /* Resource constraints (10) */\n    for(int r=0; r<nR; r++){\n      for (int t=0; t<nT; ++t){\n        qol::Expression expr;\n        for(int b=0; b<nB; b++){\n          if (fixed[t*nB + b] == 0){ // if fixed to 0, skip adding to resources\n            skipped++;\n            continue;\n          }\n          // if (t > 0){\n          //   if (fixed[(t-1)*nB + b] == 0){ // if fixed to 0, skip adding to resources\n          //     skipped++;\n          //     continue;\n          //   }\n          // }\n          double coef = (*blocks)[b].getRCoef(0,r);\n          if(fabs(coef) > 1e-5){\n            if (t > 0){\n              if (fixed[(t-1)*nB + b] == 0){\n                expr += coef*x[x_map[b][t]];\n              }\n              else{\n                expr += coef*(x[x_map[b][t]]-x[x_map[b][t-1]]);\n              }\n            }\n            else{\n              expr += coef*x[x_map[b][t]];\n            }\n          }\n        }\n        // if(cType == 'L'){\n          mip.addConstraint(expr <= probModel->getLimit(r,t)).setName(\"R%d_%d\",r,t);\n        // }else if(cType == 'G'){\n        //   mip.addConstraint(expr >= probModel->getLimit(r,t)).setName(\"R%d_%d\",r,t);\n        // }else{\n        //   std::cerr << \"ERROR: resource constraint type \" << cType\n        //     << \" not implemented - IGNORED\\n\";\n        // }\n      }\n    }\n\n    std::cout << \"done! (\" << skipped << \" resource constraints skipped)\\n\" << std::endl;\n\n    // std::cout << \"done!\" << std::endl << \"aggregated groups.. \" <<std::flush;\n    //\n    // for (int g = 0; g < groups.size(); ++g){\n    //   if (groups[g].size()==1){\n    //     continue;\n    //   }\n    //   // make pairs of all variables in groups\n    //   for(int i = 0; i < groups[g].size(); ++i){\n    //     qol::Expression lhs = x[groups[g][i]%nB][groups[g][i]/nB];\n    //     for (int j = i+1; j < groups[g].size()-1; ++j){\n    //       qol::Expression rhs = x[groups[g][j]%nB][groups[g][j]/nB];\n    //       mip.addConstraint(lhs == rhs).setName(\"G%d\",g);\n    //     }\n    //   }\n    // }\n    //\n    // // for (int g = 0; g < groups.size(); ++g){\n    // //   // if one selected, then all must be selected\n    // //   qol::Expression if_selected = x[groups[g][0]%nB][groups[g][0]/nB]*int(groups[g].size());\n    // //   qol::Expression sumX;\n    // //   for(int v = 0; v < groups[g].size(); ++v){\n    // //     sumX += x[groups[g][v]%nB][groups[g][v]/nB];\n    // //   }\n    // //   mip.addConstraint(sumX == if_selected).setName(\"G%d\",g);\n    // // }\n    // std::cout << \"done!\" << std::endl;\n}\n",
-			"file": "source/MergeSolverCompact.cpp",
-			"file_size": 22116,
-			"file_write_time": 131735205248900800,
+			"file": "source/SolutionMerger.cppold",
 			"settings":
 			{
-				"buffer_size": 22118,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "source/SolutionMerger.cpp",
-			"settings":
-			{
-				"buffer_size": 19852,
-				"encoding": "UTF-8",
+				"buffer_size": 26619,
 				"line_ending": "Unix"
 			}
 		},
@@ -178,7 +164,8 @@
 			"file": "include/SolutionMerger.h",
 			"settings":
 			{
-				"buffer_size": 1153,
+				"buffer_size": 1337,
+				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
@@ -235,11 +222,13 @@
 	"expanded_folders":
 	[
 		"/home/gus/Documents/PhD/mine-project",
-		"/home/gus/Documents/PhD/mine-project/include",
-		"/home/gus/Documents/PhD/mine-project/source"
+		"/home/gus/Documents/PhD/mine-project/include"
 	],
 	"file_history":
 	[
+		"/home/gus/Downloads/SolutionMerger.cpp",
+		"/home/gus/Documents/PhD/mine-project/source/MergeSolverCompact.cpp",
+		"/home/gus/Documents/PhD/mine-project/mayavi_test2.py",
 		"/home/gus/angus.kenny@rmit.edu.au/PhD/posters/june_2018_poster/ECML_poster_template.tex",
 		"/home/gus/Documents/PhD/mine-project/anim_mine_good.py",
 		"/home/gus/Documents/PhD/mine-project/anim_time_good.py",
@@ -290,7 +279,7 @@
 	"groups":
 	[
 		{
-			"selected": 6,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -320,7 +309,7 @@
 						"translation.y": 19181.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 14,
 					"type": "text"
 				},
 				{
@@ -329,15 +318,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 45710,
+						"buffer_size": 45774,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								37250,
-								37250
+								29399,
+								29399
 							]
 						],
 						"settings":
@@ -348,14 +337,45 @@
 							"word_wrap": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 16515.0,
+						"translation.y": 13680.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
 					"buffer": 2,
+					"file": "source/SolutionMerger.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 23553,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8161,
+								8161
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true,
+							"word_wrap": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3225.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
 					"file": "draw_plot.py",
 					"semi_transient": false,
 					"settings":
@@ -381,11 +401,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 4,
 					"file": "plot_mine.py",
 					"semi_transient": false,
 					"settings":
@@ -412,11 +432,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 5,
 					"file": "anim_time.py",
 					"semi_transient": false,
 					"settings":
@@ -443,11 +463,11 @@
 						"translation.y": 976.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 6,
 					"file": "anim_mine.py",
 					"semi_transient": false,
 					"settings":
@@ -474,11 +494,11 @@
 						"translation.y": 866.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 7,
 					"file": "boxes.py",
 					"semi_transient": false,
 					"settings":
@@ -504,11 +524,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 8,
 					"file": "mayavi_test.py",
 					"semi_transient": false,
 					"settings":
@@ -529,34 +549,6 @@
 							"syntax": "Packages/Python/Python.sublime-syntax",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "mayavi_test2.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 486,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								486,
-								486
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -593,7 +585,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
@@ -621,79 +613,47 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"file": "source/MergeSolverCompact.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 22118,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1188,
-								1188
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true,
-							"word_wrap": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 450.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 15,
-					"type": "text"
-				},
-				{
-					"buffer": 12,
-					"file": "source/SolutionMerger.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 19852,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								11142,
-								11142
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true,
-							"word_wrap": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 5235.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 14,
+					"stack_index": 3,
 					"type": "text"
 				}
 			]
 		},
 		{
-			"selected": 3,
+			"selected": 0,
 			"sheets":
 			[
 				{
-					"buffer": 13,
+					"buffer": 11,
+					"file": "source/SolutionMerger.cppold",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 26619,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								16856,
+								16856
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 6956.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
 					"file": "include/SinglePSolver.h",
 					"semi_transient": false,
 					"settings":
@@ -720,11 +680,11 @@
 						"translation.y": 630.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
-					"buffer": 14,
+					"buffer": 13,
 					"file": "notes",
 					"semi_transient": false,
 					"settings":
@@ -750,24 +710,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 16,
+					"stack_index": 15,
 					"type": "text"
 				},
 				{
-					"buffer": 15,
+					"buffer": 14,
 					"file": "include/SolutionMerger.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1153,
+						"buffer_size": 1337,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								144,
-								144
+								672,
+								672
 							]
 						],
 						"settings":
@@ -780,11 +740,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
-					"buffer": 16,
+					"buffer": 15,
 					"file": "include/SettingsHandler.h",
 					"semi_transient": false,
 					"settings":
@@ -810,7 +770,7 @@
 						"translation.y": 1125.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 10,
 					"type": "text"
 				}
 			]

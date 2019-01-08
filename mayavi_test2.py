@@ -20,5 +20,5 @@ def test_points3d():
 
 blerp = test_points3d()
 blerp.glyph.scale_mode = 'scale_by_vector'
-pts.module_manager.scalar_lut_manager.lut.table = colors
+
 show()

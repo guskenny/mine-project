@@ -21,7 +21,7 @@ class SolutionMerger{
     SolutionMerger(const SettingsHandler sh) : sh(sh) {std::cout << "solution merger initialised" << std::endl;};
 
     void fullMerge(const std::vector<Sol_Int>&sols,const std::vector<int> &include, std::vector<int> &fixed, std::vector<std::vector<int> > &groups, std::vector<int> &group_map);
-
+    void fullMergeThresh(const std::vector<Sol_Int>&sols,const std::vector<int> &include, std::vector<int> &fixed, std::vector<std::vector<int> > &groups, std::vector<int> &group_map);
     void simpleMerge(const std::vector<Sol_Int>&sols, const std::vector<int> &include, std::vector<int> &fixed);
     void mergeCPIT(const std::vector<Sol_Int>&sols, std::vector<int> &fixed, std::vector<std::vector<int> > &groups, std::vector<int> &group_map);
     void mergePCPSP(const std::vector<Sol_Int> &sols, BranchNode_info &merged);

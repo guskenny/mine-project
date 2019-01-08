@@ -1,5 +1,4 @@
 #include "SolutionMerger.h"
-#include <math.h>
 
 void SolutionMerger::fullMergeThresh(const std::vector<Sol_Int>&sols,
   const std::vector<int> &include, std::vector<int> &fixed, std::vector<std::vector<int> > &groups, std::vector<int> &group_map){
@@ -34,9 +33,7 @@ void SolutionMerger::fullMergeThresh(const std::vector<Sol_Int>&sols,
       for (int t = 0; t < nT; ++t){
         if (t >= intervals[b][0]){
           fixed[t*nB + b] = -1;
-          // I think t = intervals[b][1] can also be fixed to 1?
-          //if (t > intervals[b][1]){
-          if (t >= intervals[b][1]){
+          if (t > intervals[b][1]){
             fixed[t*nB + b] = 1;
           }
         }
@@ -79,13 +76,14 @@ void SolutionMerger::fullMergeThresh(const std::vector<Sol_Int>&sols,
     }
 
     std::cout << "done!" << std::endl;
+    
     qol::CpuTimer group_timer; 
+
     std::cout << "getting groups... " << std::flush;
 
     // further group the variables that not fixed
     int acc, sol;
-    int threshold = 1; // user defined parameter; can be worked out based on the entropy threshold and population size
-    int group_size_n = 50; // user defined parameter; the maximal group size for unfixed variables
+    int threshold = 10; // user defined parameter; can be worked out based on the entropy threshold and population size
     int groups_size = groups.size();
     // iterate over all groups; starting from the group that not fixed)
     for (int group = groups_size - 1; group < groups.size(); ++group){
@@ -93,19 +91,14 @@ void SolutionMerger::fullMergeThresh(const std::vector<Sol_Int>&sols,
         std::vector<int> temp_group;
         for (int i = 1; i < groups[group].size(); ++i){
             acc = 0; sol = 0;
-            if (i < group_size_n){
-                while (acc < threshold && sol < sols.size()){
-                    // there might be many re-calculation of x values;
-                    // using an array to store the x vlaues might improve the time efficiency?
-                    if ((sols[sol].x[groups[group][0]%nB] <= groups[group][0]/nB) != \
-                        (sols[sol].x[groups[group][i]%nB] <= groups[group][i]/nB)) {
-                        acc++;
-                    }
-                    sol++;
+            while (acc <= threshold && sol < sols.size()){
+                if ((sols[sol].x[groups[group][0]%nB] <= groups[group][0]/nB) != \
+                    (sols[sol].x[groups[group][i]%nB] <= groups[group][i]/nB)) {
+                    acc++;
                 }
+                sol++;
             }
-
-            if (i >= group_size_n || acc >= threshold){
+            if (acc > threshold){
                 group_map[groups[group][i]] = groups.size();
                 temp_group.push_back(groups[group][i]);
                 // remove current variable from current group
@@ -119,6 +112,7 @@ void SolutionMerger::fullMergeThresh(const std::vector<Sol_Int>&sols,
         // if new group created, add to list of groups
         if (!temp_group.empty()){
           groups.push_back(temp_group);
+          // std::cout << "group " << groups.size() << " created" << std::endl;
         }
     }
 
@@ -236,7 +230,7 @@ void SolutionMerger::fullMerge(const std::vector<Sol_Int>&sols,
       for (int t = 0; t < nT; ++t){
         if (t >= intervals[b][0]){
           fixed[t*nB + b] = -1;
-          if (t >= intervals[b][1]){
+          if (t > intervals[b][1]){
             fixed[t*nB + b] = 1;
           }
         }
@@ -486,64 +480,77 @@ void SolutionMerger::fullMerge(const std::vector<Sol_Int>&sols,
     std::cout << "variables unfixed: " << var_cnt2[0] <<std::endl << std::endl;
 }
 
-
 void SolutionMerger::simpleMerge(const std::vector<Sol_Int>&sols,
   const std::vector<int> &include, std::vector<int> &fixed){
 
   std::cout << "merging " << sols.size() << " CPIT solutions using simpleMerger" << std::endl;
 
+  qol::CpuTimer merge_timer;
+
   int nB = sols[0].x.size();
   int nT = sols[0].nT;
-  int nS = sols.size();
-  
-  double epsilon = 0.0;
 
-  fixed = std::vector<int>(nB*nT, -1);
+  fixed = std::vector<int>(nB*nT, 0);
 
   std::vector<int> var_cnt(3,0);
 
-//  std::vector<std::array<int, 2> > intervals(nB, std::array<int,2>{{nT,0}});
+  std::vector<std::array<int, 2> > intervals(nB, std::array<int,2>{{nT,0}});
 
-    int t, n0, n1;
-    double p0, p1, entr;
-
-  for (size_t b = 0; b < nB; ++b){
+  for (size_t b=0; b < nB; ++b){
     if (!include[b]){
-        for (t = 0; t < nT; ++t){
-            fixed[t*nB + b] = 0;
-        }
-        continue;
+      intervals[b][1] = nT;
+      continue;
     }
-    for (t = 0; t < nT; ++t){
-        n0 = 0;
-        n1 = 0;
-        p0 = 0.0;
-        p1 = 0.0;
-        entr = 0.0;
-        for (size_t sol=0; sol < nS; ++sol){
-            if(t < sols[sol].x[b]){
-                n0++;
-            } else{
-                n1++;
-            }
-        }
-        
-        if (n0 == 0){
-            fixed[t*nB + b] = 1;
-        } else if (n1 == 0){
-            fixed[t*nB + b] = 0;
-        } else{
-            p0 = double(n0)/nS;
-            p1 = double(n1)/nS;
-            entr = -p0*log2(p0)-p1*log2(p1);
-            if (entr < epsilon && p0 > p1){
-                fixed[t*nB + b] = 0;
-            } else if (entr < epsilon && p0 < p1){
-                fixed[t*nB + b] = 1;
-            }
-        }
+    for (size_t sol=0; sol < sols.size(); ++sol){
+      if (sols[sol].x[b] < intervals[b][0]){ // fixed to 0
+        intervals[b][0] = sols[sol].x[b];
+      }
+      if (sols[sol].x[b] > intervals[b][1]){ // fixed to 1
+        intervals[b][1] = sols[sol].x[b];
+      }
     }
   }
+
+  for (int b = 0; b<nB; ++b){
+    for (int t = 0; t < nT; ++t){
+      if (t >= intervals[b][0]){
+        fixed[t*nB + b] = -1;
+        if (t > intervals[b][1]){
+          fixed[t*nB + b] = 1;
+        }
+      }
+    }
+  }
+
+  //   for (size_t t = 0; t < nT; ++t){
+  //     for (size_t b = 0; b < nB; ++b){
+  //     // std::cout << " " << var_cnt[0] << " " << var_cnt[1] << " " << var_cnt[2] << std::endl;
+  //     int first_sol = (sols[0].x[b] <= t);
+  //     bool unfixed = false;
+  //     // std::cout << (sols[0].x[b] < t) << " ";
+  //     for (size_t sol = 1; sol < sols.size(); ++sol){
+  //       // std::cout << (sols[sol].x[b] < t) << " ";
+  //       if (first_sol == (sols[sol].x[b] <= t)){
+  //         continue;
+  //       }
+  //       else{
+  //         var_cnt.back()++;
+  //         unfixed = true;
+  //         // std::cout << "unfixed";
+  //         break;
+  //       }
+  //     }
+  //     if (!unfixed){
+  //       // if it makes it through the loop then it is fixed
+  //       fixed[t*nB + b] = first_sol;
+  //       // std::cout << "fixed to " << first_sol;
+  //       //update variable counts
+  //       var_cnt[first_sol]++;
+  //     }
+  //   }
+  // }
+
+  std::cout << "\nMerge time: " << merge_timer.elapsedSeconds() << std::endl << std::endl;
 
   std::cout << "merge finished!" << std::endl;
 
@@ -557,11 +564,18 @@ void SolutionMerger::simpleMerge(const std::vector<Sol_Int>&sols,
   std::cout << "variables fixed to 0: " << var_cnt2[1] <<std::endl;
   std::cout << "variables fixed to 1: " << var_cnt2[2] <<std::endl;
   std::cout << "variables unfixed: " << var_cnt2[0] <<std::endl << std::endl;
+
+  for (int i = 0; i < var_cnt.size()-1; ++i){
+    std::cout << var_cnt[i] << " variables fixed to " << i << std::endl;
+  }
+  std::cout << var_cnt.back() << " variables unfixed" << std::endl;
 }
 
 void SolutionMerger::mergeCPIT(const std::vector<Sol_Int>&sols,
   std::vector<int> &fixed, std::vector<std::vector<int> > &groups, std::vector<int> &group_map){
   std::cout << "merging " << sols.size() << " CPIT solutions" << std::endl;
+
+  qol::CpuTimer merge_timer;
 
   int nB = sols[0].x.size();
   int nT = sols[0].nT;
@@ -693,8 +707,101 @@ void SolutionMerger::mergeCPIT(const std::vector<Sol_Int>&sols,
 
   // std::cout << "done!" << std::endl;
 
+  std::cout << "\nMerge time: " << merge_timer.elapsedSeconds() << std::endl << std::endl;
+
   std::cout << "merge finished!" << std::endl << nB*nT << " variables found in " << groups.size() << " groups and " << groups_count << " groups with size greater than 1"<<std::endl;
 
   std::cout << "reduction in problem size: " << (double)groups.size()/(nB*nT) << std::endl;
   // std::cin.get();
+}
+
+void SolutionMerger::mergePCPSP(const std::vector<Sol_Int>&sols, BranchNode_info &merged){
+  std::cout << "merging PCPSP solutions" << std::endl;
+
+  int nB = sols[0].x.size();
+  int nT = sols[0].nT;
+
+  std::vector<std::array<int, 2> > intervals(nB, std::array<int,2>{{nT,0}});
+
+  // for (size_t sol = 0; sol < sols.size(); ++sol){
+  //   for(size_t i=0;i<nB;++i){
+  //     std::cout << sols[sol].x[i] << " ";
+  //   }
+  //   std::cout << std::endl;
+  // }
+
+  for (size_t b=0; b < nB; ++b){
+    for (size_t sol=0; sol < sols.size(); ++sol){
+      if (sols[sol].x[b]-1 < intervals[b][0]){ // fixed to 0
+        intervals[b][0] = sols[sol].x[b]-1;
+      }
+      if (sols[sol].x[b] > intervals[b][1]){ // fixed to 1
+        intervals[b][1] = sols[sol].x[b];
+      }
+    }
+  }
+
+  // std::cout << std::endl << "merged solutions:" << std::endl;
+  //
+  // for (size_t i = 0; i<intervals[0].size();++i){
+  //   for (size_t b=0; b<nB; ++b){
+  //     std::cout << intervals[b][i] << " ";
+  //   }
+  //   std::cout << std::endl;
+  // }
+
+  merged.init(nB,nT,sols[0].y[0].size(),sols[0].y[0].size());
+  merged.fixed = intervals;
+}
+
+// void SolutionMerger::buildNewProblem(std::vector<std::vector<int> > &groups, std::vector<int> &group_map, const SinglePModel *old_model, SinglePModel *new_model){
+//
+//   std::vector<Block> * blocks=model->getBlock();
+//   std::vector<Block> blocks;
+//
+// }
+
+void SolutionMerger::writePCPSPmerged2D(const std::vector<Sol_Int> &sols){
+  int nSols = sols.size();
+  int nB = sols[0].x.size();
+  int nT = sols[0].nT;
+
+  std::ofstream outfile;
+  outfile.open ("merged_sols2D.xsol");
+  for (size_t t=0; t < nT; ++t){
+    for (size_t b=0; b < nB; ++b){
+      double total = 0.0;
+      for (size_t sol=0; sol < nSols; ++sol){
+        if (sols[sol].x[b] <= t){
+          total++;
+        }
+      }
+      outfile << total/nSols << std::endl;
+    }
+  }
+  outfile << "END" << std::endl;
+  outfile.close();
+}
+
+void SolutionMerger::writePCPSPmerged3D(const std::vector<Sol_Int> &sols){
+  int nSols = sols.size();
+  int nB = sols[0].x.size();
+  int nT = sols[0].nT;
+
+  std::ofstream outfile;
+  outfile.open ("merged_sols3D.xsol");
+  for (size_t b=0; b < nB; ++b){
+    for (size_t t=0; t < nT; ++t){
+      double total = 0.0;
+      for (size_t sol=0; sol < nSols; ++sol){
+        if (sols[sol].x[b] <= t){
+          total++;
+        }
+      }
+      outfile << total/nSols << " ";
+    }
+    outfile << std::endl;
+  }
+  outfile << "END" << std::endl;
+  outfile.close();
 }
