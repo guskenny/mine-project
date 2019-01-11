@@ -866,8 +866,8 @@ void SinglePSolver::doMerge(SolutionMerger &sm, const std::vector<Sol_Int>&sols,
   std::vector<int> fixed;
   // sm.mergeCPIT(sols,fixed,groups,group_map);
   // sm.simpleMerge(sols,include,fixed);
-  sm.fullMerge(sols,include,fixed, groups, group_map);
-  // sm.fullMergeThresh(sols,include,fixed, groups, group_map);
+  // sm.fullMerge(sols,include,fixed, groups, group_map);
+  sm.fullMergeThresh(sols,include,fixed, groups, group_map);
 
   sols.clear();
 

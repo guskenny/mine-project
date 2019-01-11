@@ -84,7 +84,7 @@ void SolutionMerger::fullMergeThresh(const std::vector<Sol_Int>&sols,
 
     // further group the variables that not fixed
     int acc, sol;
-    int threshold = 1; // user defined parameter; can be worked out based on the entropy threshold and population size
+    int threshold = 5; // user defined parameter; can be worked out based on the entropy threshold and population size
     int group_size_n = 50; // user defined parameter; the maximal group size for unfixed variables
     int groups_size = groups.size();
     // iterate over all groups; starting from the group that not fixed)
