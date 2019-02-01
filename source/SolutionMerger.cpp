@@ -84,8 +84,8 @@ void SolutionMerger::fullMergeThresh(const std::vector<Sol_Int>&sols,
 
     // further group the variables that not fixed
     int acc, sol;
-    int threshold = 5; // user defined parameter; can be worked out based on the entropy threshold and population size
-    int group_size_n = 50; // user defined parameter; the maximal group size for unfixed variables
+    // int threshold = 2; // user defined parameter; can be worked out based on the entropy threshold and population size
+    int group_size_n = nB*nT; // user defined parameter; the maximal group size for unfixed variables
     int groups_size = groups.size();
     // iterate over all groups; starting from the group that not fixed)
     for (int group = groups_size - 1; group < groups.size(); ++group){
@@ -94,7 +94,7 @@ void SolutionMerger::fullMergeThresh(const std::vector<Sol_Int>&sols,
         for (int i = 1; i < groups[group].size(); ++i){
             acc = 0; sol = 0;
             if (i < group_size_n){
-                while (acc < threshold && sol < sols.size()){
+                while (acc < sh.MERGE_THRESH && sol < sols.size()){
                     // there might be many re-calculation of x values;
                     // using an array to store the x vlaues might improve the time efficiency?
                     if ((sols[sol].x[groups[group][0]%nB] <= groups[group][0]/nB) != \
@@ -105,7 +105,7 @@ void SolutionMerger::fullMergeThresh(const std::vector<Sol_Int>&sols,
                 }
             }
 
-            if (i >= group_size_n || acc >= threshold){
+            if (i >= group_size_n || acc >= sh.MERGE_THRESH){
                 group_map[groups[group][i]] = groups.size();
                 temp_group.push_back(groups[group][i]);
                 // remove current variable from current group
@@ -147,10 +147,12 @@ void SolutionMerger::fullMergeThresh(const std::vector<Sol_Int>&sols,
 
     int groups_count = 0;
     // int total_count = 0;
+    int grouped_vars = 0;
 
     for (int group = 0; group < groups.size(); ++group){
       if (groups[group].size() > 1){
         groups_count++;
+        grouped_vars += groups[group].size();
       }
     }
 
@@ -198,7 +200,8 @@ void SolutionMerger::fullMergeThresh(const std::vector<Sol_Int>&sols,
     std::cout << "validation:" << std::endl;
     std::cout << "variables fixed to 0: " << var_cnt2[1] <<std::endl;
     std::cout << "variables fixed to 1: " << var_cnt2[2] <<std::endl;
-    std::cout << "variables unfixed: " << var_cnt2[0] <<std::endl << std::endl;
+    std::cout << "unfixed variables in groups size = 1: " << nB*nT - grouped_vars << std::endl;
+    std::cout << "unfixed variables in groups size > 1: " << grouped_vars - (var_cnt2[2] + var_cnt2[1]) <<std::endl << std::endl;
 }
 
 void SolutionMerger::fullMerge(const std::vector<Sol_Int>&sols,
@@ -370,9 +373,12 @@ void SolutionMerger::fullMerge(const std::vector<Sol_Int>&sols,
     int groups_count = 0;
     // int total_count = 0;
 
+    int grouped_vars = 0;
+
     for (int group = 0; group < groups.size(); ++group){
       if (groups[group].size() > 1){
         groups_count++;
+        grouped_vars += groups[group].size();
       }
     }
 
@@ -480,10 +486,10 @@ void SolutionMerger::fullMerge(const std::vector<Sol_Int>&sols,
       var_cnt2[fixed[i]+1]++;
     }
 
-    std::cout << "validation:" << std::endl;
     std::cout << "variables fixed to 0: " << var_cnt2[1] <<std::endl;
     std::cout << "variables fixed to 1: " << var_cnt2[2] <<std::endl;
-    std::cout << "variables unfixed: " << var_cnt2[0] <<std::endl << std::endl;
+    std::cout << "unfixed variables in groups size = 1: " << nB*nT - grouped_vars << std::endl;
+    std::cout << "unfixed variables in groups size > 1: " << grouped_vars - (var_cnt2[2] + var_cnt2[1]) <<std::endl << std::endl;
 }
 
 

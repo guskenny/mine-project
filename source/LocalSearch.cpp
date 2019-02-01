@@ -253,6 +253,8 @@ void LocalSearch::goodSwap(Sol_Int &sol){
 
   double base_obj = sol.obj;
 
+  Sol_Int orig_sol = sol;
+
   // set up data structures
   SetObj cone(nB);
   if (!sh.QUIET){
@@ -289,10 +291,15 @@ void LocalSearch::goodSwap(Sol_Int &sol){
 
   int skips = 0;
 
+  bool improving = false;
+
   // iterate for number of swaps
-  for (int swap = 0; swap < sh.SA_ITER && sol.obj < sh.OBJ_UB; ++swap){
+  for (int swap = 0; swap < sh.SA_ITER && sol.obj < sh.OBJ_UB && sol.obj <= base_obj; ++swap){
     for (int sub_swap = 0; sub_swap < sh.FULL_RUNS && sol.obj < sh.OBJ_UB; ++sub_swap){
       Sol_Int backup_sol = sol;
+      
+      double swap_base_obj = sol.obj;
+      
       std::vector<SetObj> backup_period_blocks = period_blocks;
       // if (swap % 3 == 0){
       //   sol_tracker << sol.obj << std::endl;
@@ -343,6 +350,10 @@ void LocalSearch::goodSwap(Sol_Int &sol){
       // profit and period_blocks
       swapConePeriod(sol, period, dir, cone, cone_profit, cone_res_use, period_blocks);
 
+      if (sol.obj > swap_base_obj){
+        improving = true;
+      }
+
       // create vector with both current swap periods in
       std::vector<int> swap_periods = {period, period + dir - !dir};
 
@@ -354,6 +365,9 @@ void LocalSearch::goodSwap(Sol_Int &sol){
         bool flag = false;
         // keep swapping while resources dont match up
         while(!flag){
+
+          double sub_swap_base_obj = sol.obj;
+
           flag = true;
           int temp_t = 0;
           // check all resources to see if they are over the limit
@@ -398,16 +412,22 @@ void LocalSearch::goodSwap(Sol_Int &sol){
             swapConePeriod(sol, temp_p, temp_dir, cone, cone_profit, cone_res_use, period_blocks);
             // std::cout << "swapping from " << swap_periods[0] << " to " << swap_periods[1] << ", current objective value: " << sol.obj << std::endl;
 
+            if (sol.obj > swap_base_obj){
+              improving = true;
+            }
+
             sub_sub_swaps++;
             if (sub_sub_swaps > sh.MAX_SUB_SWAPS){
               skips++;
               // std::cout << "not frozen, just swapping from " << temp_p << " to " << int(temp_p + temp_dir - !temp_dir) << ", current objective value: " << sol.obj << std::endl;
               // std::cout << "sub_sub_swaps over 100, skipping current sub_swap!" << std::endl;
               // drop current sub-swap
+              //***uncomment!!***
               swap--;
               sol = backup_sol;
               period_blocks = backup_period_blocks;
               flag = true;
+              improving = false;
               // std::cin.get();
             }
           }
@@ -445,6 +465,11 @@ void LocalSearch::goodSwap(Sol_Int &sol){
   if (!sh.QUIET){
     std::cout << "number of skips: " << skips << std::endl;
   }
+
+  if(!improving){
+    sol = orig_sol;
+  }
+
   // sol_tracker.close();
   // sol_tracker_base.close();
 }
@@ -499,7 +524,7 @@ void LocalSearch::swapWalk(Sol_Int &sol){
   int skips = 0;
 
   // iterate for number of swaps
-  for (int swap = 0; swap < sh.SA_ITER && sol.obj < sh.OBJ_UB; ++swap){
+  for (int swap = 0; swap < sh.SA_ITER && sol.obj < sh.OBJ_UB && sol.obj <= base_obj; ++swap){
     for (int sub_swap = 0; sub_swap < sh.FULL_RUNS && sol.obj < sh.OBJ_UB; ++sub_swap){
       Sol_Int backup_sol = sol;
       std::vector<SetObj> backup_period_blocks = period_blocks;

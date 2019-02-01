@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"group",
+				"grouped_vars"
+			],
+			[
 				"rand",
 				"random_ball"
 			],
@@ -48,7 +52,7 @@
 			"file": "source/SinglePSolver.cpp",
 			"settings":
 			{
-				"buffer_size": 45774,
+				"buffer_size": 45805,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -57,8 +61,16 @@
 			"file": "source/SolutionMerger.cpp",
 			"settings":
 			{
-				"buffer_size": 23553,
+				"buffer_size": 23963,
 				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "source/MergeSolverCompact.cpp",
+			"settings":
+			{
+				"buffer_size": 22116,
 				"line_ending": "Unix"
 			}
 		},
@@ -173,8 +185,25 @@
 			"file": "include/SettingsHandler.h",
 			"settings":
 			{
-				"buffer_size": 12911,
+				"buffer_size": 13062,
 				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "settings.ini",
+			"settings":
+			{
+				"buffer_size": 3655,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "good_settings",
+			"settings":
+			{
+				"buffer_size": 499,
 				"line_ending": "Unix"
 			}
 		}
@@ -222,10 +251,12 @@
 	"expanded_folders":
 	[
 		"/home/gus/Documents/PhD/mine-project",
-		"/home/gus/Documents/PhD/mine-project/include"
+		"/home/gus/Documents/PhD/mine-project/source"
 	],
 	"file_history":
 	[
+		"/home/gus/angus.kenny@rmit.edu.au/PhD/gecco_19/paper/gecco19.tex",
+		"/home/gus/angus.kenny@rmit.edu.au/PhD/notes/grouping/grouping.tex",
 		"/home/gus/Downloads/SolutionMerger.cpp",
 		"/home/gus/Documents/PhD/mine-project/source/MergeSolverCompact.cpp",
 		"/home/gus/Documents/PhD/mine-project/mayavi_test2.py",
@@ -252,6 +283,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"GROUP_MER",
 			"saveSols",
 			"base_plt",
 			"()\n",
@@ -279,7 +311,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -309,7 +341,7 @@
 						"translation.y": 19181.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 14,
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
@@ -318,15 +350,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 45774,
+						"buffer_size": 45805,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								29399,
-								29399
+								10117,
+								10117
 							]
 						],
 						"settings":
@@ -337,7 +369,7 @@
 							"word_wrap": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 13680.0,
+						"translation.y": 1457.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -349,15 +381,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 23553,
+						"buffer_size": 23963,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								8161,
-								8161
+								17496,
+								17496
 							]
 						],
 						"settings":
@@ -368,14 +400,44 @@
 							"word_wrap": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3225.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
 					"buffer": 3,
+					"file": "source/MergeSolverCompact.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 22116,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2498,
+								2498
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 834.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
 					"file": "draw_plot.py",
 					"semi_transient": false,
 					"settings":
@@ -401,11 +463,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 5,
 					"file": "plot_mine.py",
 					"semi_transient": false,
 					"settings":
@@ -432,11 +494,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 16,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 6,
 					"file": "anim_time.py",
 					"semi_transient": false,
 					"settings":
@@ -463,11 +525,11 @@
 						"translation.y": 976.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 7,
 					"file": "anim_mine.py",
 					"semi_transient": false,
 					"settings":
@@ -491,14 +553,14 @@
 							"word_wrap": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 866.0,
+						"translation.y": 912.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 8,
 					"file": "boxes.py",
 					"semi_transient": false,
 					"settings":
@@ -524,11 +586,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 9,
 					"file": "mayavi_test.py",
 					"semi_transient": false,
 					"settings":
@@ -554,11 +616,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
-					"buffer": 9,
+					"buffer": 10,
 					"file": "mayavi_test3.py",
 					"semi_transient": false,
 					"settings":
@@ -585,11 +647,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 14,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 11,
 					"file": "gen_colourmap.py",
 					"semi_transient": false,
 					"settings":
@@ -613,17 +675,17 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 9,
 					"type": "text"
 				}
 			]
 		},
 		{
-			"selected": 0,
+			"selected": 5,
 			"sheets":
 			[
 				{
-					"buffer": 11,
+					"buffer": 12,
 					"file": "source/SolutionMerger.cppold",
 					"semi_transient": false,
 					"settings":
@@ -649,11 +711,11 @@
 						"translation.y": 6956.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
-					"buffer": 12,
+					"buffer": 13,
 					"file": "include/SinglePSolver.h",
 					"semi_transient": false,
 					"settings":
@@ -680,11 +742,11 @@
 						"translation.y": 630.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 15,
 					"type": "text"
 				},
 				{
-					"buffer": 13,
+					"buffer": 14,
 					"file": "notes",
 					"semi_transient": false,
 					"settings":
@@ -710,11 +772,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 15,
+					"stack_index": 18,
 					"type": "text"
 				},
 				{
-					"buffer": 14,
+					"buffer": 15,
 					"file": "include/SolutionMerger.h",
 					"semi_transient": false,
 					"settings":
@@ -740,24 +802,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
-					"buffer": 15,
+					"buffer": 16,
 					"file": "include/SettingsHandler.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 12911,
+						"buffer_size": 13062,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								9089,
-								9089
+								5894,
+								5894
 							]
 						],
 						"settings":
@@ -767,10 +829,66 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1125.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 17,
+					"file": "settings.ini",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3655,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2051,
+								2051
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 435.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 18,
+					"file": "good_settings",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 499,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
 					"type": "text"
 				}
 			]
@@ -852,7 +970,7 @@
 		],
 		"width": 0.0
 	},
-	"selected_group": 0,
+	"selected_group": 1,
 	"settings":
 	{
 	},

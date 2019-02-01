@@ -43,7 +43,12 @@ skip_times = False
 
 y_max = 0;
 
-for infile_name in args[1:]:
+nodata = False
+
+if args[len(args)-1] == "-n":
+    nodata = True
+
+for infile_name in args[1:len(args)-1]:
     with open(infile_name, 'r') as infile:
         y = []
         for line in infile:
@@ -158,8 +163,8 @@ ax1.grid(True,which='major')
 ax1.grid(True,which='minor', linestyle='--',alpha=0.5)
 
 ax.yaxis.set_visible(False)
-ax.text(0.96,0.06, box_text,transform=ax.transAxes, fontsize=14,
-bbox={'facecolor':'white', 'alpha':0.5, 'pad':10}, ha='right', va='bottom')
+if nodata == False:
+    ax.text(0.96,0.06, box_text,transform=ax.transAxes, fontsize=14, bbox={'facecolor':'white', 'alpha':0.5, 'pad':10}, ha='right', va='bottom')
 
 ax1.set_xlim(right=x_max)
 

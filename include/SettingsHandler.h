@@ -33,6 +33,7 @@ class SettingsHandler {
     size_t NUM_SEEDS=1;
     size_t NUM_ITER=1;
     size_t MERGE_TYPE=1;
+    size_t MERGE_THRESH=0;
     size_t ITER_INCR=0;
     size_t FIX_BEST_GROUP=false;
     bool GROUP_MERGE=false;
@@ -200,6 +201,10 @@ class SettingsHandler {
         }
         else if (setting.compare("MERGE_TYPE") == 0){
           MERGE_TYPE = stoi(value);
+          continue;
+        }
+        else if (setting.compare("MERGE_THRESH") == 0){
+          MERGE_THRESH = stoi(value);
           continue;
         }
         else if (setting.compare("ITER_INCR") == 0){

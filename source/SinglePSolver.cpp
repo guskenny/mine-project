@@ -292,7 +292,8 @@ bool SinglePSolver::loadSols(std::vector<Sol_Int> &sols){
 
   std::vector<double> obj_vals;
 
-    // for (int i = 0; i < sh.NUM_SEEDS; ++i){
+    for (int i = 0; i < sh.NUM_SEEDS; ++i){
+    int cur_idx = sh.SOL_IDX + i;
     Sol_Int temp_sol(nB,0,r_max,t_max);
 
     std::string path_name = "./init_sols/" + probModel->getName();
@@ -307,9 +308,9 @@ bool SinglePSolver::loadSols(std::vector<Sol_Int> &sols){
     //   sol_idx = "0" + std::to_string(i);
     // }
 
-    std::string sol_idx = std::to_string(sh.SOL_IDX);
-    if (sh.SOL_IDX < 10){
-      sol_idx = "0" + std::to_string(sh.SOL_IDX);
+    std::string sol_idx = std::to_string(cur_idx);
+    if (cur_idx < 10){
+      sol_idx = "0" + std::to_string(cur_idx);
     }
 
     std::string fname = path_name + "/" + probModel->getName() + "_" + sol_idx + ".sol";
@@ -338,11 +339,11 @@ bool SinglePSolver::loadSols(std::vector<Sol_Int> &sols){
     computeResUse(temp_sol);
     sols.push_back(temp_sol);
 
-    std::cout << "Adding solution " << sh.SOL_IDX << " to seeds. Objective value: " << temp_sol.obj << std::endl;
+    std::cout << "Adding solution " << cur_idx << " to seeds. Objective value: " << temp_sol.obj << std::endl;
     obj_vals.push_back(temp_sol.obj);
 
     solfile.close();
-  // }
+  }
 
   std::cout << sols.size() << " seeds loaded!" << std::endl;
   std::cout << "Best objective value: " << sols[0].obj << std::endl;
@@ -383,25 +384,25 @@ int SinglePSolver::forkMergeSolve(){
 
   if (sh.RECORD_DATA){
   for (int i = 0; i < sh.NUM_SEEDS+1; ++i){
-    time_out[i].open("/tracking_data/TIME_"+std::to_string(i)+".csv");
+    time_out[i].open("./tracking_data/" + probModel->getName() + "/TIME_"+std::to_string(i)+".csv");
     time_out[i] << "TIME DATA - SEED " << i << std::endl << "CPU TIME,OBJ_VALUE" << std::endl;
 
     // output files for recording all solutions
-    seed_out[i].open("/tracking_data/SEED_"+std::to_string(i)+".csv");
+    seed_out[i].open("./tracking_data/" + probModel->getName() + "/SEED_"+std::to_string(i)+".csv");
     seed_out[i] << "PARALLEL MERGE - SEED " << i << std::endl;
     seed_out[i] << "SA_ALPHA,SA_T_MIN,SA_ITER,FULL_RUNS,MERGE_POP_SIZE,NUM_ITER,ITER_INCR" << std::endl;
     seed_out[i] << sh.SA_ALPHA <<","<< sh.SA_T_MIN <<","<< sh.SA_ITER <<","<< sh.FULL_RUNS <<","<< sh.MERGE_POP_SIZE <<","<< sh.NUM_ITER << "," << sh.ITER_INCR << std::endl;
 
     // output files for recording best solutions
-    seed_out[i+sh.NUM_SEEDS+1].open("/tracking_data/SEED_"+std::to_string(i)+"_BEST.csv");
+    seed_out[i+sh.NUM_SEEDS+1].open("./tracking_data/" + probModel->getName() + "/SEED_"+std::to_string(i)+"_BEST.csv");
     seed_out[i+sh.NUM_SEEDS+1] << "PARALLEL MERGE (BEST SOL)- SEED " << i << std::endl;
     seed_out[i+sh.NUM_SEEDS+1] << "SA_ALPHA,SA_T_MIN,SA_ITER,FULL_RUNS,MERGE_POP_SIZE,NUM_ITER,ITER_INCR" << std::endl;
     seed_out[i+sh.NUM_SEEDS+1] << sh.SA_ALPHA <<","<< sh.SA_T_MIN <<","<< sh.SA_ITER <<","<< sh.FULL_RUNS <<","<< sh.MERGE_POP_SIZE <<","<< sh.NUM_ITER << "," << sh.ITER_INCR << std::endl;
   }
-  run_time.open ("/tracking_data/run_time.csv");
+  run_time.open ("./tracking_data/" + probModel->getName() + "/run_time.csv");
   run_time << "RUN_TIMES:" << std::endl;
-  outfile.open ("/tracking_data/merge_obj.csv");
-  red_data.open ("/tracking_data/reduce_data.csv");
+  outfile.open ("./tracking_data/" + probModel->getName() + "/merge_obj.csv");
+  red_data.open ("./tracking_data/" + probModel->getName() + "/reduce_data.csv");
   red_data << "VARIABLES,CONSTRAINTS" << std::endl;
   outfile << "PARALLEL MERGE" << std::endl;
   outfile << "SA_ALPHA,SA_T_MIN,SA_ITER,FULL_RUNS,MERGE_POP_SIZE,NUM_ITER,ITER_INCR" << std::endl;
@@ -441,7 +442,7 @@ int SinglePSolver::forkMergeSolve(){
 
     Sol_Int best_sol = seeds[0];
 
-    Sol_Int merged_sol;
+    // Sol_Int merged_sol;
 
     // doMerge(sm, seeds, include, seeds[0] ,merged_sol,red_data);
 
@@ -475,9 +476,9 @@ int SinglePSolver::forkMergeSolve(){
 
         double start_swap = over_timer.elapsedSeconds();
 
-        // #pragma omp parallel for shared(curr_best_obj)
+        #pragma omp parallel for shared(curr_best_obj)
         for (int i = 0; i < merge_pop_size; ++i){
-          Sol_Int parallel_sol = seeds[seed];
+          Sol_Int parallel_sol = best_par_sols[seed];
           computeResUse(parallel_sol);
 
           if (sh.QUIET){
@@ -493,11 +494,14 @@ int SinglePSolver::forkMergeSolve(){
           // (*out_streams[omp_get_thread_num()]) << "printing iteration " << i << " to thread " << omp_get_thread_num() << std::endl;
           // std::cout << "blerp..." << std::endl;
           // ls.SAnoPeriod(parallel_sol);
-          ls.swapWalk(parallel_sol);
+          // ls.swapWalk(parallel_sol);
+          ls.goodSwap(parallel_sol);
 
           if (sh.OBJ_UB > 0 && parallel_sol.obj > sh.OBJ_UB){
             flag = true;
           }
+
+          computeResUse(parallel_sol);
 
           curr_best_obj = std::max(curr_best_obj, parallel_sol.obj);
 
@@ -510,7 +514,17 @@ int SinglePSolver::forkMergeSolve(){
           }
 
           if (parallel_sol.obj > best_par_sols[seed].obj){
-            best_par_sols[seed] = parallel_sol;
+          // test sol
+          try{
+            bool test_error = verify((*probModel), parallel_sol);
+            // bool test_error = false;
+            if (!test_error){
+              best_par_sols[seed] = parallel_sol;
+            }
+          } // end try statement
+          catch (qol::Exception & ex) {
+          }
+          catch (...) { std::cerr << "Unknown Error Occured" << std::endl;}
           }
 
           if (!sh.QUIET){
@@ -519,29 +533,29 @@ int SinglePSolver::forkMergeSolve(){
           }
 
 
-          try{
-            // std::cout << "\nChecking solution from solver...\n" << std::endl;
+          // try{
+          //   // std::cout << "\nChecking solution from solver...\n" << std::endl;
 
-            bool test_error = verify((*probModel), parallel_sol);
+          //   bool test_error = verify((*probModel), parallel_sol);
 
-            // std::cout << "\nSolution found by merge solver was ";
-            if (!test_error){
-              // std::cout << "feasible!\n" << std::endl;
-            }
-            else{
-              // std::cout << "\033[31;1minfeasible!\033[0m\n" << std::endl;
-              // std::cin.get();
-              std::cin.get();
-              throw qol::Exception("Infeasible solution!");
-              // sol = backup_sol;
-            }
-          } // end try statement
-          catch (qol::Exception & ex) {
-            std::cerr << "Error: " << ex.what() << std::endl;
-            computeResUse(parallel_sol);
-            ls.repairSolution(parallel_sol);
-          }
-          catch (...) { std::cerr << "Unknown Error Occured" << std::endl;}
+          //   // std::cout << "\nSolution found by merge solver was ";
+          //   if (!test_error){
+          //     // std::cout << "feasible!\n" << std::endl;
+          //   }
+          //   else{
+          //     // std::cout << "\033[31;1minfeasible!\033[0m\n" << std::endl;
+          //     // std::cin.get();
+          //     std::cin.get();
+          //     throw qol::Exception("Infeasible solution!");
+          //     // sol = backup_sol;
+          //   }
+          // } // end try statement
+          // catch (qol::Exception & ex) {
+          //   std::cerr << "Error: " << ex.what() << std::endl;
+          //   computeResUse(parallel_sol);
+          //   ls.repairSolution(parallel_sol);
+          // }
+          // catch (...) { std::cerr << "Unknown Error Occured" << std::endl;}
 
           // add branch solution to population of solutions
           sols[seed][i] = parallel_sol;
@@ -557,9 +571,12 @@ int SinglePSolver::forkMergeSolve(){
 
           std::cout << "************ MERGE " << iter+1 << " OF " << sh.NUM_ITER << " - seed: " << seed << " ************\n" << std::endl;
           qol::CpuTimer merge_timer;
-          // Sol_Int merged_sol;
+          
+          Sol_Int merged_sol;
 
           doMerge(sm, sols[seed], include, best_par_sols[seed],merged_sol,red_data);
+
+          computeResUse(merged_sol);
 
           // test final solution for feasibility
           try{
@@ -573,7 +590,7 @@ int SinglePSolver::forkMergeSolve(){
             }
             else{
               std::cout << "\033[31;1minfeasible!\033[0m\n" << std::endl;
-              std::cin.get();
+              // std::cin.get();
               throw qol::Exception("Infeasible solution!");
               // sol = backup_sol;
             }
@@ -608,6 +625,7 @@ int SinglePSolver::forkMergeSolve(){
 
           std::cout << std::endl << "old best: " << best_sol.obj
                     << std::endl << "branch best: " << best_par_sols[seed].obj
+                    << std::endl << "current overall best: " << curr_best_obj
                     << std::endl << "new objective after merge: " << merged_sol.obj;
           if (iterObj > best_par_sols[seed].obj){
               std::cout << std::endl << "***** NEW BEST OBJECTIVE FOUND AFTER MERGE! *****\n" << std::endl;
@@ -648,13 +666,20 @@ int SinglePSolver::forkMergeSolve(){
     // merge best solutions all together
     std::cout << "\nPerforming full merge of all seeds\n" << std::endl;
 
+    for (int p = 0; p < sols.size(); ++p){
+      std::cout << "sols[" << p << "]: " << sols[p].size() << std::endl;     
+    }
+    
     std::vector<Sol_Int> all_sols;
     all_sols.reserve(sh.NUM_SEEDS * sols[0].size());
     for (int seed = 0; seed < sh.NUM_SEEDS; ++seed){
       all_sols.insert(all_sols.end(), sols[seed].begin(), sols[seed].end());
     }
 
-    // Sol_Int merged_sol;
+
+
+
+    Sol_Int merged_sol;
     doMerge(sm, all_sols, include, tot_best_sol, merged_sol,red_data);
 
     // test final solution for feasibility
@@ -669,7 +694,7 @@ int SinglePSolver::forkMergeSolve(){
       }
       else{
         std::cout << "\033[31;1minfeasible!\033[0m\n" << std::endl;
-        // std::cin.get();
+        std::cin.get();
         throw qol::Exception("Infeasible solution!");
         // sol = backup_sol;
       }
@@ -832,7 +857,7 @@ int SinglePSolver::forkMergeSolve(){
     else{
       std::cout << "\033[31;1minfeasible!\033[0m\n" << std::endl;
       throw qol::Exception("Infeasible solution!");
-      std::cin.get();
+      // std::cin.get();
       // sol = backup_sol;
     }
   } // end try statement
@@ -866,10 +891,13 @@ void SinglePSolver::doMerge(SolutionMerger &sm, const std::vector<Sol_Int>&sols,
   std::vector<int> fixed;
   // sm.mergeCPIT(sols,fixed,groups,group_map);
   // sm.simpleMerge(sols,include,fixed);
-  // sm.fullMerge(sols,include,fixed, groups, group_map);
-  sm.fullMergeThresh(sols,include,fixed, groups, group_map);
-
-  sols.clear();
+  if (sh.MERGE_THRESH){
+    sm.fullMergeThresh(sols,include,fixed, groups, group_map);
+  }
+  else{
+    sm.fullMerge(sols,include,fixed, groups, group_map);
+  }
+  // sols.clear();
 
   if (sh.RECORD_DATA){
     std::ofstream group_out;
@@ -1068,7 +1096,8 @@ int SinglePSolver::serialMergeSolve(){
 
       #pragma omp parallel for shared(best_sol,order_count)
       for (int i = 1; i < merge_pop_size; ++i){
-        Sol_Int sol = seeds[0];
+        Sol_Int sol = best_sol;
+        // Sol_Int sol = seeds[0];
         computeResUse(sol);
 
         if (sh.QUIET){
@@ -1083,7 +1112,8 @@ int SinglePSolver::serialMergeSolve(){
           std::cout << "iteration: " << i << " of " << (merge_pop_size)/omp_get_num_threads() << std::endl << "thread sol: " << seeds[0].obj <<std::endl;
         }
 
-        ls.swapWalk(sol);
+        // ls.swapWalk(sol);
+        ls.goodSwap(sol);
 
         if (sh.OBJ_UB > 0 && sol.obj > sh.OBJ_UB){
           flag = true;
@@ -1092,9 +1122,10 @@ int SinglePSolver::serialMergeSolve(){
         computeResUse(sol);
 
         if (sol.obj > best_sol.obj){
-          // test best sol
+          // test sol
           try{
-            bool test_error = verify((*probModel), best_sol);
+            bool test_error = verify((*probModel), sol);
+            // bool test_error = false;
             if (!test_error){
               best_sol = sol;
             }

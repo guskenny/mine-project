@@ -7,9 +7,14 @@ then
   if [ $2 = "-g" ]
   then
     echo "Plotting $1 (groups)"
-    cmd="$cmd $1/GROUPS.csv"
+    cmd="$cmd $1/GROUPS.csv -x"
+  elif [ $2 = "-n" ]
+  	then
+  	echo "Plotting $1 (no data)"
+  	cmd="$cmd $1/GROUPS.csv -n"
   else
     echo "Plotting $1 (times)"
+    cmd="$cmd -x"
   fi
 else
   echo "Plotting $1 (times)"
