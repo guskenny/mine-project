@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"para",
+				"parallel_sol"
+			],
+			[
+				"comput",
+				"computeResUse"
+			],
+			[
+				"cur",
+				"cur_idx"
+			],
+			[
 				"group",
 				"grouped_vars"
 			],
@@ -43,7 +55,7 @@
 			"file": "source/LocalSearch.cpp",
 			"settings":
 			{
-				"buffer_size": 46345,
+				"buffer_size": 46816,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -52,7 +64,42 @@
 			"file": "source/SinglePSolver.cpp",
 			"settings":
 			{
-				"buffer_size": 45805,
+				"buffer_size": 47094,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "do_away_run",
+			"settings":
+			{
+				"buffer_size": 1109,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "source/MergeSolverCompact.cpp",
+			"settings":
+			{
+				"buffer_size": 22116,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "source/util.cpp",
+			"settings":
+			{
+				"buffer_size": 18747,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "plot",
+			"settings":
+			{
+				"buffer_size": 432,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -67,18 +114,10 @@
 			}
 		},
 		{
-			"file": "source/MergeSolverCompact.cpp",
-			"settings":
-			{
-				"buffer_size": 22116,
-				"line_ending": "Unix"
-			}
-		},
-		{
 			"file": "draw_plot.py",
 			"settings":
 			{
-				"buffer_size": 6232,
+				"buffer_size": 6332,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -194,7 +233,7 @@
 			"file": "settings.ini",
 			"settings":
 			{
-				"buffer_size": 3655,
+				"buffer_size": 3657,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -251,10 +290,13 @@
 	"expanded_folders":
 	[
 		"/home/gus/Documents/PhD/mine-project",
-		"/home/gus/Documents/PhD/mine-project/source"
+		"/home/gus/Documents/PhD/mine-project/source",
+		"/home/gus/Documents/PhD/mine-project/source/slurm"
 	],
 	"file_history":
 	[
+		"/home/gus/Documents/PhD/mine-project/source/SinglePSolver.cpp",
+		"/home/gus/Documents/PhD/mine-project/source/MergeSolverSimple.cpp",
 		"/home/gus/angus.kenny@rmit.edu.au/PhD/gecco_19/paper/gecco19.tex",
 		"/home/gus/angus.kenny@rmit.edu.au/PhD/notes/grouping/grouping.tex",
 		"/home/gus/Downloads/SolutionMerger.cpp",
@@ -283,6 +325,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"groups",
+			"base_obj",
+			"best_obj",
+			"sols",
 			"GROUP_MER",
 			"saveSols",
 			"base_plt",
@@ -320,28 +366,38 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 46345,
+						"buffer_size": 46816,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								19437,
-								19437
+								6772,
+								6772
 							]
 						],
 						"settings":
 						{
+							"WordCount":
+							{
+								"changes": 0,
+								"count": 2328,
+								"modified": false,
+								"selection": false,
+								"status": -1,
+								"syntax": "plain text"
+							},
 							"syntax": "Packages/C++/C++.sublime-syntax",
 							"tab_size": 2,
-							"translate_tabs_to_spaces": true
+							"translate_tabs_to_spaces": true,
+							"word_wrap": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 19181.0,
+						"translation.y": 1485.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 17,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
@@ -350,33 +406,177 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 45805,
+						"buffer_size": 47094,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								10117,
-								10117
+								38526,
+								38526
 							]
 						],
 						"settings":
 						{
+							"WordCount":
+							{
+								"changes": 129,
+								"count": 1911,
+								"modified": false,
+								"selection": false,
+								"status": -1,
+								"syntax": "plain text"
+							},
+							"history_list_is_closing": true,
 							"syntax": "Packages/C++/C++.sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true,
 							"word_wrap": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1457.0,
+						"translation.y": 17791.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "do_away_run",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1109,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								306,
+								306
+							]
+						],
+						"settings":
+						{
+							"WordCount":
+							{
+								"changes": 0,
+								"count": 90,
+								"modified": false,
+								"selection": false,
+								"status": -1,
+								"syntax": "plain text"
+							},
+							"syntax": "Packages/ShellScript/Bash.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
+					"buffer": 3,
+					"file": "source/MergeSolverCompact.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 22116,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								9182,
+								9182
+							]
+						],
+						"settings":
+						{
+							"WordCount":
+							{
+								"changes": 0,
+								"count": 1337,
+								"modified": false,
+								"selection": false,
+								"status": -1,
+								"syntax": "plain text"
+							},
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true,
+							"word_wrap": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4995.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "source/util.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 18747,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2745.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "plot",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 432,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								323,
+								323
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/ShellScript/Bash.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
 					"file": "source/SolutionMerger.cpp",
 					"semi_transient": false,
 					"settings":
@@ -395,7 +595,7 @@
 						"settings":
 						{
 							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 2,
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true,
 							"word_wrap": true
 						},
@@ -403,54 +603,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "source/MergeSolverCompact.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 22116,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2498,
-								2498
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 834.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
+					"buffer": 7,
 					"file": "draw_plot.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6232,
+						"buffer_size": 6332,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								50,
-								50
+								1003,
+								1003
 							]
 						],
 						"settings":
@@ -460,14 +630,14 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1395.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 8,
 					"file": "plot_mine.py",
 					"semi_transient": false,
 					"settings":
@@ -494,11 +664,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 16,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 9,
 					"file": "anim_time.py",
 					"semi_transient": false,
 					"settings":
@@ -525,11 +695,11 @@
 						"translation.y": 976.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 18,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 10,
 					"file": "anim_mine.py",
 					"semi_transient": false,
 					"settings":
@@ -556,11 +726,11 @@
 						"translation.y": 912.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 11,
 					"file": "boxes.py",
 					"semi_transient": false,
 					"settings":
@@ -586,11 +756,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 16,
 					"type": "text"
 				},
 				{
-					"buffer": 9,
+					"buffer": 12,
 					"file": "mayavi_test.py",
 					"semi_transient": false,
 					"settings":
@@ -616,11 +786,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 15,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 13,
 					"file": "mayavi_test3.py",
 					"semi_transient": false,
 					"settings":
@@ -647,11 +817,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 14,
+					"stack_index": 19,
 					"type": "text"
 				},
 				{
-					"buffer": 11,
+					"buffer": 14,
 					"file": "gen_colourmap.py",
 					"semi_transient": false,
 					"settings":
@@ -675,7 +845,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 14,
 					"type": "text"
 				}
 			]
@@ -685,7 +855,7 @@
 			"sheets":
 			[
 				{
-					"buffer": 12,
+					"buffer": 15,
 					"file": "source/SolutionMerger.cppold",
 					"semi_transient": false,
 					"settings":
@@ -708,14 +878,14 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 6956.0,
+						"translation.y": 371.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
-					"buffer": 13,
+					"buffer": 16,
 					"file": "include/SinglePSolver.h",
 					"semi_transient": false,
 					"settings":
@@ -742,11 +912,11 @@
 						"translation.y": 630.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 15,
+					"stack_index": 20,
 					"type": "text"
 				},
 				{
-					"buffer": 14,
+					"buffer": 17,
 					"file": "notes",
 					"semi_transient": false,
 					"settings":
@@ -772,11 +942,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 18,
+					"stack_index": 21,
 					"type": "text"
 				},
 				{
-					"buffer": 15,
+					"buffer": 18,
 					"file": "include/SolutionMerger.h",
 					"semi_transient": false,
 					"settings":
@@ -802,11 +972,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
-					"buffer": 16,
+					"buffer": 19,
 					"file": "include/SettingsHandler.h",
 					"semi_transient": false,
 					"settings":
@@ -832,39 +1002,48 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
-					"buffer": 17,
+					"buffer": 20,
 					"file": "settings.ini",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3655,
+						"buffer_size": 3657,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2051,
-								2051
+								484,
+								484
 							]
 						],
 						"settings":
 						{
+							"WordCount":
+							{
+								"changes": 167,
+								"count": 402,
+								"modified": false,
+								"selection": false,
+								"status": -1,
+								"syntax": "plain text"
+							},
 							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 435.0,
+						"translation.y": 720.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 18,
+					"buffer": 21,
 					"file": "good_settings",
 					"semi_transient": false,
 					"settings":
@@ -882,6 +1061,15 @@
 						],
 						"settings":
 						{
+							"WordCount":
+							{
+								"changes": 0,
+								"count": 56,
+								"modified": false,
+								"selection": false,
+								"status": -1,
+								"syntax": "plain text"
+							},
 							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
@@ -970,7 +1158,7 @@
 		],
 		"width": 0.0
 	},
-	"selected_group": 1,
+	"selected_group": 0,
 	"settings":
 	{
 	},

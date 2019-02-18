@@ -1096,8 +1096,8 @@ int SinglePSolver::serialMergeSolve(){
 
       #pragma omp parallel for shared(best_sol,order_count)
       for (int i = 1; i < merge_pop_size; ++i){
-        Sol_Int sol = best_sol;
-        // Sol_Int sol = seeds[0];
+        // Sol_Int sol = best_sol;
+        Sol_Int sol = seeds[0];
         computeResUse(sol);
 
         if (sh.QUIET){
@@ -1178,6 +1178,10 @@ int SinglePSolver::serialMergeSolve(){
         sols[i] = sol;
       }
       
+      if (flag){
+        break;
+      }
+
       if (sh.RECORD_DATA){
         // sort data by order_count
         std::priority_queue<std::pair<int, int> > q;
@@ -1242,7 +1246,7 @@ int SinglePSolver::serialMergeSolve(){
         computeResUse(merged_sol);
         ls.repairSolution(merged_sol);
 
-        iter--;
+        // iter--;
         resets++;
         restarts_out[0] << resets << std::endl;
       }
@@ -1322,6 +1326,10 @@ int SinglePSolver::serialMergeSolve(){
 
       std::cout << "# CPU time        "<<over_timer.elapsedSeconds()
         <<" sec.  Wall:"<< over_timer.elapsedWallTime() <<std::endl;
+
+      std::cout <<"\nrun time:" << std::endl;
+      std::cout << "# CPU time        "<<run_timer.elapsedSeconds()
+        <<" sec.  Wall:"<< run_timer.elapsedWallTime() <<std::endl;
 
 
 } // end full run
