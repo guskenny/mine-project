@@ -12,6 +12,7 @@
 #include "BranchNode.h"
 #include "QOL/CpuTimer.h"
 #include "SinglePModel.h"
+#include "SetObj.h"
 
 class SolutionMerger{
   private:

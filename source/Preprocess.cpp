@@ -116,10 +116,16 @@ int Preprocess::fixEarliest(const std::vector<bool> &mined, const int period)
     res.clear();
     res.resize(nB, std::vector<long double> (prob.getnResources(), 0.0));
 
+    std::vector<std::vector<long double> > succ_res(nB, std::vector<long double> (prob.getnResources(), 0.0));
+    std::vector<long double> curr_res(prob.getnResources(),0.0);
+
     double max_cone_value = -9e10;
 
 //#   pragma omp parallel for
     for(int b=0;b<nB;++b){
+    if (mined[b]){
+      continue;
+    }
 	std::vector<int> stack; // stack for search
 	stack.push_back(b);
 	inCone[b][b]=true; // set current block to in cone
@@ -134,19 +140,25 @@ int Preprocess::fixEarliest(const std::vector<bool> &mined, const int period)
       //   //max_profit = std::max(max_profit, block.getProfit(d));
       //   max_profit = std::max(max_profit, block.getProfit(d)/pow(1+rate,period));
       // }
-
       cone_value[b] += max_profit;
 	    for(int r=0;r<r_max;++r){ // iterate over resources
 		long double minR=block.getRCoef(0,r); // get resource from destination 0
 		// for(int d=1;d<d_max;++d)
 		//     minR = std::min(minR,(long double)block.getRCoef(d,r)); // find minimum resource
+    curr_res[r] = 0;
+    curr_res[r] = minR;
 		res[b][r] += minR; // add minimum resource use to resource vector
 	    }
       // iterate over predecessors
 	    for(auto p=block.getPreds().begin();p!=block.getPreds().end();++p)
         if( ! inCone[b][*p] && !mined[*p] && (period > node.fixed[*p][0])){ // if not in cone and not previously mined
 		      inCone[b][*p] = true; // add to cone
-		      stack.push_back(*p); // push back onto stack
+
+          // add to successor cone resource use
+          for (int r=0;r < r_max;++r){
+            succ_res[*p][r] += curr_res[r];
+		      }
+          stack.push_back(*p); // push back onto stack
 		}
 	}
 
@@ -164,6 +176,19 @@ int Preprocess::fixEarliest(const std::vector<bool> &mined, const int period)
 	cnt += earliest - node.time[b][0]; // count how many time periods removed
 	node.time[b][0] = earliest; // update value in BranchNode_info
 	//check if earliest mineable time is greater than latest mineable time
+  
+  int latest=node.time[b][1]; // get previously defined latest mining time
+  int latesub = 0;
+  for(int r=0;r<r_max;++r){
+      // while resource used is greater than cumulative available, increased earliest
+      while(latesub < t_max && succ_res[b][r] > (1+eps)*cumRes[latesub][r]){
+          ++latesub;
+      }
+  }
+  cnt += latesub; // count how many time periods removed
+  node.time[b][1] = latest - latesub;
+
+
   if(earliest >= node.time[b][1] && node.time[b][1] < t_max)
 	  infeas=true;
     }
@@ -175,6 +200,115 @@ int Preprocess::fixEarliest(const std::vector<bool> &mined, const int period)
     if(infeas) cnt = Infeasible;
     return cnt;
 }
+
+// the earliest a block can be mined is if we have enough resources to clear
+// all of the cone of predecessor blocks by that period
+int Preprocess::fixLatest(const std::vector<bool> &mined, const int period)
+{
+    //std::cout << "\tPreprocess::fixEarliest disabled!!!!\n"; return;
+    const double eps=1e-6;
+    const int t_max = prob.getNPeriod();
+    const int d_max = prob.getnDestination();
+    const int r_max = prob.getnResources();
+    const double rate = prob.getDiscountRate();
+    const int nB = prob.getNBlock();
+
+    int cont=0;
+
+    for (int i=0;i<nB;++i)
+      if (mined[i])
+        cont++;
+
+    std::cout << cont << " total blocks mined\n"<<std::endl;
+
+    cumRes.clear();
+    cumRes.resize(t_max+1,std::vector<long double> (r_max,0.0));
+
+
+
+    // set up vector of cumulative resource limits for each time period and each resource
+    for(int t=0;t<t_max;++t){
+  for(int r=0;r<r_max;++r){
+      cumRes[t][r] += prob.getLimit(r,t);
+      cumRes[t+1][r]= cumRes[t][r];
+  }
+    }
+    std::atomic<int> cnt; cnt=0;
+    bool infeas=false;
+
+    // establish vectors for cone values, cone membership and resource use for each block
+    cone_value.clear();
+    cone_value.resize(nB, 0.0);
+    inCone.clear();
+    inCone.resize(nB, std::vector<bool> (nB, false)); // true if in cone
+    res.clear();
+    res.resize(nB, std::vector<long double> (prob.getnResources(), 0.0));
+
+    double max_cone_value = -9e10;
+
+//#   pragma omp parallel for
+    for(int b=0;b<nB;++b){
+      if (mined[b]){
+        continue;
+      }
+  std::vector<int> stack; // stack for search
+  stack.push_back(b);
+  inCone[b][b]=true; // set current block to in cone
+  while(! stack.empty()){
+      int blockID = stack.back(); // get next block id
+      const Block & block=prob.getBlock(blockID); // get block
+      stack.pop_back(); // remove block from stack
+
+      //double max_profit = block.getProfit(0);
+      double max_profit = block.getProfit(0)/pow(1+rate,period);
+      // for (int d=1;d<d_max;++d){
+      //   //max_profit = std::max(max_profit, block.getProfit(d));
+      //   max_profit = std::max(max_profit, block.getProfit(d)/pow(1+rate,period));
+      // }
+
+      cone_value[b] += max_profit;
+      for(int r=0;r<r_max;++r){ // iterate over resources
+    long double minR=block.getRCoef(0,r); // get resource from destination 0
+    // for(int d=1;d<d_max;++d)
+    //     minR = std::min(minR,(long double)block.getRCoef(d,r)); // find minimum resource
+    res[b][r] += minR; // add minimum resource use to resource vector
+      }
+      // iterate over predecessors
+      for(auto p=block.getPreds().begin();p!=block.getPreds().end();++p)
+        if( ! inCone[b][*p] && !mined[*p] && (period > node.fixed[*p][0])){ // if not in cone and not previously mined
+          inCone[b][*p] = true; // add to cone
+          stack.push_back(*p); // push back onto stack
+    }
+  }
+
+  if (cone_value[b] > max_cone_value)
+    max_cone_value = cone_value[b];
+  int earliest=node.time[b][0]; // get previously defined earliest mining time
+  //if (earliest < 0) earliest=0; // REMOVE EVENTUALLY!!!!
+  //std::cout << earliest << " " << std::endl;
+  for(int r=0;r<r_max;++r){
+      // while resource used is greater than cumulative available, increased earliest
+      while(earliest < t_max && res[b][r] > (1+eps)*cumRes[earliest][r]){
+          ++earliest;
+      }
+  }
+  cnt += earliest - node.time[b][0]; // count how many time periods removed
+  node.time[b][0] = earliest; // update value in BranchNode_info
+  //check if earliest mineable time is greater than latest mineable time
+  if(earliest >= node.time[b][1] && node.time[b][1] < t_max)
+    infeas=true;
+    }
+
+
+
+    std::cout << "fixEarliest removed " << cnt << " periods, avg "
+        << double(cnt)/nB << " per block\n";
+    if(infeas) cnt = Infeasible;
+    return cnt;
+}
+
+
+
 
 // the earliest a block can be mined is if we have enough resources to clear
 // all of the cone of predecessor blocks by that period
@@ -336,9 +470,4 @@ void Preprocess::getMostValuableCones(int t, std::vector<bool> &included, const 
 //    }
 
     std::cout << block_count << " blocks added from " << cone_count << " cones"<<std::endl;
-}
-
-
-void Preprocess::fixLatest()
-{
 }

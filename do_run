@@ -1,5 +1,44 @@
 #!/bin/bash
 
+testsets=("Zuck_large" "Zuck_small" "marvin" "Zuck_medium" "KD")
+echo " " >> results/results_log.csv
+echo " **************** STARTING RUN **************** " >> results/results_log.csv
+echo "          $(date)" >> results/results_log.csv
+echo " ********************************************** " >> results/results_log.csv
+
+
+for t in ${testsets[@]}; do
+	echo "" >> results/results_log.csv
+	echo "###### TESTSET: ${t^^} ######" >> results/results_log.csv
+	echo "" >> results/results_log.csv
+
+	for ((num_runs=1;num_runs<6;num_runs++)); do
+
+		./QOLcpit -c -B ../Data/${t}
+		rsync -a --delete tracking_data/${t}/ tracking_data/with_splitting/${t}_${num_runs}/
+	done
+		# for ((i=1;i<9;i++)) do
+		# echo " "
+		# ./merge_stpg -g ./data/MC/mc$i.stp
+		# done
+
+		# ./merge_stpg -g ./data/MC/mc11.stp
+		# ./merge_stpg -g ./data/MC/mc13.stp
+		# ./merge_stpg -g ./data/MC/mc2.stp
+		# ./merge_stpg -g ./data/MC/mc3.stp
+		# ./merge_stpg -g ./data/MC/mc7.stp
+		# ./merge_stpg -g ./data/MC/mc8.stp
+
+done
+		echo " " >> results/results_log.csv
+		echo " **************** FINISHED RUN **************** " >> results/results_log.csv
+		echo "          $(date)" >> results/results_log.csv
+		echo " ********************************************** " >> results/results_log.csv
+		echo " " >> results/results_log.csv
+paplay /usr/share/sounds/freedesktop/stereo/suspend-error.oga
+
+
+
 #rm ./objfiles/*
 
 #for ((i=0;i<30;i++)) do
@@ -38,16 +77,16 @@
 #./QOLpcpsp -c -B Data/zuck_large
 #done
 
-echo "**** running newman1 ****"
-./QOLpcpsp -c -B Data/newman1
-echo "**** running zuck_small ****"
-./QOLpcpsp -c -B Data/zuck_small
-echo "**** running marvin ****"
-./QOLpcpsp -c -B Data/marvin
-echo "**** running zuck medium ****"
-./QOLpcpsp -c -B Data/zuck_medium
-echo "**** running kd ****"
-./QOLpcpsp -c -B Data/kd
-echo "**** running zuck_large ****"
-./QOLpcpsp -c -B Data/zuck_large
+# echo "**** running newman1 ****"
+# ./QOLpcpsp -c -B Data/newman1
+# echo "**** running zuck_small ****"
+# ./QOLpcpsp -c -B Data/zuck_small
+# echo "**** running marvin ****"
+# ./QOLpcpsp -c -B Data/marvin
+# echo "**** running zuck medium ****"
+# ./QOLpcpsp -c -B Data/zuck_medium
+# echo "**** running kd ****"
+# ./QOLpcpsp -c -B Data/kd
+# echo "**** running zuck_large ****"
+# ./QOLpcpsp -c -B Data/zuck_large
 

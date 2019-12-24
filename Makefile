@@ -1,9 +1,10 @@
 #all: pcpsp QOLpcpsp cumulative
 all: QOLcpit
 
-LR = LagrangianHeuristic
-INC = /usr/local/gurobi/6.5.1/include/
-LIB = /usr/local/gurobi/6.5.1/lib/
+# LR = LagrangianHeuristic
+# INC = /usr/local/gurobi/6.5.1/include/
+# LIB = /usr/local/gurobi/6.5.1/lib/
+CPLEX_ROOT= /opt/ibm/ILOG/CPLEX_Studio127
 
 # dependency generation
 DEPDIR := .d
@@ -27,6 +28,8 @@ CPPFLAGS+=-DIL_STD  -Wno-sign-compare
 #QOL_LIBS:= -L$(wildcard $(CPLEX_ROOT)/concert/lib/*/static_pic) -lconcert -lilocplex $(QOL_LIBS) #-lgurobi_c++ -lgurobi$(GUROBI_VER)
 QOL_LIBS:= -L/opt/ibm/ILOG/CPLEX_Studio127/cplex/lib/x86-64_linux/static_pic -lilocplex -lconcert -lcplex -lm -lpthread -L/opt/ibm/ILOG/CPLEX_Studio127/concert/lib/x86-64_linux/static_pic -lilocplex -lconcert -lcplex -lm -lpthread $(QOL_LIBS) #-lgurobi_c++ -lgurobi$(GUROBI_VER)
 CPPFLAGS+= -I./include -I. -I./$(LR)
+# CPPFLAGS+= -ggdb3 # for debugging with valgrind
+
 $(QOL_LIB): $(wildcard $(QOL_DIR)/*.h $(QOL_DIR)/*.cpp)
 	cd $(QOL_DIR); make
 
@@ -36,7 +39,7 @@ CPPFLAGS+= -I QOL/lagrangian
 SRC=source/daten.cpp source/network.cpp source/boostMaxFlow.cpp source/CumulativeModel.cpp source/util.cpp source/MaxClosure_PP.cpp $(wildcard source/MaxClosure_B*.cpp) source/MaxClosureFactory.cpp source/UpitSolver.cpp source/graph.cpp source/SinglePSolver.cpp source/Preprocess.cpp source/SinglePModel.cpp source/SolutionMerger.cpp source/MergeSolver.cpp source/MergeSolverSimple.cpp source/MergeSolverCompact.cpp source/RandomSearch.cpp source/LocalSearch.cpp source/ConeMiner.cpp $(LAPSO_SRC) #$(LR)/solver.cpp $(LR)/mip.cpp $(LR)/ACO_solution.cpp $(LR)/Timer.cc $(LR)/Random.cc $(LR)/MaxClosure_NetworkFlow_LR.cpp $(LR)/pheromones.cpp source/lr_graph.cpp $(LR)/solver_functions.cpp source/solver_interface.cpp source/MaxClosure_NetworkFlow.cpp $(LAPSO_SRC)
 OBJ=$(patsubst %.cpp,%.o,$(SRC))
 
-LIBS = -L${LIB}$ -lgurobi_c++ -lpthread -lm -lgurobi65
+#LIBS = -L${LIB}$ -lgurobi_c++ -lpthread -lm  -lgurobi65
 
 %.o: %.cpp $(DEPDIR)/%.d
 .cpp.o:

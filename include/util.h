@@ -9,8 +9,8 @@
 #include <string>
 #include <boost/format.hpp>
 #include "BranchNode.h"
-const double eps_tol = 1e-6;
-const double res_eps_tol = 1e-6;
+const double eps_tol = 1e-10;
+const double res_eps_tol = 1e-10;
 const double obj_eps_tol = 1e-2; 
 // const double eps_tol = 1;
 //#include <iomanip>

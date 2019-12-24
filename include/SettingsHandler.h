@@ -14,11 +14,17 @@ class SettingsHandler {
     bool TEST_SOL_MERGE=0;
     bool RECORD_DATA=1;
 		bool RECORD_RUN=1;
+    bool PRESOLVE=0;
     bool RECORD_PASS_TIME=0;
     bool RANDOM_SEARCH=0;
+    bool HEURISTIC_SEARCH=1;
     double SCALED_RESOURCE=1.0;
     double MIP_GAP=0.0;
     size_t FIND_DEPTH_TRIALS=1000;
+    size_t NUM_SAVE=5;
+    size_t TERMINATE_SAME=5;
+    size_t SPLIT_FACTOR=1;
+    size_t NUM_SPLITS=0;
     size_t BOUND_DEPTH=1;
     double SA_ALPHA=0.99;
     double SA_T_MIN=0.00001;
@@ -88,8 +94,32 @@ class SettingsHandler {
           NUM_TOTAL_RUNS = stoi(value);
           continue;
         }
+        if (setting.compare("TERMINATE_SAME") == 0){
+          TERMINATE_SAME = stoi(value);
+          continue;
+        }
+        if (setting.compare("PRESOLVE") == 0){
+          PRESOLVE = stoi(value);
+          continue;
+        }
+        if (setting.compare("NUM_SAVE") == 0){
+          NUM_SAVE = stoi(value);
+          continue;
+        }
         else if (setting.compare("RECORD_DATA") == 0){
           RECORD_DATA = stoi(value);
+          continue;
+        }
+        else if (setting.compare("NUM_SPLITS") == 0){
+          NUM_SPLITS = stoi(value);
+          continue;
+        }
+        else if (setting.compare("SPLIT_FACTOR") == 0){
+          SPLIT_FACTOR = stoi(value);
+          continue;
+        }
+        else if (setting.compare("HEURISTIC_SEARCH") == 0){
+          HEURISTIC_SEARCH = stoi(value);
           continue;
         }
         else if (setting.compare("QUIET") == 0){

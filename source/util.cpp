@@ -11,7 +11,7 @@ bool verify(const Daten & data, const Sol_Int & sol){
 	const int t_max = data.getNPeriod();
 	const int d_max = data.getnDestination();
 	const double rate = data.getDiscountRate();
-	bool error = 0;
+	bool error = false;
 // verify precedence constraints
 	for(int a=0; a<nBlocks; a++){
 		if(sol.x[a]<t_max){
@@ -23,8 +23,8 @@ bool verify(const Daten & data, const Sol_Int & sol){
 				if(sol.x[a] < sol.x[b] && sol.x[b] != t_max){
 						std::cout<<(boost::format("ERROR: blocks %i and %i violated precedence constraint") %a %b )<<std::endl;
 						std::cout<<(boost::format("\t pred %i is in period %i and succ. %i is in period %i") %b %sol.x[b] %a %sol.x[a])<<std::endl;
-						error = 1;
-						break;
+						error = true;
+						return error;
 				}
 			}
 			if(error) break;
@@ -75,8 +75,8 @@ bool verify(const Daten & data, const Sol_Int & sol){
 			if(amount > R + res_eps_tol){
 				std::cout<<(boost::format("ERROR: Resource constraint is violated!")) <<std::endl;
 				std::cout<<(boost::format(" resource r = %i t = %i   amount %14.6f    limit = %14.6f ") %r %t %amount %R)<<std::endl;
-				error = 1;
-				// break;
+				error = true;
+				return error;
 			}
 	}
 	// std::cout << "\nTotal resource (" << r << ") usage: " << total_use << "/" << total_available << std::endl << std::endl;

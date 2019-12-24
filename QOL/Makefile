@@ -10,7 +10,7 @@ QOL_LIBS:=
 UNAME=$(shell uname)
 QOL_DIR:=$(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 
-include $(QOL_DIR)/QOL.mk
+include $(QOL_DIR)/QOL.mk # removed gurobi!
 
 GCC_VER=$(shell gcc -dumpversion)
 

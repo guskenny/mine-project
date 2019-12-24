@@ -11,6 +11,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
+#include <math.h>
 
 typedef struct {
 	int x;

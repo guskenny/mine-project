@@ -4,12 +4,15 @@
 #include <set>
 #include <vector>
 #include <random>
+#include <numeric>
 
 class SetObj{
   public:
     int num_elements;
-    std::vector<int> idx_data;
+    std::vector<int> idx_data; // holds index of elements in set data (-1 if not in set)
     std::vector<int> set_data;
+
+    SetObj(){};
 
     SetObj(int num_elements) : num_elements(num_elements){
       idx_data = std::vector<int>(num_elements, -1);
@@ -21,22 +24,64 @@ class SetObj{
       set_data.clear();
     };
 
+    void fill(){
+      idx_data = std::vector<int>(num_elements);
+      std::iota (std::begin(idx_data), std::end(idx_data), 0);
+      set_data = idx_data;
+    };
+
+    void fill(int _num_elements){
+      num_elements = _num_elements;
+      idx_data = std::vector<int>(num_elements);
+      std::iota (std::begin(idx_data), std::end(idx_data), 0);
+      set_data = idx_data;
+    };
+
     void clear(int num_elements_){
       num_elements = num_elements_;
       idx_data = std::vector<int>(num_elements, -1);
       set_data.clear();
     };
 
+    void setAll(){
+      set_data.clear();
+      for (int i =0; i < num_elements; ++i){
+        idx_data[i] = i;
+        set_data.push_back(i);
+      }
+    };
+
+    std::vector<int> getSet(){
+      return set_data;
+    };
+
     bool empty(){
       return set_data.empty();
-    }
+    };
 
     bool is_element(int idx){
       return (idx_data[idx] > -1);
-    }
+    };
 
     int size(){
       return set_data.size();
+    };
+
+    int idx_size(){
+      return idx_data.size();
+    };
+
+    int get(int idx){
+      if (idx < set_data.size()){
+        return set_data[idx];
+      }
+      else{
+        return -1;
+      }
+    };
+
+    const int& operator[] (int idx) {
+        return set_data[idx];
     }
 
     int getRandomElement(std::mt19937 &rng){
@@ -48,23 +93,50 @@ class SetObj{
       return set_data[idx];
     };
 
-    void addElement(const int idx){
-      if (idx_data[idx] < 0){
-        idx_data[idx] = set_data.size();
-        set_data.push_back(idx);
+    void addElement(const int val){
+      if (val > idx_data.size() || val < 0){
+        std::cout << "something's wrong! trying to insert " << val << std::endl;
+      }
+      if (idx_data[val] < 0){
+        idx_data[val] = set_data.size();
+        set_data.push_back(val);
       }
     };
 
-    void removeElement(const int idx){
-      if (idx_data[idx] > -1){
+    void addElements(const std::vector<int> &idxs){
+      for (int i = 0; i < idxs.size(); ++i){
+        if (idx_data[idxs[i]] < 0){
+          idx_data[idxs[i]] = set_data.size();
+          set_data.push_back(idxs[i]);   
+        }
+      }
+    };
+
+    void removeElement(const int val){
+      if (idx_data[val] > -1){
         // replace current element with back element
-        set_data[idx_data[idx]] = set_data.back();
+        set_data[idx_data[val]] = set_data.back();
         // change idx_data for back element
-        idx_data[set_data.back()] = idx_data[idx];
+        idx_data[set_data.back()] = idx_data[val];
         // remove from idx data
-        idx_data[idx] = -1;
+        idx_data[val] = -1;
         // remove back element
         set_data.pop_back();
+      }
+    };
+
+    void removeElements(const std::vector<int> &idxs){
+      for (int i = 0; i < idxs.size(); ++i){
+        if (idx_data[idxs[i]] > -1){
+          // replace current element with back element
+          set_data[idx_data[idxs[i]]] = set_data.back();
+          // change idx_data for back element
+          idx_data[set_data.back()] = idx_data[idxs[i]];
+          // remove from idx data
+          idx_data[idxs[i]] = -1;
+          // remove back element
+          set_data.pop_back();
+        }
       }
     };
 

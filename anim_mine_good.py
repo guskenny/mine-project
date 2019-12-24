@@ -39,7 +39,8 @@ no_plot = [0 for x in range(len(periods))]
 
 for b in range(len(periods)):
     if periods[b] == max_data:
-        no_plot[b] = 1
+        # no_plot[b] = 1
+        periods[b] == -1
 
 values = [-1 if x==max_data else x for x in values]
 
@@ -53,7 +54,7 @@ max_coords = [max(coords[X_VAL]), max(coords[Y_VAL]), max(coords[Z_VAL])]
 
 fig = mlab.figure(size=(800,800))
 
-@mlab.animate(delay=250)
+@mlab.animate(delay=2250)
 def anim():
     f = mlab.gcf()
     while True:
@@ -78,6 +79,7 @@ def anim():
 
 plt=mlab.points3d([],[],[], mode='cube', scale_factor=1.0)
 plt.glyph.scale_mode = 'scale_by_vector'
+
 # plt.glyph.color_mode = 'color_by_scalar' # Color by scalar
 # lut = plt.module_manager.scalar_lut_manager.lut.table.to_array()
 # plt.module_manager.scalar_lut_manager.lut.table = lut
@@ -87,7 +89,7 @@ plt.mlab_source.dataset.point_data.scalars = values
 plot_blocks.clear()
 
 for b in range(len(coords[Z_VAL])):
-    if no_plot[b] == 0 and coords[Z_VAL][b] <= max_coords[Z_VAL] and coords[Z_VAL][b] > max_coords[Z_VAL]-3:
+    if no_plot[b] == 0 and coords[Z_VAL][b] <= max_coords[Z_VAL] and coords[Z_VAL][b] > max_coords[Z_VAL]-0:
         plot_blocks.append(b)
 
 base_plt=mlab.points3d([coords[X_VAL][i] for i in plot_blocks], [coords[Y_VAL][i] for i in plot_blocks], [coords[Z_VAL][i] for i in plot_blocks], mode='2dsquare', scale_factor=1.0,opacity=0.1)

@@ -34,9 +34,9 @@
 
 for ((i=0;i<10;i++)) do
 echo " "
-echo "zuck_large - $i"
-./QOLcpit -c -B ../Data/zuck_small
-cp -r ./tracking_data/Zuck_small/ ./tracking_data/away_test/Zuck_small$i/
+echo "zuck_small - $i"
+./QOLcpit -c -B ../Data/zuck_large
+cp -r ./tracking_data/Zuck_large/ ./tracking_data/away_test/Zuck_large_$i/
 done
 
 #echo "**** running newman1 ****"

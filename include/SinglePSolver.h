@@ -34,6 +34,7 @@
 // #include <ncurses.h>
 #include <sstream>
 #include <queue>
+#include <ctime>
 
 typedef std::pair<double, int> p_mined_pair;
 
@@ -76,6 +77,13 @@ class SinglePSolver{
     double singlePSolve(const BranchNode_info &init_sol, Sol_Int &sol);
 
     void doMerge(SolutionMerger &sm, const std::vector<Sol_Int>&sols, const std::vector<int> &include, Sol_Int &init_sol, Sol_Int &merged_sol, std::ofstream &red_data);
+
+    // void randomSplit(std::vector<SetObj> &groups, std::vector<int> &group_map,std::vector<int> &fixed);
+
+    void randomSplit(std::vector<std::vector<int> > &groups, std::vector<int> &group_map,std::vector<int> &fixed);
+
+    // void DFSsplit(std::vector<SetObj> &groups, std::vector<int> &group_map, int g, std::vector<int> &connected_vars, int start_var);
+    void DFSsplit(std::vector<std::vector<int> > &groups, std::vector<int> &group_map, int g, std::vector<int> &connected_vars, int start_var);
 
     void setSolverType(int type) {solverType = type;};
 

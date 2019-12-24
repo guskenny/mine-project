@@ -2,6 +2,7 @@
 #define __PREPROCESS_H__
 //#include "MineProblem.h"
 #include "SinglePSolver.h"
+#include "SinglePModel.h"
 #include "SettingsHandler.h"
 #include <limits>
 #include <queue>
@@ -15,7 +16,7 @@ class Preprocess {
 public:
     std::vector<double> residualProfit;
     static constexpr int Infeasible = std::numeric_limits<int>::max();
-    const Daten &prob;
+    const SinglePModel &prob;
     BranchNode_info &node;
     const SettingsHandler &sh;
 
@@ -25,21 +26,21 @@ public:
     std::vector<std::vector<long double> > res;
 
     // by default Preprocess runs all fixing methods, this can be turned off by setting doIt=false
-    Preprocess(const Daten &_prob, BranchNode_info &_node,const std::vector<bool> &mined, const SettingsHandler &_sh, bool doIt=true) : prob(_prob), node(_node), sh(_sh) {
+    Preprocess(const SinglePModel &_prob, BranchNode_info &_node,const std::vector<bool> &mined, const SettingsHandler &_sh, bool doIt=true) : prob(_prob), node(_node), sh(_sh) {
 	if( node.time.empty() ) // not initialised
 	    node.init(_prob.getNBlock(),_prob.getNPeriod(),prob.getnDestination(),
 		      prob.getnResources());
 	if(doIt){
 	  fixUPIT();
 	  fixEarliest(mined,0);
-	  fixLatest();
+	  // fixLatest(mined,0);
 	}
     }
     void fixUPIT(); // eliminate blocks that are not in the UPIT solution
     // earliest resource-feasible solution: returns no. fixed or INFEASIBLE
     int fixEarliest(const std::vector<bool> &mined, const int period);
     int getProcessable(std::vector<bool> &processable);
-    void fixLatest();	// latest completion time to do whole UPIT
+    int fixLatest(const std::vector<bool> &mined, const int period);	// latest completion time to do whole UPIT
     void getMostValuableCones(int t, std::vector<bool> &included, const std::vector<bool> &mined);
 };
 

@@ -56,6 +56,8 @@ void MergeSolverCompact::solve(Sol_Int &sol){
     // if (rel_gap)
       // param.setParamVal(qol::RELGAP,0.1);
     // else
+
+    if (sh.MIP_GAP > 0)
       param.setParamVal(qol::RELGAP,sh.MIP_GAP);
 
     if (sh.WINDOW_SEARCH_TIME > 0)
@@ -72,6 +74,16 @@ void MergeSolverCompact::solve(Sol_Int &sol){
     // if(solverType == CPLEX_T)
 	  mipPtr = new qol::CplexFormulation();
 
+    CPXENVptr env=(dynamic_cast<qol::CplexFormulation *>(mipPtr))->env;
+
+    CPXsetintparam(env,CPX_PARAM_PREIND,sh.PRESOLVE);
+    if (sh.HEURISTIC_SEARCH){
+      CPXsetdblparam(env,CPX_PARAM_CUTSFACTOR,1.0);
+      CPXsetintparam(env,CPX_PARAM_HEURFREQ,1);
+      CPXsetintparam(env,CPX_PARAM_RINSHEUR,1);
+      CPXsetintparam(env,CPX_PARAM_POLISHAFTERINTSOL,1);
+    }    
+    
     // create MIPSolver object
     qol::MIPSolver &mip=*mipPtr;
     mip.setParameters(param);

@@ -838,6 +838,7 @@ int SinglePSolver::forkMergeSolve(){
       run_time << run_timer.elapsedSeconds() << std::endl;
     }
 
+    
     std::cout << "Best objective found: " << tot_best_sol.obj << std::endl << std::endl;
 
       std::cout << "# CPU time        "<<over_timer.elapsedSeconds()
@@ -891,13 +892,23 @@ void SinglePSolver::doMerge(SolutionMerger &sm, const std::vector<Sol_Int>&sols,
   std::vector<int> fixed;
   // sm.mergeCPIT(sols,fixed,groups,group_map);
   // sm.simpleMerge(sols,include,fixed);
-  if (sh.MERGE_THRESH){
-    sm.fullMergeThresh(sols,include,fixed, groups, group_map);
-  }
-  else{
+  // if (sh.MERGE_THRESH){
+    // sm.fullMergeThresh(sols,include,fixed, groups, group_map);
+  // }
+  // else{
+
+  std::cout << "merging..." << std::flush;
     sm.fullMerge(sols,include,fixed, groups, group_map);
-  }
+  // }
   // sols.clear();
+  std::cout << " done!" << std::endl;
+  std::cout << "random splitting..." << std::flush;
+
+  std::cout << "groups.size(): " << groups.size() << std::endl;
+
+  randomSplit(groups,group_map,fixed);
+
+  std::cout << "groups.size(): " << groups.size() << std::endl;
 
   if (sh.RECORD_DATA){
     std::ofstream group_out;
@@ -906,10 +917,274 @@ void SinglePSolver::doMerge(SolutionMerger &sm, const std::vector<Sol_Int>&sols,
     group_out.close();
   }
 
+  std::cout << " done!" << std::endl;
+
   // MergeSolverSimple ms = MergeSolverSimple(sh,probModel,init_sol,groups,group_map,fixed);
   MergeSolverCompact ms = MergeSolverCompact(sh,probModel,init_sol,groups,group_map,fixed, include, &red_data);
 
   ms.solve(merged_sol);
+}
+
+// void SinglePSolver::randomSplit(std::vector<SetObj> &groups, std::vector<int> &group_map, std::vector<int> &fixed){
+
+//   std::random_device r;
+//   std::seed_seq seed{r(), r(), r(), r(), r(), r(), r(), r()};
+//   std::mt19937 rng = std::mt19937(seed);
+
+//   int num_vars = probModel->getNBlock() * probModel->getNPeriod();
+
+//   int fixed_group_size = groups.size();
+
+//   // SetObj connected_vars(num_vars);
+
+//   SetObj splittable(num_vars);
+//   for (int i = 0; i < groups.size(); ++i){
+//     if (groups[i].size() > 1){
+//       splittable.addElements(groups[i].getSet());
+//     }
+//   }
+
+//   // remove groups with fixed variables
+//   for (int i = 0; i < fixed.size(); ++i){
+//     if (fixed[i] > -1){
+//       splittable.removeElement(i);
+//     }
+//   }
+
+//   int two_count = 0;
+//   int same_count = 0;
+
+//   // std::cout << "frac: " << double(fixed_group_size)/sh.SPLIT_FACTOR << std::endl;
+
+//   while (!splittable.empty() && (((groups.size()-fixed_group_size) < double(fixed_group_size)/sh.SPLIT_FACTOR) || (((groups.size()-fixed_group_size) < sh.NUM_SPLITS) && (groups.size() < num_vars)))){
+
+//     std::vector<int> connected_vars;
+//     SetObj temp_group(num_vars);
+//     int start_var = splittable.getRandomElement(rng);
+//     int g = group_map[start_var];
+
+//     // std::uniform_int_distribution<int> uni(0,groups[g].size()-1);
+//     // int start_var_idx = uni(rng);
+//     // int start_var = groups[g][start_var_idx];
+
+//     // int start_var = groups[g].getRandomElement(rng);
+    
+
+//     DFSsplit(groups, group_map, g, connected_vars, start_var);
+
+//     // std::cout << groups.size()-fixed_group_size << "- var: " << start_var << ", group["<<g<<"].size(): " << groups[g].size() << ", connected_vars.size(): " << connected_vars.size() << std::endl;
+
+//     // // if size of group is 2
+//     // if (connected_vars.size() == 2){
+//     //   temp_group.addElement(connected_vars[0]);
+//     //   groups[g].removeElement(connected_vars[0]);
+//     //   splittable.removeElement(g);
+//     //   group_map[connected_vars[0]] = groups.size();
+//     //   groups.push_back(temp_group);
+//     //   two_count++;
+//     //   continue;
+//     // }
+
+//     // if entire group is connected
+//     if (connected_vars.size() == groups[g].size()){
+//       connected_vars.pop_back();
+//       same_count++;
+//     }
+  
+//     // add group to back of list and remove from current group - update group map
+//     for (std::vector<int>::iterator var = connected_vars.begin(); var != connected_vars.end(); ++var){
+//       temp_group.addElement(*var);
+//       group_map[*var] = groups.size();
+//       groups[g].removeElement(*var);
+//     }
+    
+
+//     if(temp_group.size() > 1){
+//       // splittable.addElement(groups.size());
+//       splittable.addElements(temp_group.getSet());
+//     }
+//     if(groups[g].size() < 2){
+//       splittable.removeElement(groups[g][0]);
+//     }
+  
+//     groups.push_back(temp_group);
+  
+//   }
+ 
+//   std::cout << "same_count: " << same_count << ", two_count: " << two_count << std::endl; 
+
+//   std::cout << groups.size() << " groups after split" << std::endl;
+//   int big_group_count = 0;
+//   int zero_group_count = 0;
+//   int one_group_count = 0;
+//   for (int i = 0; i < groups.size(); ++i){
+//     if (groups[i].size() > 1){
+//       big_group_count++;
+//       continue;
+//     }
+//     if (groups[i].size() == 0){
+//       zero_group_count++;
+//       continue;
+//     }
+//     if (groups[i].size() == 1){
+//       one_group_count++;
+//       continue;
+//     }
+//   }
+//   std::cout << "zero_group_count: " << zero_group_count << std::endl;
+//   std::cout << "one_group_count: " << one_group_count << std::endl;
+//   std::cout << "big_group_count: " << big_group_count << std::endl;
+// }
+
+void SinglePSolver::randomSplit(std::vector<std::vector<int> > &groups, std::vector<int> &group_map, std::vector<int> &fixed){
+
+  std::random_device r;
+  std::seed_seq seed{r(), r(), r(), r(), r(), r(), r(), r()};
+  std::mt19937 rng = std::mt19937(seed);
+
+  int num_vars = probModel->getNBlock() * probModel->getNPeriod();
+
+  int fixed_group_size = groups.size();
+
+  // SetObj connected_vars(num_vars);
+
+  SetObj splittable(num_vars);
+  for (int i = 0; i < groups.size(); ++i){
+    if (groups[i].size() > 1){
+      splittable.addElements(groups[i]);
+    }
+  }
+
+  // remove groups with fixed variables
+  for (int i = 0; i < fixed.size(); ++i){
+    if (fixed[i] > -1){
+      splittable.removeElement(i);
+    }
+  }
+
+  int two_count = 0;
+  int same_count = 0;
+
+  // std::cout << "frac: " << double(fixed_group_size)/sh.SPLIT_FACTOR << std::endl;
+  if (sh.NUM_SPLITS > 0){
+    while (!splittable.empty() && (((groups.size()-fixed_group_size) < double(fixed_group_size)/sh.SPLIT_FACTOR) || (((groups.size()-fixed_group_size) < sh.NUM_SPLITS) && (groups.size() < num_vars)))){
+
+
+      std::vector<int> connected_vars;
+      // std::vector<int> temp_group(num_vars);
+      int start_var = splittable.getRandomElement(rng);
+      int g = group_map[start_var];
+
+      // std::uniform_int_distribution<int> uni(0,groups[g].size()-1);
+      // int start_var_idx = uni(rng);
+      // int start_var = groups[g][start_var_idx];
+
+      // int start_var = groups[g].getRandomElement(rng);
+      
+
+      DFSsplit(groups, group_map, g, connected_vars, start_var);
+
+      // std::cout << groups.size()-fixed_group_size << "- var: " << start_var << ", group["<<g<<"].size(): " << groups[g].size() << ", connected_vars.size(): " << connected_vars.size() << std::endl;
+
+      // // if size of group is 2
+      // if (connected_vars.size() == 2){
+      //   temp_group.addElement(connected_vars[0]);
+      //   groups[g].removeElement(connected_vars[0]);
+      //   splittable.removeElement(g);
+      //   group_map[connected_vars[0]] = groups.size();
+      //   groups.push_back(temp_group);
+      //   two_count++;
+      //   continue;
+      // }
+      // if entire group is connected
+      if (connected_vars.size() == groups[g].size()){
+        connected_vars.pop_back();
+        same_count++;
+      }
+      // add group to back of list and remove from current group - update group map
+      for (std::vector<int>::iterator var = connected_vars.begin(); var != connected_vars.end(); ++var){
+
+        group_map[*var] = groups.size();
+        // std::cout << "groups[g].size(): " << groups[g].size() << ", connected_vars.size(): " << connected_vars.size() << std::flush;
+        for (int i = 0; groups[g].size(); ++i){
+          if (*var == groups[g][i]){
+            groups[g][i] = groups[g].back();
+            groups[g].pop_back();
+            break;
+          }
+        }
+      }
+
+      if(connected_vars.size() > 1){
+        // splittable.addElement(groups.size());
+        splittable.addElements(connected_vars);
+      }
+      if(groups[g].size() < 2){
+        splittable.removeElement(groups[g][0]);
+      }
+      groups.push_back(connected_vars);
+    }
+  }
+ 
+  std::cout << "same_count: " << same_count << ", two_count: " << two_count << std::endl; 
+
+  std::cout << groups.size() << " groups after split" << std::endl;
+  int big_group_count = 0;
+  int zero_group_count = 0;
+  int one_group_count = 0;
+  for (int i = 0; i < groups.size(); ++i){
+    if (groups[i].size() > 1){
+      big_group_count++;
+      continue;
+    }
+    if (groups[i].size() == 0){
+      zero_group_count++;
+      continue;
+    }
+    if (groups[i].size() == 1){
+      one_group_count++;
+      continue;
+    }
+  }
+  std::cout << "zero_group_count: " << zero_group_count << std::endl;
+  std::cout << "one_group_count: " << one_group_count << std::endl;
+  std::cout << "big_group_count: " << big_group_count << std::endl;
+}
+
+void SinglePSolver::DFSsplit( std::vector<std::vector<int> > &groups, std::vector<int> &group_map, int g, std::vector<int> &connected_vars, int start_var){
+
+  const int nB = probModel->getNBlock();
+  const int nT = probModel->getNPeriod();
+
+  std::vector<int> visited(group_map.size(),0);
+  std::vector<int> var_stack;
+
+  var_stack.push_back(start_var);
+
+  while(!var_stack.empty()){
+    int var_idx = var_stack.back();
+    var_stack.pop_back();
+
+    visited[var_idx] = 1;
+
+    connected_vars.push_back(var_idx);
+
+    const Block & block = probModel->getBlock(var_idx%nB);
+    const int curr_period = var_idx/nB;
+
+    if(curr_period < nT-1 && !visited[var_idx] && group_map[var_idx+nB] == g){
+      var_stack.push_back(var_idx+nB);
+    }
+    // else{
+    //   visited[var_idx+nB] = 1;
+    // }
+    for(auto p=block.getPreds().begin();p!=block.getPreds().end();++p){
+      if(!visited[*p+(curr_period*nB)] && group_map[*p + (curr_period*nB)] == g){
+          var_stack.push_back(*p+(curr_period*nB));
+        }
+      visited[*p+(curr_period*nB)] = 1;
+    }
+  }
 }
 
 // set up MIP and solve
@@ -1014,8 +1289,105 @@ int SinglePSolver::serialMergeSolve(){
 
   BranchNode_info base_info(nB,t_max,d_max,r_max);
   std::vector<int> include(nB,0);
+  std::vector<bool> excluded(nB,0);
 
+  int test_block = 50;
+
+
+  std::cout << "before UPIT" << std::endl;
+  std::cout << "base_info.time[" << test_block << "][0] = " << base_info.time[test_block][0] << ", base_info.time[" << test_block << "][1] = " << base_info.time[test_block][1] << std::endl;
+
+  int var_count = 0;
+  int pred_count = 0;
+  for (int b=0;b<nB;++b){
+    if(excluded[b]){
+      continue;
+    }
+    var_count += (base_info.time[b][1] - base_info.time[b][0]) - 1;
+    for (int t=base_info.time[b][0]; t < base_info.time[b][1]; ++t){
+      const Block & block=probModel->getBlock(b);
+      for(auto p=block.getPreds().begin();p!=block.getPreds().end();++p){
+        if(!excluded[*p] && base_info.time[*p][0] <= t && base_info.time[*p][1] >= t){
+          pred_count++;
+        }
+      }
+      if(base_info.time[b][1] > t+1){
+        pred_count++;
+      }
+    }
+  }
+  
+  std::cout << "number of variables: " << var_count << std::endl;
+  std::cout << "nB * (nT-1): " << nB*(t_max-1) << std::endl;
+  std::cout << "number of precedences: " << pred_count << std::endl;
+  
   computeUPIT(base_info, include);
+
+  for (int b=0;b<nB;++b){
+    excluded[b] = !include[b];
+  }
+
+  std::cout << "after UPIT" << std::endl;
+  std::cout << "base_info.time[" << test_block << "][0] = " << base_info.time[test_block][0] << ", base_info.time[" << test_block << "][1] = " << base_info.time[test_block][1] << std::endl;
+
+  int excl_count = 0;
+  var_count = 0;
+  pred_count = 0;
+  for (int b=0;b<nB;++b){
+    if(excluded[b]){
+      excl_count++;
+      continue;
+    }
+    var_count += (base_info.time[b][1] - base_info.time[b][0]) - 1;
+    for (int t=base_info.time[b][0]; t < base_info.time[b][1]; ++t){
+      const Block & block=probModel->getBlock(b);
+      for(auto p=block.getPreds().begin();p!=block.getPreds().end();++p){
+        if(!excluded[*p] && base_info.time[*p][0] <= t && base_info.time[*p][1] >= t){
+          pred_count++;
+        }
+      }
+      if(base_info.time[b][1] > t+1){
+        pred_count++;
+      }
+    }
+  }
+  
+  std::cout << "blocks excluded: " << excl_count << std::endl;
+
+  std::cout << "number of variables: " << var_count << std::endl;
+  std::cout << "nB * (nT-1): " << nB*(t_max-1) << std::endl;
+  std::cout << "number of precedences: " << pred_count << std::endl;
+
+  Preprocess pp((*probModel), base_info, excluded,sh, true);
+
+  std::cout << "after pre-processing" << std::endl;
+  std::cout << "base_info.time[" << test_block << "][0] = " << base_info.time[test_block][0] << ", base_info.time[" << test_block << "][1] = " << base_info.time[test_block][1] << std::endl;
+
+  var_count = 0;
+  pred_count = 0;
+  for (int b=0;b<nB;++b){
+    if(excluded[b]){
+      continue;
+    }
+    var_count += (base_info.time[b][1] - base_info.time[b][0]) - 1;
+    for (int t=base_info.time[b][0]; t < base_info.time[b][1]; ++t){
+      const Block & block=probModel->getBlock(b);
+      for(auto p=block.getPreds().begin();p!=block.getPreds().end();++p){
+        if(!excluded[*p] && base_info.time[*p][0] <= t && base_info.time[*p][1] >= t){
+          pred_count++;
+        }
+      }
+      if(base_info.time[b][1] > t+1){
+        pred_count++;
+      }
+    }
+  }
+  
+  std::cout << "number of variables: " << var_count << std::endl;
+  std::cout << "nB * (nT-1): " << nB*(t_max-1) << std::endl;
+  std::cout << "number of precedences: " << pred_count << std::endl;
+
+  // std::cin.get();
 
   for (int full_run = 0; full_run < sh.NUM_TOTAL_RUNS; ++full_run){
 
@@ -1064,8 +1436,14 @@ int SinglePSolver::serialMergeSolve(){
 
     int resets = 0;
 
+    int same_count = 0;
+
+    bool same_flag = false;
+
+    int iter = 0;
+
     // number of merges
-    for (int iter = 0; (iter < sh.NUM_ITER) && !flag; ++iter){
+    for (iter = 0; (iter < sh.NUM_ITER) && !flag; ++iter){
       std::vector<std::vector<double> > data_out(4, std::vector<double>(merge_pop_size));
       std::vector<int> idx_order(merge_pop_size);
       int order_count = 0;
@@ -1091,13 +1469,13 @@ int SinglePSolver::serialMergeSolve(){
       std::string path_name = "./sol_files/";
       std::vector<Sol_Int> temp_vec;
       temp_vec.push_back(seeds[0]);
-      saveSols(temp_vec, path_name, iter);
+      saveSols(temp_vec, path_name, iter%sh.NUM_SAVE);
       merge_obj << iter << " " << seeds[0].obj << std::endl;
 
       #pragma omp parallel for shared(best_sol,order_count)
       for (int i = 1; i < merge_pop_size; ++i){
-        // Sol_Int sol = best_sol;
-        Sol_Int sol = seeds[0];
+        Sol_Int sol = best_sol;
+        // Sol_Int sol = seeds[0];
         computeResUse(sol);
 
         if (sh.QUIET){
@@ -1109,7 +1487,7 @@ int SinglePSolver::serialMergeSolve(){
           std::cout << "full run: " << full_run+1 << " of " << sh.NUM_TOTAL_RUNS << std::endl;
           std::cout << "merge: " << iter << std::endl;
           std::cout << "thread: " << omp_get_thread_num() << std::endl;
-          std::cout << "iteration: " << i << " of " << (merge_pop_size)/omp_get_num_threads() << std::endl << "thread sol: " << seeds[0].obj <<std::endl;
+          std::cout << "iteration: " << i << " of " << (merge_pop_size)/omp_get_num_threads() << std::endl << "thread sol: " << best_sol.obj <<std::endl;
         }
 
         // ls.swapWalk(sol);
@@ -1127,7 +1505,11 @@ int SinglePSolver::serialMergeSolve(){
             bool test_error = verify((*probModel), sol);
             // bool test_error = false;
             if (!test_error){
+              same_count=0;
               best_sol = sol;
+            }
+            else{
+              std::cout << "ERROR FOUND - NOT SAVING BEST SOLUTION!" << std::endl;
             }
           } // end try statement
           catch (qol::Exception & ex) {
@@ -1275,13 +1657,17 @@ int SinglePSolver::serialMergeSolve(){
 
       std::cout << std::endl << "old best: " << best_sol.obj
                 << std::endl << "new objective after merge: " << merged_sol.obj;
-      if (merged_sol.obj > best_sol.obj){
+      if (merged_sol.obj > curr_best_obj){
           std::cout << std::endl << "***** NEW BEST OBJECTIVE FOUND AFTER MERGE! *****\n" << std::endl;
           best_sol = merged_sol;
           seeds[0] = best_sol;
+          same_count = 0;
       }
-      else if (merged_sol.obj == best_sol.obj){
-          std::cout << std::endl << "***** SAME OBJECTIVE FOUND AFTER MERGE.. *****\n" << std::endl;
+      else if (abs(merged_sol.obj - curr_best_obj) < 10e1){
+          best_sol = merged_sol;
+          seeds[0] = best_sol;
+          same_count++;
+          std::cout << std::endl << "***** SAME OBJECTIVE FOUND AFTER MERGE! ("<< same_count <<"/"<< sh.TERMINATE_SAME <<") *****\n" << std::endl;
       }
       else{
           std::cout << std::endl << "***** WORSE OBJECTIVE FOUND AFTER MERGE! *****\n" << std::endl;
@@ -1308,6 +1694,10 @@ int SinglePSolver::serialMergeSolve(){
           }
           catch (...) { std::cerr << "Unknown Error Occured" << std::endl;}
       }
+      if(same_count >= sh.TERMINATE_SAME){
+        same_flag = true;
+        break;
+      }
     }
 
     if (sh.RECORD_DATA){
@@ -1321,6 +1711,46 @@ int SinglePSolver::serialMergeSolve(){
       time_out[1] << record_timer.elapsedWallTime() << std::endl;
       run_time << run_timer.elapsedSeconds() << std::endl;
     }
+
+    time_t now = time(0);
+    tm *ltm = localtime(&now);
+
+    std::string year = std::to_string(1900+ltm->tm_year);
+    std::string month = std::to_string(1+ltm->tm_mon);
+    std::string day = std::to_string(ltm->tm_mday);
+    std::string hour = std::to_string(ltm->tm_hour);
+    std::string minute = std::to_string(ltm->tm_min);
+    std::string second = std::to_string(ltm->tm_sec);
+
+    if (ltm->tm_year < 10)
+      year = "0" + std::to_string(1+ltm->tm_year);
+
+    if (ltm->tm_mon < 10)
+      month = "0" + std::to_string(1+ltm->tm_mon);
+
+    if (ltm->tm_mday < 10)
+      day = "0" + std::to_string(ltm->tm_mday);
+
+    if (ltm->tm_sec < 10)
+      second = "0" + std::to_string(ltm->tm_sec);
+
+    if (ltm->tm_min < 10)
+      minute = "0" + std::to_string(ltm->tm_min);
+
+    if (ltm->tm_hour < 10)
+      hour = "0" + std::to_string(ltm->tm_hour);
+    
+    std::ofstream _log;
+    _log.open("results/results_log.csv",std::ios_base::app);
+    _log << "," <<year << "-" << month << "-" << day << ",";
+    _log << hour << ":" << minute << ":" << second << ",";
+    _log << probModel->getName() << "," << best_sol.obj << ",";
+    _log << over_timer.elapsedWallTime() << "," << over_timer.elapsedSeconds() << ",";
+    // _log << iter << "," << sh.NUM_ITER << "," << sh.NUM_MOVES << ",";
+    _log << sh.NUM_ITER << ",";
+    _log << sh.NUM_SPLITS << "," << sh.SPLIT_FACTOR << "," << sh.SA_ITER << "," << sh.HEURISTIC_SEARCH << "," << sh.WINDOW_SEARCH_TIME << "," << sh.MERGE_POP_SIZE << "," << sh.MAX_SUB_SWAPS << "," << sh.SWAP_POP << "," << same_flag << "," << iter << std::endl;
+    _log.close();
+
 
     std::cout << "Best objective found: " << best_sol.obj << std::endl << std::endl;
 

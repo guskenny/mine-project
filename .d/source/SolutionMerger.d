@@ -4,7 +4,7 @@ source/SolutionMerger.o: source/SolutionMerger.cpp \
  include/SinglePModel.h include/daten.h include/util.h \
  include/UpitSolver.h include/MaxClosure_BoostMaxFlow_BK.h \
  include/MaxClosure_BoostMaxFlow.h include/boostGraphTypes.h \
- include/MaxClosure_Base.h
+ include/MaxClosure_Base.h include/SetObj.h
 
 include/SolutionMerger.h:
 
@@ -33,3 +33,5 @@ include/MaxClosure_BoostMaxFlow.h:
 include/boostGraphTypes.h:
 
 include/MaxClosure_Base.h:
+
+include/SetObj.h:

@@ -1,0 +1,1 @@
+nohup ./do_run > output.log &

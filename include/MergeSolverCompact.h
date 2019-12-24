@@ -18,6 +18,7 @@
 #include "BranchNode.h"
 #include "QOL/CpuTimer.h"
 #include "SinglePModel.h"
+#include "SetObj.h"
 
 class MergeSolverCompact{
   private:

@@ -1,0 +1,558 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"push",
+				"push_back"
+			],
+			[
+				"merge",
+				"merged_sols"
+			],
+			[
+				"R",
+				"RAND_SPLIT"
+			],
+			[
+				"NUM",
+				"NUM_SPLITS"
+			],
+			[
+				"end",
+				"end_early"
+			],
+			[
+				"prob",
+				"probModel"
+			],
+			[
+				"j",
+				"j"
+			],
+			[
+				"full",
+				"full_sols"
+			],
+			[
+				"ant_",
+				"ant_node_id"
+			],
+			[
+				"group",
+				"group_map"
+			],
+			[
+				"find",
+				"find_group"
+			],
+			[
+				"probMo",
+				"probModel-"
+			],
+			[
+				"edges_t",
+				"edges_to_remove"
+			],
+			[
+				"comp",
+				"comp_type"
+			],
+			[
+				"callback",
+				"Callback"
+			],
+			[
+				"get",
+				"getObjective"
+			],
+			[
+				"getT",
+				"getTgtID"
+			],
+			[
+				"getNum",
+				"getNumEdges"
+			],
+			[
+				"latex",
+				"latex_x"
+			],
+			[
+				"n",
+				"n_nodes"
+			],
+			[
+				"set",
+				"set_obj"
+			],
+			[
+				"count",
+				"countPtr"
+			],
+			[
+				"callb",
+				"callback_counter"
+			],
+			[
+				"probm",
+				"probModel-"
+			],
+			[
+				"add",
+				"addElement"
+			],
+			[
+				"prim",
+				"primal_x"
+			],
+			[
+				"prune_sub",
+				"prune_subgraph_noterm"
+			],
+			[
+				"is",
+				"is_element"
+			],
+			[
+				"ad",
+				"adj_edges"
+			],
+			[
+				"probM",
+				"probModel-"
+			],
+			[
+				"STPG",
+				"STPGCallback"
+			],
+			[
+				"groups",
+				"groups_size"
+			],
+			[
+				"getS",
+				"getSolValue"
+			],
+			[
+				"pro",
+				"prob_graph"
+			],
+			[
+				"getN",
+				"getNode"
+			],
+			[
+				"INIT",
+				"INIT_SOL_TYPE"
+			],
+			[
+				"sort",
+				"sorted_edges"
+			],
+			[
+				"src",
+				"src_tgt"
+			],
+			[
+				"src_t",
+				"src_tgt_set"
+			],
+			[
+				"tree",
+				"tree_nodes"
+			],
+			[
+				"getNU",
+				"getNumNodes"
+			],
+			[
+				"ST",
+				"STPGSolver"
+			],
+			[
+				"DEB",
+				"debugging_enabled"
+			],
+			[
+				"hs",
+				"\\hspace*{length}                                  \tlatex-document"
+			],
+			[
+				"question",
+				"\\question                                         \tclass-exam"
+			],
+			[
+				"item",
+				"\\item                                             \tlatex-document"
+			],
+			[
+				"enumer",
+				"\\begin{enumerate}                                 \tlatex-document"
+			],
+			[
+				"beg",
+				"\\begin{tabular}{cols}                             \tlatex-document"
+			],
+			[
+				"be",
+				"\\begin{}                                          \tlatex-document"
+			],
+			[
+				"sq",
+				"\\sqrt{arg}                                        \tlatex-document"
+			],
+			[
+				"pf",
+				"pdf_solutions"
+			],
+			[
+				"big",
+				"\\bigskip                                          \ttex"
+			],
+			[
+				"np",
+				"\\newpage                                          \tlatex-document"
+			],
+			[
+				"table",
+				"\\begin{table*}                                    \tlatex-document"
+			],
+			[
+				"par",
+				"\\par                                              \ttex"
+			],
+			[
+				"h",
+				"\\hlinefill                                        \tlatex-document"
+			],
+			[
+				"bs",
+				"\\bigskip                                          \ttex"
+			],
+			[
+				"cpu_time",
+				"cpu_time"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"Package Control: inst",
+				"Package Control: Install Package"
+			],
+			[
+				"packa",
+				"Package Control: List Packages"
+			],
+			[
+				"Package Control: ins",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: in",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Discover Packages"
+			],
+			[
+				"Package Control: insta",
+				"Package Control: Install Package"
+			],
+			[
+				"install",
+				"Install Package Control"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 137.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '6f4c264a24d933ce70df5dedcf1dcaee' + 'ebe013ee18cced0ef93d5f746d80ef60'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) ",
+			"install package"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/gus/Documents/PhD/stpg/results_log.csv",
+		"/home/gus/Documents/PhD/stpg/data/E/e01.stp",
+		"/home/gus/Documents/PhD/stpg/data/E/e02.stp",
+		"/home/gus/Documents/PhD/stpg/data/E/e03.stp",
+		"/home/gus/Documents/PhD/stpg/data/E/e04.stp",
+		"/home/gus/Documents/PhD/stpg/data/E/e05.stp",
+		"/home/gus/Documents/PhD/stpg/data/E/e06.stp",
+		"/home/gus/Documents/PhD/stpg/data/E/e07.stp",
+		"/home/gus/Documents/PhD/stpg/data/E/e08.stp",
+		"/home/gus/Documents/PhD/stpg/data/E/e09.stp",
+		"/home/gus/Documents/PhD/stpg/data/E/e10.stp",
+		"/home/gus/Documents/PhD/stpg/data/E/e11.stp",
+		"/home/gus/Documents/PhD/stpg/data/E/e12.stp",
+		"/home/gus/Documents/PhD/stpg/data/E/e13.stp",
+		"/home/gus/Documents/PhD/stpg/data/E/e19.stp",
+		"/home/gus/Documents/PhD/stpg/data/E/e18.stp",
+		"/home/gus/Documents/PhD/stpg/data/E/e17.stp",
+		"/home/gus/Documents/PhD/stpg/data/E/e16.stp",
+		"/home/gus/Documents/PhD/stpg/data/E/e15.stp",
+		"/home/gus/Documents/PhD/stpg/data/E/e14.stp",
+		"/home/gus/Documents/PhD/stpg/data/E/e20.stp",
+		"/home/gus/Documents/admin_stuff/work_stuff/resume_dump.tex",
+		"/home/gus/angus.kenny@rmit.edu.au/PhD/thesis/pubs.tex",
+		"/home/gus/angus.kenny@rmit.edu.au/PhD/thesis/kenny_thesis.tex",
+		"/home/gus/angus.kenny@rmit.edu.au/PhD/thesis/intro/goals.tex",
+		"/home/gus/angus.kenny@rmit.edu.au/PhD/thesis/intro/intro.tex",
+		"/home/gus/angus.kenny@rmit.edu.au/PhD/presentations/2018_02_21-milestone_3/kenny_milestone3.tex",
+		"/home/gus/Documents/PhD/stpg/data/D/d01.stp",
+		"/home/gus/Documents/PhD/stpg/data/D/d02.stp",
+		"/home/gus/Documents/PhD/stpg/data/D/d03.stp",
+		"/home/gus/Documents/PhD/stpg/data/D/d04.stp",
+		"/home/gus/Documents/PhD/stpg/data/D/d05.stp",
+		"/home/gus/Documents/PhD/stpg/data/D/d06.stp",
+		"/home/gus/Documents/PhD/stpg/data/D/d07.stp",
+		"/home/gus/Documents/PhD/stpg/data/D/d08.stp",
+		"/home/gus/Documents/PhD/stpg/data/D/d09.stp",
+		"/home/gus/Documents/PhD/stpg/data/D/d10.stp",
+		"/home/gus/Documents/PhD/stpg/data/D/d11.stp",
+		"/home/gus/Documents/PhD/stpg/data/D/d12.stp",
+		"/home/gus/Documents/PhD/stpg/data/D/d13.stp",
+		"/home/gus/Documents/PhD/stpg/data/D/d19.stp",
+		"/home/gus/Documents/PhD/stpg/data/D/d18.stp",
+		"/home/gus/Documents/PhD/stpg/data/D/d17.stp",
+		"/home/gus/Documents/PhD/stpg/data/D/d16.stp",
+		"/home/gus/Documents/PhD/stpg/data/D/d15.stp",
+		"/home/gus/Documents/PhD/stpg/data/D/d14.stp",
+		"/home/gus/Documents/PhD/stpg/data/D/d20.stp",
+		"/home/gus/Documents/PhD/stpg/data/C/c01.stp",
+		"/home/gus/Documents/PhD/stpg/data/C/c02.stp",
+		"/home/gus/Documents/PhD/stpg/data/C/c03.stp",
+		"/home/gus/Documents/PhD/stpg/data/C/c04.stp",
+		"/home/gus/Documents/PhD/stpg/data/C/c05.stp",
+		"/home/gus/Documents/PhD/stpg/data/C/c06.stp",
+		"/home/gus/Documents/PhD/stpg/data/C/c07.stp",
+		"/home/gus/Documents/PhD/stpg/data/C/c08.stp",
+		"/home/gus/Documents/PhD/stpg/data/C/c09.stp",
+		"/home/gus/Documents/PhD/stpg/data/C/c10.stp",
+		"/home/gus/Documents/PhD/stpg/data/C/c11.stp",
+		"/home/gus/Documents/PhD/stpg/data/C/c12.stp",
+		"/home/gus/Documents/PhD/stpg/data/C/c13.stp",
+		"/home/gus/Documents/PhD/stpg/data/C/c20.stp",
+		"/home/gus/Documents/PhD/stpg/data/C/c19.stp",
+		"/home/gus/Documents/PhD/stpg/data/C/c18.stp",
+		"/home/gus/Documents/PhD/stpg/data/C/c17.stp",
+		"/home/gus/Documents/PhD/stpg/data/C/c16.stp",
+		"/home/gus/Documents/PhD/stpg/data/C/c15.stp",
+		"/home/gus/Documents/PhD/stpg/data/C/c14.stp",
+		"/home/gus/Documents/PhD/stpg/data/B/b01.stp",
+		"/home/gus/Documents/PhD/stpg/data/B/b02.stp",
+		"/home/gus/Documents/PhD/stpg/data/B/b03.stp",
+		"/home/gus/Documents/PhD/stpg/data/B/b04.stp",
+		"/home/gus/Documents/PhD/stpg/data/B/b05.stp",
+		"/home/gus/Documents/PhD/stpg/data/B/b06.stp",
+		"/home/gus/Documents/PhD/stpg/data/B/b07.stp",
+		"/home/gus/Documents/PhD/stpg/data/B/b08.stp",
+		"/home/gus/Documents/PhD/stpg/data/B/b09.stp",
+		"/home/gus/Documents/PhD/stpg/data/B/b10.stp",
+		"/home/gus/Documents/PhD/stpg/data/B/b11.stp",
+		"/home/gus/Documents/PhD/stpg/data/B/b17.stp",
+		"/home/gus/Documents/PhD/stpg/data/B/b16.stp",
+		"/home/gus/Documents/PhD/stpg/data/B/b15.stp",
+		"/home/gus/Documents/PhD/stpg/data/B/b14.stp",
+		"/home/gus/Documents/PhD/stpg/data/B/b13.stp",
+		"/home/gus/Documents/PhD/stpg/data/B/b12.stp",
+		"/home/gus/Documents/PhD/stpg/data/B/b18.stp",
+		"/home/gus/Documents/PhD/stpg/include/STPGModel.h",
+		"/home/gus/Documents/PhD/stpg/source/STPGModel.cpp",
+		"/home/gus/angus.kenny@rmit.edu.au/PhD/presentations/2018_07_18-GECCO18/gecco18.tex",
+		"/home/gus/angus.kenny@rmit.edu.au/tutoring/DS_2019/test_3/test3_notes.tex",
+		"/home/gus/Documents/PhD/stpg/source/STPGMip_cutdown.cpp",
+		"/home/gus/Documents/PhD/mine-project/source/MergeSolverCompact.cpp",
+		"/home/gus/angus.kenny@rmit.edu.au/PhD/notes/MIP_traces/trace_2/mip_trace_2.tex",
+		"/home/gus/Documents/PhD/stpg/data/teeny_test.stp",
+		"/home/gus/Documents/PhD/stpg/source/util.cpp",
+		"/home/gus/Documents/PhD/stpg/include/Solution.h",
+		"/home/gus/Documents/PhD/stpg/QOL/QolMIP.h",
+		"/home/gus/Documents/PhD/stpg/QOL/CplexFormulation.cpp",
+		"/home/gus/Documents/PhD/stpg/QOL/Makefile",
+		"/home/gus/Documents/PhD/mine-project/Makefile",
+		"/home/gus/Documents/PhD/stpg/Makefile",
+		"/home/gus/Documents/PhD/stpg/QOL/examples/mipTest/src/stdafx.cpp",
+		"/home/gus/Documents/PhD/stpg/QOL/examples/mipTest/src/ilobendersatsp_orig.cpp",
+		"/home/gus/Documents/PhD/stpg/QOL/examples/mipTest/src/bendersatsp.cpp",
+		"/home/gus/angus.kenny@rmit.edu.au/PhD/notes/steiner_formulation/diane_formulation.tex",
+		"/home/gus/angus.kenny@rmit.edu.au/PhD/notes/steiner_formulation/graph3.tikz",
+		"/home/gus/angus.kenny@rmit.edu.au/PhD/notes/steiner_formulation/graph2.tikz",
+		"/home/gus/Documents/PhD/stpg/QOL/QolMIP.cpp",
+		"/home/gus/angus.kenny@rmit.edu.au/CT18_asg2_deferred(DONT_USE)/Assignment2-COSC1107-1105-CT18_deferred.pdf",
+		"/home/gus/angus.kenny@rmit.edu.au/CT18_asg2_deferred(DONT_USE)/Assignment2-COSC1107-1105-CT18_deferred.tex",
+		"/home/gus/Documents/PhD/stpg/plot_mine.py",
+		"/home/gus/Documents/PhD/stpg/test_plot.py",
+		"/home/gus/Documents/PhD/stpg/force_graph.py",
+		"/home/gus/Documents/PhD/stpg/source/graph.cpp",
+		"/home/gus/Documents/PhD/stpg/include/SetObj.h",
+		"/home/gus/angus.kenny@rmit.edu.au/ct_17/wk11quiz/wk9_quiz_notes.tex",
+		"/home/gus/Documents/teaching_stuff/2018/ct18/notes/final_week_machine.tex",
+		"/home/gus/angus.kenny@rmit.edu.au/ct_17/2018_test/2018_test_notes.tex",
+		"/home/gus/Documents/PhD/stpg/include/graph.h",
+		"/home/gus/Documents/PhD/mine_base_code/Makefile",
+		"/home/gus/Dropbox/2018-DS18ii-TutorialSources/animation_stuff/truth_table/tangocolors.sty",
+		"/home/gus/Dropbox/2018-DS18ii-TutorialSources/animation_stuff/truth_table/blerp.sty",
+		"/home/gus/Dropbox/2018-DS18ii-TutorialSources/class_test_4/DS18_S2_test_4.tex",
+		"/home/gus/Documents/teaching_stuff/2018/ct18/asg2/old/Assignment2-COSC1107-1105-CT17.tex",
+		"/home/gus/angus.kenny@rmit.edu.au/CT18-assignment2/EmmaLemma/emma-6.tex",
+		"/home/gus/Documents/teaching_stuff/2018/ds2018/sem2/test_1/Assignment2-COSC1107-1105-CT17.tex",
+		"/home/gus/Dropbox/2018-DS18ii-TutorialSources/source/tute-DS18ii-03-logic.tex",
+		"/home/gus/Dropbox/2018-DS18ii-TutorialSources/source/tute-DS18ii-04-proofs.tex",
+		"/home/gus/Dropbox/2018-DS18ii-TutorialSources/source/tute-DS18ii-05-proofs-induction.tex"
+	],
+	"find":
+	{
+		"height": 40.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 39.0
+	},
+	"input":
+	{
+		"height": 39.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.SublimeLinter":
+	{
+		"height": 0.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "Preprocess.sublime-project",
+	"replace":
+	{
+		"height": 48.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 227.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

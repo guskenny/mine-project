@@ -13,8 +13,8 @@ source/MergeSolverCompact.o: source/MergeSolverCompact.cpp \
  QOL/QolSolutionFull.h QOL/QolParams.h QOL/QolColFormulation.h \
  QOL/GurobiFormulation.h QOL/CpuTimer.h include/my_math.h \
  include/SinglePModel.h include/SettingsHandler.h \
- include/SolutionMerger.h include/RandomSearch.h include/LocalSearch.h \
- include/SetObj.h include/MergeSolver.h include/MergeSolverSimple.h \
+ include/SolutionMerger.h include/SetObj.h include/RandomSearch.h \
+ include/LocalSearch.h include/MergeSolver.h include/MergeSolverSimple.h \
  include/MergeSolverCompact.h include/ConeMiner.h
 
 include/MergeSolverCompact.h:
@@ -91,11 +91,11 @@ include/SettingsHandler.h:
 
 include/SolutionMerger.h:
 
+include/SetObj.h:
+
 include/RandomSearch.h:
 
 include/LocalSearch.h:
-
-include/SetObj.h:
 
 include/MergeSolver.h:
 

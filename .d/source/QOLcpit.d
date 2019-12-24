@@ -12,8 +12,8 @@ source/QOLcpit.o: source/QOLcpit.cpp QOL/QolMIP.h QOL/QolUtil.h \
  include/boostGraphTypes.h include/MaxClosure_Base.h \
  include/MaxClosureFactory.h include/Preprocess.h include/SinglePSolver.h \
  include/SettingsHandler.h include/my_math.h include/SinglePModel.h \
- include/SolutionMerger.h include/RandomSearch.h include/LocalSearch.h \
- include/SetObj.h include/MergeSolver.h include/MergeSolverSimple.h \
+ include/SolutionMerger.h include/SetObj.h include/RandomSearch.h \
+ include/LocalSearch.h include/MergeSolver.h include/MergeSolverSimple.h \
  include/MergeSolverCompact.h include/ConeMiner.h
 
 QOL/QolMIP.h:
@@ -90,11 +90,11 @@ include/SinglePModel.h:
 
 include/SolutionMerger.h:
 
+include/SetObj.h:
+
 include/RandomSearch.h:
 
 include/LocalSearch.h:
-
-include/SetObj.h:
 
 include/MergeSolver.h:
 

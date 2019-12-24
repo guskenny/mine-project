@@ -16,25 +16,29 @@ COLOURS = ['b','r','g','c','m','y','k']
 
 # double check there are files
 if len(args) <= 1:
-  print "Please enter csv files";
+  print("Please enter csv files");
   exit();
+
+iter_limit = int(args[len(args)-1])
+
+save_dir = os.path.dirname(os.path.abspath(args[1]))
 
 # container for y values
 y_vals = []
 
 # containers for metadata
-lines=[1 for _ in range(len(args)-1)]
-names=["" for _ in range(len(args)-1)]
-pop_size=[0 for _ in range(len(args)-1)]
-swaps=[0 for _ in range(len(args)-1)]
-num_merges=[0 for _ in range(len(args)-1)]
-restarts=[0 for _ in range(len(args)-1)]
-cpu_times=[0 for _ in range(len(args)-1)]
-wall_times=[0 for _ in range(len(args)-1)]
-groups=[0 for _ in range(len(args)-1)]
-max_sub_swaps=[0 for _ in range(len(args)-1)]
-mip_timeout=[0 for _ in range(len(args)-1)]
-mip_rel_gap=[0 for _ in range(len(args)-1)]
+lines=[1 for _ in range(len(args)-2)]
+names=["" for _ in range(len(args)-2)]
+pop_size=[0 for _ in range(len(args)-2)]
+swaps=[0 for _ in range(len(args)-2)]
+num_merges=[0 for _ in range(len(args)-2)]
+restarts=[0 for _ in range(len(args)-2)]
+cpu_times=[0 for _ in range(len(args)-2)]
+wall_times=[0 for _ in range(len(args)-2)]
+groups=[0 for _ in range(len(args)-2)]
+max_sub_swaps=[0 for _ in range(len(args)-2)]
+mip_timeout=[0 for _ in range(len(args)-2)]
+mip_rel_gap=[0 for _ in range(len(args)-2)]
 
 wall_times_idx = -1
 times_idx = -1
@@ -45,13 +49,17 @@ y_max = 0;
 
 nodata = False
 
-if args[len(args)-1] == "-n":
+if args[len(args)-2] == "-n":
     nodata = True
 
-for infile_name in args[1:len(args)-1]:
+for infile_name in args[1:len(args)-2]:
     with open(infile_name, 'r') as infile:
+        count = 0
         y = []
         for line in infile:
+            if iter_limit > 0 and count > iter_limit:
+                break;
+            count+=1
             if line.startswith("#"):
                 continue
             if line.startswith("!"):
@@ -93,7 +101,7 @@ for infile_name in args[1:len(args)-1]:
                 y.append(float(line))
             except ValueError:
                 continue;
-	    if args.index(infile_name) == 1:
+            if args.index(infile_name) == 1:
             	y_max = max(y_max, float(line))
 
     y_vals.append(y)
@@ -109,7 +117,7 @@ else:
     + "\nRESTARTS: " + str(restarts[0])
 
 box_text = box_text +"\nMIP_TIMEOUT: " + str(mip_timeout[0]) + " sec"\
-                    +"\nMIP_REL_GAP: " + str(mip_rel_gap[0]*100) + "%"
+                    +"\nMIP_REL_GAP: " + str('%.2f'%(mip_rel_gap[0]*100)) + "%"
 
 if wall_times_idx > -1:
     box_text = box_text + "\nWALL_TIME: " + str(y_vals[wall_times_idx][-1]) + " sec"
@@ -169,9 +177,19 @@ if nodata == False:
 ax1.set_xlim(right=x_max)
 
 plt.tight_layout()
-plt.rcParams["savefig.directory"] = os.getcwd()
+plt.rcParams["savefig.directory"] = save_dir
 plt.show()
 
-filename = './tracking_data/' + names[0] + '_' + str(pop_size[0]) + '_' + str(swaps[0]) + '_' + str(num_merges[0]) + '.png'
+filename = str(save_dir) + "/" + names[0] + '_' + str(pop_size[0]) + '_' + str(num_merges[0]) 
+
+if args[len(args)-2] == "-g":
+    filename+= '_groups'
+elif args[len(args)-2] == "-t":
+    filename+= '_times'
+
+# if (iter_limit > 0):
+#     filename+="("+str(iter_limit)+")"
+    
+filename+= '.png'
 
 fig.savefig(filename)
