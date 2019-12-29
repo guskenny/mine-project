@@ -292,57 +292,94 @@ bool SinglePSolver::loadSols(std::vector<Sol_Int> &sols){
 
   std::vector<double> obj_vals;
 
-    for (int i = 0; i < sh.NUM_SEEDS; ++i){
-    int cur_idx = sh.SOL_IDX + i;
-    Sol_Int temp_sol(nB,0,r_max,t_max);
+    if(sh.FORCE_PATH.compare("") != 0){
+      Sol_Int temp_sol(nB,0,r_max,t_max);
+      std::cout << "forcing path: " << sh.FORCE_PATH << std::endl;
+      std::string fname = sh.FORCE_PATH;
+      std::ifstream solfile(fname);
+      if (!solfile.is_open()){
+        std::cout << "unable to find file: " << fname << "! Exiting...." << std::endl;
+        exit(0);
+      }
+      std::vector<int> temp_x;
+      std::string in_line;
 
-    std::string path_name = "./init_sols/" + probModel->getName();
+      while(std::getline(solfile, in_line)){
+        temp_x.push_back(stoi(in_line));
+      }
 
-    if (sh.RANDOM_SEARCH){
-      path_name = "./rand_sols/" + probModel->getName();
-    }
-    
-    // std::string sol_idx = std::to_string(i);
+      if (nB == temp_x.size()){
+        temp_sol.x = temp_x;
+      }
+      else{
+        std::cout << "error in solution file: " << fname << "! not the same number of entries!" << std::endl;
+        return false;
+      }
 
-    // if (i < 10){
-    //   sol_idx = "0" + std::to_string(i);
-    // }
+      std::cout << fname << " loaded!\n";
 
-    std::string sol_idx = std::to_string(cur_idx);
-    if (cur_idx < 10){
-      sol_idx = "0" + std::to_string(cur_idx);
-    }
+      computeResUse(temp_sol);
+      sols.push_back(temp_sol);
 
-    std::string fname = path_name + "/" + probModel->getName() + "_" + sol_idx + ".sol";
-    std::ifstream solfile(fname);
-    if (!solfile.is_open()){
-      std::cout << "unable to find file: " << fname << "! Exiting...." << std::endl;
-      exit(0);
-    }
-    std::vector<int> temp_x;
-    std::string in_line;
+      std::cout << "Adding solution " << fname << " to seeds. Objective value: " << temp_sol.obj << std::endl;
+      obj_vals.push_back(temp_sol.obj);
 
-    while(std::getline(solfile, in_line)){
-      temp_x.push_back(stoi(in_line));
-    }
-
-    if (nB == temp_x.size()){
-      temp_sol.x = temp_x;
+      solfile.close();
     }
     else{
-      std::cout << "error in solution file: " << fname << "! not the same number of entries!" << std::endl;
-      return false;
+
+      for (int i = 0; i < sh.NUM_SEEDS; ++i){
+      int cur_idx = sh.SOL_IDX + i;
+      Sol_Int temp_sol(nB,0,r_max,t_max);
+
+      std::string path_name = "./init_sols/" + probModel->getName();
+
+      if (sh.RANDOM_SEARCH){
+        path_name = "./rand_sols/" + probModel->getName();
+      }
+      
+      // std::string sol_idx = std::to_string(i);
+
+      // if (i < 10){
+      //   sol_idx = "0" + std::to_string(i);
+      // }
+
+      std::string sol_idx = std::to_string(cur_idx);
+      if (cur_idx < 10){
+        sol_idx = "0" + std::to_string(cur_idx);
+      }
+
+      std::string fname = path_name + "/" + probModel->getName() + "_" + sol_idx + ".sol";
+      std::ifstream solfile(fname);
+      if (!solfile.is_open()){
+        std::cout << "unable to find file: " << fname << "! Exiting...." << std::endl;
+        exit(0);
+      }
+      std::vector<int> temp_x;
+      std::string in_line;
+
+      while(std::getline(solfile, in_line)){
+        temp_x.push_back(stoi(in_line));
+      }
+
+      if (nB == temp_x.size()){
+        temp_sol.x = temp_x;
+      }
+      else{
+        std::cout << "error in solution file: " << fname << "! not the same number of entries!" << std::endl;
+        return false;
+      }
+
+      std::cout << fname << " loaded!\n";
+
+      computeResUse(temp_sol);
+      sols.push_back(temp_sol);
+
+      std::cout << "Adding solution " << cur_idx << " to seeds. Objective value: " << temp_sol.obj << std::endl;
+      obj_vals.push_back(temp_sol.obj);
+
+      solfile.close();
     }
-
-    std::cout << fname << " loaded!\n";
-
-    computeResUse(temp_sol);
-    sols.push_back(temp_sol);
-
-    std::cout << "Adding solution " << cur_idx << " to seeds. Objective value: " << temp_sol.obj << std::endl;
-    obj_vals.push_back(temp_sol.obj);
-
-    solfile.close();
   }
 
   std::cout << sols.size() << " seeds loaded!" << std::endl;
@@ -1510,6 +1547,8 @@ int SinglePSolver::serialMergeSolve(){
             }
             else{
               std::cout << "ERROR FOUND - NOT SAVING BEST SOLUTION!" << std::endl;
+              computeResUse(sol);
+              ls.repairSolution(sol);
             }
           } // end try statement
           catch (qol::Exception & ex) {
@@ -1681,6 +1720,10 @@ int SinglePSolver::serialMergeSolve(){
             if (!test_error){
               // std::cout << "feasible!\n" << std::endl;
               seeds[0] = best_sol;
+            }
+            else{
+              computeResUse(best_sol);
+              ls.repairSolution(best_sol);
             }
           } // end try statement
           catch (qol::Exception & ex) {

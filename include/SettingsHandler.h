@@ -8,6 +8,7 @@ class SettingsHandler {
 
   public:
     std::string SETTINGS_FILE = "settings.ini";
+    std::string FORCE_PATH="";
     int NUM_TOTAL_RUNS=1;
     bool QUIET=0;
     bool TEMP_FLAG;
@@ -88,6 +89,10 @@ class SettingsHandler {
 
         if (setting.compare("TIMER_LENGTH") == 0){
           TIMER_LENGTH = stoi(value);
+          continue;
+        }
+        if (setting.compare("FORCE_PATH") == 0){
+          FORCE_PATH = value;
           continue;
         }
         if (setting.compare("NUM_TOTAL_RUNS") == 0){

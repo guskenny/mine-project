@@ -1,0 +1,2 @@
+>> sudo swapon -a
+swapon: cannot find the device for UUID=891c76e3-61e7-42bf-ad54-c8827e9b63f9

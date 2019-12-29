@@ -1,6 +1,6 @@
 #!/bin/bash
 
-testsets=("Zuck_large" "Zuck_small" "marvin" "Zuck_medium" "KD")
+testsets=("Zuck_small" "Zuck_large" "marvin" "Zuck_medium" "KD")
 echo " " >> results/results_log.csv
 echo " **************** STARTING RUN **************** " >> results/results_log.csv
 echo "          $(date)" >> results/results_log.csv
@@ -16,6 +16,16 @@ for t in ${testsets[@]}; do
 
 		./QOLcpit -c -B ../Data/${t}
 		rsync -a --delete tracking_data/${t}/ tracking_data/with_splitting/${t}_${num_runs}/
+		rsync -a --delete sol_files/${t}/ sol_files/with_splitting/${t}_${num_runs}/
+
+#		if [ $num_runs == 1 ]
+#		then
+#			echo "FORCE_PATH=" >> settings.ini
+#			echo "MERGE_POP_SIZE=500" >> settings.ini
+#			echo "WINDOW_SEARCH_TIME=100" >> settings.ini
+#			echo "SPLIT_FACTOR=4" >> settings.ini
+#		fi
+
 	done
 		# for ((i=1;i<9;i++)) do
 		# echo " "

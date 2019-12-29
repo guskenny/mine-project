@@ -1,0 +1,272 @@
+
+Algorithm settings:
+-------------------
+RECORD_DATA: true
+RECORD_RUN: false
+TEMP_FLAG: truefalse
+TEST_SOL_MERGE: true
+RECORD_PASS_TIME: false
+RANDOM_SEARCH: false
+NUM_TOTAL_RUNS: 1
+SCALED_RESOURCE: 0.99
+MIP_GAP: 0.00011
+FIND_DEPTH_TRIALS: 1000
+BOUND_DEPTH: 1
+SA_ALPHA: 0.97
+SA_T_MIN: 0.5
+SA_ITER: 1
+FULL_RUNS: 1
+MERGE_POP_SIZE: 3000
+SWAP_POP: 10
+MAX_SUB_SWAPS: 1000
+GREEDY_PLUS: false
+PROCESS_THRESHOLD: 0
+MIN_DIFF_TO_PROCESS: 1e-05
+TIMER_LENGTH: NONE
+GROUP_MERGE: true
+NUM_TOTAL_RUNS: 1
+LOAD_SEEDS: true
+AUTO_REPAIR: false
+MERGE_POP_SIZE: 3000
+FIX_BEST_GROUP: 0
+INIT_SEEDS: 20
+NUM_SEEDS: 1
+NUM_ITER: 500
+MERGE_TYPE: 0
+ITER_INCR: 0
+WINDOW_SIZE: 2
+VNS_WINDOW_LIMIT: 0
+REDUCED_BLOCKS: 1
+MODIFIER_WEIGHT: 0
+WARM_START: true
+ONLY_NEGATIVE: false
+WINDOW_SEARCH_TIME: 500
+TOP_PERCENT: 1
+LIMIT_MULTIPLIER: 1
+P_SELECTION: 0.5
+NUM_SUB_PERIODS: 3
+RES_CUTOFF: 0.2
+OBJ_UB: 9e+20
+WALL_SEARCH_TIME: 0
+CPU_SEARCH_TIME: 0
+CONVERGE_STOP: 2
+
+setting up model.. done!
+setting up max closure factory.. done!
+fixing non-upit blocks.. done!
+setting profits.. done!
+Running serialMergeSolve()
+
+before UPIT
+base_info.time[50][0] = 0, base_info.time[50][1] = 20
+number of variables: 178600
+nB * (nT-1): 178600
+number of precedences: 3091400
+		Block 9356 is never mined
+after UPIT
+base_info.time[50][0] = 0, base_info.time[50][1] = 20
+blocks excluded: 1
+number of variables: 178581
+nB * (nT-1): 178600
+number of precedences: 3090741
+		Block 9356 is never mined
+1 total blocks mined
+
+fixEarliest removed 4885 periods, avg 0.519681 per block
+after pre-processing
+base_info.time[50][0] = 0, base_info.time[50][1] = 20
+number of variables: 173696
+nB * (nT-1): 178600
+number of precedences: 2930365
+solution merger initialised
+LocalSearch initialised
+Zuck_small
+./init_sols/Zuck_small/Zuck_small_00.sol loaded!
+Adding solution 0 to seeds. Objective value: 8.13121e+08
+1 seeds loaded!
+Best objective value: 8.13121e+08
+Mean objective value of all seeds: 8.13121e+08
+Standard deviation: 0
+seed solution: 8.13121e+08
+i: 0, writing solution 00, fname: ./sol_files/Zuck_small/Zuck_small_00.sol
+iteration: 4 of 3000iteration: 8 of 3000iteration: 12 of 3000iteration: 16 of 3000iteration: 20 of 3000iteration: 24 of 3000iteration: 28 of 3000iteration: 32 of 3000iteration: 36 of 3000iteration: 40 of 3000iteration: 44 of 3000iteration: 48 of 3000iteration: 52 of 3000iteration: 56 of 3000iteration: 60 of 3000iteration: 64 of 3000iteration: 68 of 3000iteration: 72 of 3000iteration: 76 of 3000iteration: 80 of 3000iteration: 84 of 3000iteration: 88 of 3000iteration: 92 of 3000iteration: 96 of 3000iteration: 100 of 3000iteration: 104 of 3000iteration: 108 of 3000iteration: 112 of 3000iteration: 116 of 3000iteration: 120 of 3000iteration: 124 of 3000iteration: 128 of 3000iteration: 132 of 3000iteration: 136 of 3000iteration: 140 of 3000iteration: 144 of 3000iteration: 148 of 3000iteration: 152 of 3000iteration: 156 of 3000iteration: 160 of 3000iteration: 164 of 3000iteration: 168 of 3000iteration: 172 of 3000iteration: 176 of 3000iteration: 180 of 3000iteration: 184 of 3000iteration: 188 of 3000iteration: 192 of 3000iteration: 196 of 3000iteration: 200 of 3000iteration: 204 of 3000iteration: 208 of 3000iteration: 212 of 3000iteration: 216 of 3000iteration: 220 of 3000iteration: 224 of 3000iteration: 228 of 3000iteration: 232 of 3000iteration: 236 of 3000iteration: 240 of 3000iteration: 244 of 3000iteration: 248 of 3000iteration: 252 of 3000iteration: 256 of 3000iteration: 260 of 3000iteration: 264 of 3000iteration: 268 of 3000iteration: 272 of 3000iteration: 276 of 3000iteration: 280 of 3000iteration: 284 of 3000iteration: 288 of 3000iteration: 292 of 3000iteration: 296 of 3000iteration: 300 of 3000iteration: 304 of 3000iteration: 308 of 3000iteration: 312 of 3000iteration: 316 of 3000iteration: 320 of 3000iteration: 324 of 3000iteration: 328 of 3000iteration: 332 of 3000iteration: 336 of 3000iteration: 340 of 3000iteration: 344 of 3000iteration: 348 of 3000iteration: 352 of 3000iteration: 356 of 3000iteration: 360 of 3000iteration: 364 of 3000iteration: 368 of 3000iteration: 372 of 3000iteration: 376 of 3000iteration: 380 of 3000iteration: 384 of 3000iteration: 388 of 3000iteration: 392 of 3000iteration: 396 of 3000iteration: 400 of 3000iteration: 404 of 3000iteration: 408 of 3000iteration: 412 of 3000iteration: 416 of 3000iteration: 420 of 3000iteration: 424 of 3000iteration: 428 of 3000iteration: 432 of 3000iteration: 436 of 3000iteration: 440 of 3000iteration: 444 of 3000iteration: 448 of 3000iteration: 452 of 3000iteration: 456 of 3000iteration: 460 of 3000iteration: 464 of 3000iteration: 468 of 3000iteration: 472 of 3000iteration: 476 of 3000iteration: 480 of 3000iteration: 484 of 3000iteration: 488 of 3000iteration: 492 of 3000iteration: 496 of 3000iteration: 500 of 3000iteration: 504 of 3000iteration: 508 of 3000iteration: 512 of 3000iteration: 516 of 3000iteration: 520 of 3000iteration: 524 of 3000iteration: 528 of 3000iteration: 532 of 3000iteration: 536 of 3000iteration: 540 of 3000iteration: 544 of 3000iteration: 548 of 3000iteration: 552 of 3000iteration: 556 of 3000iteration: 560 of 3000iteration: 564 of 3000iteration: 568 of 3000iteration: 572 of 3000iteration: 576 of 3000iteration: 580 of 3000iteration: 584 of 3000iteration: 588 of 3000iteration: 592 of 3000iteration: 596 of 3000iteration: 600 of 3000iteration: 604 of 3000iteration: 608 of 3000iteration: 612 of 3000iteration: 616 of 3000iteration: 620 of 3000iteration: 624 of 3000iteration: 628 of 3000iteration: 632 of 3000iteration: 636 of 3000iteration: 640 of 3000iteration: 644 of 3000iteration: 648 of 3000iteration: 652 of 3000iteration: 656 of 3000iteration: 660 of 3000iteration: 664 of 3000iteration: 668 of 3000iteration: 672 of 3000iteration: 676 of 3000iteration: 680 of 3000iteration: 684 of 3000iteration: 688 of 3000iteration: 692 of 3000iteration: 696 of 3000iteration: 700 of 3000iteration: 704 of 3000iteration: 708 of 3000iteration: 712 of 3000iteration: 716 of 3000iteration: 720 of 3000iteration: 724 of 3000iteration: 728 of 3000ERROR: blocks 9321 and 8941 violated precedence constraint
+	 pred 8941 is in period 15 and succ. 9321 is in period 14
+ERROR FOUND - NOT SAVING BEST SOLUTION!
+repairing solution... done!
+testing solution new solution... WARNING: Objective values do not match!
+ obj in sol = 817910722.366328  actual amount 817904701.336222
+feasible!
+
+iteration: 732 of 3000iteration: 736 of 3000iteration: 740 of 3000iteration: 744 of 3000iteration: 748 of 3000iteration: 752 of 3000iteration: 756 of 3000iteration: 760 of 3000iteration: 764 of 3000iteration: 768 of 3000iteration: 772 of 3000iteration: 776 of 3000iteration: 780 of 3000iteration: 784 of 3000iteration: 788 of 3000iteration: 792 of 3000iteration: 796 of 3000iteration: 800 of 3000iteration: 804 of 3000iteration: 808 of 3000iteration: 812 of 3000iteration: 816 of 3000iteration: 820 of 3000iteration: 824 of 3000iteration: 828 of 3000iteration: 832 of 3000iteration: 836 of 3000iteration: 840 of 3000iteration: 844 of 3000iteration: 848 of 3000iteration: 852 of 3000iteration: 856 of 3000iteration: 860 of 3000iteration: 864 of 3000iteration: 868 of 3000iteration: 872 of 3000iteration: 876 of 3000iteration: 880 of 3000iteration: 884 of 3000iteration: 888 of 3000iteration: 892 of 3000iteration: 896 of 3000iteration: 900 of 3000iteration: 904 of 3000iteration: 908 of 3000iteration: 912 of 3000iteration: 916 of 3000iteration: 920 of 3000iteration: 924 of 3000iteration: 928 of 3000iteration: 932 of 3000iteration: 936 of 3000iteration: 940 of 3000iteration: 944 of 3000iteration: 948 of 3000iteration: 952 of 3000iteration: 956 of 3000iteration: 960 of 3000iteration: 964 of 3000iteration: 968 of 3000iteration: 972 of 3000iteration: 976 of 3000iteration: 980 of 3000iteration: 984 of 3000iteration: 988 of 3000iteration: 992 of 3000iteration: 996 of 3000iteration: 1000 of 3000iteration: 1004 of 3000iteration: 1008 of 3000iteration: 1012 of 3000iteration: 1016 of 3000iteration: 1020 of 3000iteration: 1024 of 3000iteration: 1028 of 3000iteration: 1032 of 3000iteration: 1036 of 3000iteration: 1040 of 3000iteration: 1044 of 3000iteration: 1048 of 3000iteration: 1052 of 3000iteration: 1056 of 3000iteration: 1060 of 3000iteration: 1064 of 3000iteration: 1068 of 3000iteration: 1072 of 3000iteration: 1076 of 3000iteration: 1080 of 3000iteration: 1084 of 3000iteration: 1088 of 3000iteration: 1092 of 3000iteration: 1096 of 3000iteration: 1100 of 3000iteration: 1104 of 3000iteration: 1108 of 3000iteration: 1112 of 3000iteration: 1116 of 3000iteration: 1120 of 3000iteration: 1124 of 3000iteration: 1128 of 3000iteration: 1132 of 3000iteration: 1136 of 3000iteration: 1140 of 3000iteration: 1144 of 3000iteration: 1148 of 3000iteration: 1152 of 3000iteration: 1156 of 3000iteration: 1160 of 3000iteration: 1164 of 3000iteration: 1168 of 3000iteration: 1172 of 3000iteration: 1176 of 3000iteration: 1180 of 3000iteration: 1184 of 3000iteration: 1188 of 3000iteration: 1192 of 3000iteration: 1196 of 3000iteration: 1200 of 3000iteration: 1204 of 3000iteration: 1208 of 3000iteration: 1212 of 3000iteration: 1216 of 3000iteration: 1220 of 3000iteration: 1224 of 3000iteration: 1228 of 3000iteration: 1232 of 3000iteration: 1236 of 3000iteration: 1240 of 3000iteration: 1244 of 3000iteration: 1248 of 3000iteration: 1252 of 3000iteration: 1256 of 3000iteration: 1260 of 3000iteration: 1264 of 3000iteration: 1268 of 3000iteration: 1272 of 3000iteration: 1276 of 3000iteration: 1280 of 3000iteration: 1284 of 3000iteration: 1288 of 3000iteration: 1292 of 3000iteration: 1296 of 3000iteration: 1300 of 3000iteration: 1304 of 3000iteration: 1308 of 3000iteration: 1312 of 3000iteration: 1316 of 3000iteration: 1320 of 3000iteration: 1324 of 3000iteration: 1328 of 3000iteration: 1332 of 3000iteration: 1336 of 3000iteration: 1340 of 3000iteration: 1344 of 3000iteration: 1348 of 3000iteration: 1352 of 3000iteration: 1356 of 3000iteration: 1360 of 3000iteration: 1364 of 3000iteration: 1368 of 3000iteration: 1372 of 3000iteration: 1376 of 3000iteration: 1380 of 3000iteration: 1384 of 3000iteration: 1388 of 3000iteration: 1392 of 3000iteration: 1396 of 3000iteration: 1400 of 3000iteration: 1404 of 3000iteration: 1408 of 3000iteration: 1412 of 3000iteration: 1416 of 3000iteration: 1420 of 3000iteration: 1424 of 3000iteration: 1428 of 3000iteration: 1432 of 3000iteration: 1436 of 3000iteration: 1440 of 3000iteration: 1444 of 3000iteration: 1448 of 3000iteration: 1452 of 3000iteration: 1456 of 3000iteration: 1460 of 3000iteration: 1464 of 3000iteration: 1468 of 3000iteration: 1472 of 3000iteration: 1476 of 3000iteration: 1480 of 3000iteration: 1484 of 3000iteration: 1488 of 3000iteration: 1492 of 3000iteration: 1496 of 3000iteration: 1500 of 3000iteration: 1504 of 3000iteration: 1508 of 3000iteration: 1512 of 3000iteration: 1516 of 3000iteration: 1520 of 3000iteration: 1524 of 3000iteration: 1528 of 3000iteration: 1532 of 3000iteration: 1536 of 3000iteration: 1540 of 3000iteration: 1544 of 3000iteration: 1548 of 3000iteration: 1552 of 3000iteration: 1556 of 3000iteration: 1560 of 3000iteration: 1564 of 3000iteration: 1568 of 3000iteration: 1572 of 3000iteration: 1576 of 3000iteration: 1580 of 3000iteration: 1584 of 3000iteration: 1588 of 3000iteration: 1592 of 3000iteration: 1596 of 3000iteration: 1600 of 3000iteration: 1604 of 3000iteration: 1608 of 3000iteration: 1612 of 3000iteration: 1616 of 3000iteration: 1620 of 3000iteration: 1624 of 3000iteration: 1628 of 3000ERROR: blocks 9321 and 8941 violated precedence constraint
+iteration: 	 pred 8941 is in period 15 and succ. 9321 is in period 14
+ERROR FOUND - NOT SAVING BEST SOLUTION!
+1632 of 3000repairing solution... done!
+testing solution new solution... WARNING: Objective values do not match!
+ obj in sol = 817879256.900502  actual amount 817873235.870396
+feasible!
+
+iteration: 1636 of 3000iteration: 1640 of 3000iteration: 1644 of 3000iteration: 1648 of 3000iteration: 1652 of 3000iteration: 1656 of 3000iteration: 1660 of 3000ERROR: blocks 9321 and 8941 violated precedence constraint
+	 pred 8941 is in period 15 and succ. 9321 is in period 14
+ERROR FOUND - NOT SAVING BEST SOLUTION!
+iteration: 1664 of 3000repairing solution... done!
+testing solution new solution... WARNING: Objective values do not match!
+ obj in sol = 817866938.387067  actual amount 817860917.356961
+feasible!
+
+iteration: 1668 of 3000iteration: 1672 of 3000iteration: 1676 of 3000iteration: 1680 of 3000iteration: 1684 of 3000iteration: 1688 of 3000iteration: 1692 of 3000iteration: 1696 of 3000iteration: 1700 of 3000iteration: 1704 of 3000iteration: 1708 of 3000iteration: 1712 of 3000iteration: 1716 of 3000iteration: 1720 of 3000iteration: 1724 of 3000iteration: 1728 of 3000iteration: 1732 of 3000iteration: 1736 of 3000iteration: 1740 of 3000iteration: 1744 of 3000iteration: 1748 of 3000iteration: 1752 of 3000iteration: 1756 of 3000iteration: 1760 of 3000iteration: 1764 of 3000iteration: 1768 of 3000iteration: 1772 of 3000iteration: 1776 of 3000iteration: 1780 of 3000iteration: 1784 of 3000iteration: 1788 of 3000iteration: 1792 of 3000iteration: 1796 of 3000iteration: 1800 of 3000iteration: 1804 of 3000iteration: 1808 of 3000iteration: 1812 of 3000iteration: 1816 of 3000ERROR: blocks 9321 and 8941 violated precedence constraint
+	 pred 8941 is in period 15 and succ. 9321 is in period 14
+ERROR FOUND - NOT SAVING BEST SOLUTION!
+repairing solution... iteration: 1820 of 3000done!
+testing solution new solution... WARNING: Objective values do not match!
+ obj in sol = 817864907.433999  actual amount 817858886.403893
+feasible!
+
+iteration: 1824 of 3000iteration: 1828 of 3000iteration: 1832 of 3000iteration: 1836 of 3000iteration: 1840 of 3000iteration: 1844 of 3000iteration: 1848 of 3000iteration: 1852 of 3000iteration: 1856 of 3000iteration: 1860 of 3000iteration: 1864 of 3000iteration: 1868 of 3000iteration: 1872 of 3000iteration: 1876 of 3000iteration: 1880 of 3000iteration: 1884 of 3000iteration: 1888 of 3000iteration: 1892 of 3000iteration: 1896 of 3000iteration: 1900 of 3000iteration: 1904 of 3000iteration: 1908 of 3000iteration: 1912 of 3000iteration: 1916 of 3000iteration: 1920 of 3000iteration: 1924 of 3000iteration: 1928 of 3000iteration: 1932 of 3000iteration: 1936 of 3000iteration: 1940 of 3000iteration: 1944 of 3000iteration: 1948 of 3000iteration: 1952 of 3000iteration: 1956 of 3000iteration: 1960 of 3000iteration: 1964 of 3000iteration: 1968 of 3000iteration: 1972 of 3000iteration: 1976 of 3000iteration: 1980 of 3000iteration: 1984 of 3000iteration: 1988 of 3000iteration: 1992 of 3000iteration: 1996 of 3000iteration: 2000 of 3000iteration: 2004 of 3000iteration: 2008 of 3000iteration: 2012 of 3000iteration: 2016 of 3000iteration: 2020 of 3000iteration: 2024 of 3000iteration: 2028 of 3000iteration: 2032 of 3000iteration: 2036 of 3000iteration: 2040 of 3000iteration: 2044 of 3000iteration: 2048 of 3000iteration: 2052 of 3000iteration: 2056 of 3000iteration: 2060 of 3000iteration: 2064 of 3000iteration: 2068 of 3000iteration: 2072 of 3000iteration: 2076 of 3000iteration: 2080 of 3000iteration: 2084 of 3000iteration: 2088 of 3000iteration: 2092 of 3000iteration: 2096 of 3000iteration: 2100 of 3000iteration: 2104 of 3000iteration: 2108 of 3000iteration: 2112 of 3000iteration: 2116 of 3000iteration: 2120 of 3000iteration: 2124 of 3000iteration: 2128 of 3000iteration: 2132 of 3000iteration: 2136 of 3000iteration: 2140 of 3000iteration: 2144 of 3000iteration: 2148 of 3000iteration: 2152 of 3000ERROR: blocks 9321 and 8941 violated precedence constraint
+	 pred 8941 is in period 15 and succ. 9321 is in period 14
+ERROR FOUND - NOT SAVING BEST SOLUTION!
+repairing solution... done!
+testing solution new solution... iteration: 2156 of 3000WARNING: Objective values do not match!
+ obj in sol = 817866938.387067  actual amount 817860917.356961
+feasible!
+
+iteration: 2160 of 3000iteration: 2164 of 3000iteration: 2168 of 3000iteration: 2172 of 3000iteration: 2176 of 3000iteration: 2180 of 3000iteration: 2184 of 3000iteration: 2188 of 3000iteration: 2192 of 3000iteration: 2196 of 3000iteration: 2200 of 3000iteration: 2204 of 3000iteration: 2208 of 3000iteration: 2212 of 3000iteration: 2216 of 3000iteration: 2220 of 3000iteration: 2224 of 3000iteration: 2228 of 3000iteration: 2232 of 3000iteration: 2236 of 3000iteration: 2240 of 3000iteration: 2244 of 3000iteration: 2248 of 3000iteration: 2252 of 3000iteration: 2256 of 3000iteration: 2260 of 3000iteration: 2264 of 3000iteration: 2268 of 3000iteration: 2272 of 3000iteration: 2276 of 3000iteration: 2280 of 3000iteration: 2284 of 3000iteration: 2288 of 3000iteration: 2292 of 3000iteration: 2296 of 3000iteration: 2300 of 3000iteration: 2304 of 3000iteration: 2308 of 3000iteration: 2312 of 3000iteration: 2316 of 3000iteration: 2320 of 3000iteration: 2324 of 3000iteration: 2328 of 3000iteration: 2332 of 3000iteration: 2336 of 3000iteration: 2340 of 3000iteration: 2344 of 3000iteration: 2348 of 3000iteration: 2352 of 3000iteration: 2356 of 3000iteration: 2360 of 3000iteration: 2364 of 3000iteration: 2368 of 3000iteration: 2372 of 3000iteration: 2376 of 3000iteration: 2380 of 3000iteration: 2384 of 3000iteration: 2388 of 3000iteration: 2392 of 3000iteration: 2396 of 3000iteration: 2400 of 3000iteration: 2404 of 3000iteration: 2408 of 3000iteration: 2412 of 3000iteration: 2416 of 3000iteration: 2420 of 3000iteration: 2424 of 3000ERROR: blocks 9321 and 8941 violated precedence constraint
+	 pred 8941 is in period 15 and succ. 9321 is in period 14
+ERROR FOUND - NOT SAVING BEST SOLUTION!
+repairing solution... done!
+testing solution new solution... iteration: 2428 of 3000WARNING: Objective values do not match!
+ obj in sol = 817866938.387067  actual amount 817860917.356961
+feasible!
+
+iteration: 2432 of 3000iteration: 2436 of 3000iteration: 2440 of 3000iteration: 2444 of 3000iteration: 2448 of 3000iteration: 2452 of 3000iteration: 2456 of 3000iteration: 2460 of 3000iteration: 2464 of 3000iteration: 2468 of 3000iteration: 2472 of 3000iteration: 2476 of 3000iteration: 2480 of 3000iteration: 2484 of 3000iteration: 2488 of 3000iteration: 2492 of 3000iteration: 2496 of 3000iteration: 2500 of 3000iteration: 2504 of 3000iteration: 2508 of 3000ERROR: blocks 9321 and 8941 violated precedence constraint
+	 pred 8941 is in period 15 and succ. 9321 is in period 14
+ERROR FOUND - NOT SAVING BEST SOLUTION!
+repairing solution... done!
+testing solution new solution... WARNING: Objective values do not match!
+ obj in sol = 817879256.900502  actual amount 817873235.870396
+feasible!
+
+iteration: 2512 of 3000iteration: 2516 of 3000iteration: 2520 of 3000iteration: 2524 of 3000iteration: 2528 of 3000iteration: 2532 of 3000iteration: 2536 of 3000iteration: 2540 of 3000iteration: 2544 of 3000iteration: 2548 of 3000iteration: 2552 of 3000iteration: 2556 of 3000iteration: 2560 of 3000iteration: 2564 of 3000iteration: 2568 of 3000iteration: 2572 of 3000iteration: 2576 of 3000iteration: 2580 of 3000iteration: 2584 of 3000iteration: 2588 of 3000iteration: 2592 of 3000iteration: 2596 of 3000iteration: 2600 of 3000iteration: 2604 of 3000iteration: 2608 of 3000iteration: 2612 of 3000iteration: 2616 of 3000iteration: 2620 of 3000iteration: 2624 of 3000iteration: 2628 of 3000iteration: 2632 of 3000iteration: 2636 of 3000iteration: 2640 of 3000iteration: 2644 of 3000iteration: 2648 of 3000iteration: 2652 of 3000iteration: 2656 of 3000iteration: 2660 of 3000iteration: 2664 of 3000iteration: 2668 of 3000iteration: 2672 of 3000iteration: 2676 of 3000iteration: 2680 of 3000iteration: 2684 of 3000iteration: 2688 of 3000iteration: 2692 of 3000iteration: 2696 of 3000iteration: 2700 of 3000iteration: 2704 of 3000iteration: 2708 of 3000iteration: 2712 of 3000iteration: 2716 of 3000iteration: 2720 of 3000iteration: 2724 of 3000iteration: 2728 of 3000iteration: 2732 of 3000iteration: 2736 of 3000iteration: 2740 of 3000iteration: 2744 of 3000iteration: 2748 of 3000iteration: 2752 of 3000iteration: 2756 of 3000iteration: 2760 of 3000iteration: 2764 of 3000iteration: 2768 of 3000iteration: 2772 of 3000iteration: 2776 of 3000iteration: 2780 of 3000iteration: 2784 of 3000iteration: 2788 of 3000iteration: 2792 of 3000iteration: 2796 of 3000iteration: 2800 of 3000iteration: 2804 of 3000iteration: 2808 of 3000iteration: 2812 of 3000iteration: 2816 of 3000iteration: 2820 of 3000iteration: 2824 of 3000iteration: 2828 of 3000iteration: 2832 of 3000iteration: 2836 of 3000iteration: 2840 of 3000iteration: 2844 of 3000iteration: 2848 of 3000iteration: 2852 of 3000iteration: 2856 of 3000iteration: 2860 of 3000iteration: 2864 of 3000iteration: 2868 of 3000iteration: 2872 of 3000iteration: 2876 of 3000iteration: 2880 of 3000iteration: 2884 of 3000iteration: 2888 of 3000iteration: 2892 of 3000iteration: 2896 of 3000iteration: 2900 of 3000iteration: 2904 of 3000iteration: 2908 of 3000iteration: 2912 of 3000iteration: 2916 of 3000iteration: 2920 of 3000iteration: 2924 of 3000iteration: 2928 of 3000iteration: 2932 of 3000iteration: 2936 of 3000iteration: 2940 of 3000iteration: 2944 of 3000iteration: 2948 of 3000iteration: 2952 of 3000iteration: 2956 of 3000iteration: 2960 of 3000iteration: 2964 of 3000iteration: 2968 of 3000iteration: 2972 of 3000iteration: 2976 of 3000iteration: 2980 of 3000iteration: 2984 of 3000iteration: 2988 of 3000iteration: 2992 of 3000iteration: 2996 of 3000iteration: 3000 of 3000
+time taken to generate population: 14.1408
+
+
+***** Best solution found *****
+8.17859e+08
+************ Zuck_small MERGE 1 OF 500 (resets: 0) ************
+
+merging...merging 3000 CPIT solutions using fullMerge
+initialising group data structures... done!
+getting groups... done!
+2.47857 sec CPU time taken to find groups
+Finding fixed groups... done!
+
+Fixed groups: 
+group 0 - value: 0, size: 75175
+group 33 - value: 1, size: 103610
+
+groups[0].size(): 75175, zero_count: 75175
+
+Top 10 group sizes:
+------------------
+1: group[33] = 103610
+2: group[0] = 75175
+3: group[2817] = 84
+4: group[3199] = 59
+5: group[4825] = 40
+6: group[4399] = 39
+7: group[1697] = 39
+8: group[3618] = 33
+9: group[2033] = 33
+10: group[3047] = 30
+
+total_vars: 188000, group_map.size(): 188000
+
+Merge time: 3.00216
+
+merge finished!
+188000 variables found in 4844 groups and 1255 groups with size greater than 1
+reduction in problem size: 0.025766
+variables fixed to 0: 75175
+variables fixed to 1: 103610
+unfixed variables in groups size = 1: 3589
+unfixed variables in groups size > 1: 5626
+
+ done!
+random splitting...groups.size(): 4844
+same_count: 743, two_count: 0
+7266 groups after split
+zero_group_count: 265
+one_group_count: 5841
+big_group_count: 1160
+groups.size(): 7266
+ done!
+
+Merge Solver initialised
+Problem has 9400 blocks
+*** creating aggregate merge MIP model ***
+7266 variables for groups added
+35962 precedence constraints added
+7769 block persistence constraints added
+40 resource constraints added
+CPXPARAM_Preprocessing_Presolve                  0
+CPXPARAM_TimeLimit                               500
+CPXPARAM_MIP_Tolerances_MIPGap                   0.00011000000085914508
+CPXPARAM_MIP_Strategy_HeuristicFreq              1
+CPXPARAM_MIP_Limits_CutsFactor                   1
+CPXPARAM_MIP_Strategy_RINSHeur                   1
+CPXPARAM_MIP_PolishAfter_Solutions               1
+Warning:  No solution found from 1 MIP starts.
+Retaining values of one MIP start for possible repair.
+Clique table members: 43729.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: deterministic, using up to 4 threads.
+Root relaxation solution time = 1.24 sec. (612.40 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0  -8.33278e+08   477                -8.33278e+08     9439         
+*     0+    0                      -8.30914e+08  -8.33278e+08             0.28%
+
+Starting condition for polishing reached (PolishAfterIntSol).
+Starting solution polishing.
+
+      0     2  -8.33278e+08   477  -8.30914e+08  -8.33278e+08    24404    0.28%
+Elapsed time = 13.89 sec. (11310.86 ticks, tree = 0.01 MB, solutions = 1)
+*     1+    1                      -8.31058e+08  -8.33278e+08             0.27%
+*     1+    1                      -8.31142e+08  -8.33278e+08             0.26%
+*     1+    1                      -8.31302e+08  -8.33278e+08             0.24%
+*     1+    1                      -8.31490e+08  -8.33278e+08             0.21%
+*     1+    1                      -8.31528e+08  -8.33278e+08             0.21%
+*     1+    1                      -8.31626e+08  -8.33278e+08             0.20%
+*     1+    1                      -8.31746e+08  -8.33278e+08             0.18%
+*     1+    1                      -8.31773e+08  -8.33278e+08             0.18%
+*     1+    1                      -8.31949e+08  -8.33278e+08             0.16%
+*     1+    1                      -8.32092e+08  -8.33278e+08             0.14%
+*     1+    1                      -8.32099e+08  -8.33278e+08             0.14%
+*     1+    1                      -8.32104e+08  -8.33278e+08             0.14%
+*     1+    1                      -8.32118e+08  -8.33278e+08             0.14%
+*     1+    1                      -8.32137e+08  -8.33278e+08             0.14%
+*     1+    1                      -8.32353e+08  -8.33278e+08             0.11%
+*     1+    1                      -8.32388e+08  -8.33278e+08             0.11%
+*     1+    1                      -8.32624e+08  -8.33278e+08             0.08%
+*     1+    1                      -8.32652e+08  -8.33278e+08             0.08%
+*     1+    1                      -8.32734e+08  -8.33278e+08             0.07%
+      1     3  -8.33276e+08   379  -8.32734e+08  -8.33277e+08    24413    0.07%
+*     2+    2                      -8.32738e+08  -8.33277e+08             0.06%
+*     2+    2                      -8.32750e+08  -8.33277e+08             0.06%
+      2     3  -8.33264e+08   414  -8.32750e+08  -8.33277e+08    24418    0.06%
+*     3+    2                      -8.32767e+08  -8.33277e+08             0.06%
+*     3+    2                      -8.32785e+08  -8.33275e+08             0.06%
+*     3+    2                      -8.32793e+08  -8.33275e+08             0.06%
+*     3+    2                      -8.32796e+08  -8.33275e+08             0.06%
+*     3+    2                      -8.32808e+08  -8.33275e+08             0.06%
+*     3+    2                      -8.32813e+08  -8.33275e+08             0.06%
+*     3+    2                      -8.32814e+08  -8.33275e+08             0.06%
+*     3+    2                      -8.32815e+08  -8.33275e+08             0.06%
+*     3+    2                      -8.32815e+08  -8.33275e+08             0.06%
+      3     4  -8.33242e+08   342  -8.32815e+08  -8.33275e+08    24468    0.06%
+      4     5  -8.33229e+08   377  -8.32815e+08  -8.33275e+08    24483    0.06%
+*     5+    4                      -8.32816e+08  -8.33275e+08             0.06%
+*     5+    3                      -8.32816e+08  -8.33275e+08             0.06%
+      5     5  -8.33256e+08   390  -8.32816e+08  -8.33275e+08    24434    0.06%
