@@ -15,7 +15,8 @@ source/Preprocess.o: source/Preprocess.cpp include/Preprocess.h \
  include/SinglePModel.h include/SettingsHandler.h \
  include/SolutionMerger.h include/SetObj.h include/RandomSearch.h \
  include/LocalSearch.h include/MergeSolver.h include/MergeSolverSimple.h \
- include/MergeSolverCompact.h include/ConeMiner.h include/UpitSolver.h
+ include/MergeSolverCompact.h include/ConeMiner.h include/GRASPSolver.h \
+ include/UpitSolver.h
 
 include/Preprocess.h:
 
@@ -104,5 +105,7 @@ include/MergeSolverSimple.h:
 include/MergeSolverCompact.h:
 
 include/ConeMiner.h:
+
+include/GRASPSolver.h:
 
 include/UpitSolver.h:

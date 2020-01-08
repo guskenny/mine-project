@@ -15,7 +15,7 @@ source/MergeSolverCompact.o: source/MergeSolverCompact.cpp \
  include/SinglePModel.h include/SettingsHandler.h \
  include/SolutionMerger.h include/SetObj.h include/RandomSearch.h \
  include/LocalSearch.h include/MergeSolver.h include/MergeSolverSimple.h \
- include/MergeSolverCompact.h include/ConeMiner.h
+ include/MergeSolverCompact.h include/ConeMiner.h include/GRASPSolver.h
 
 include/MergeSolverCompact.h:
 
@@ -104,3 +104,5 @@ include/MergeSolverSimple.h:
 include/MergeSolverCompact.h:
 
 include/ConeMiner.h:
+
+include/GRASPSolver.h:

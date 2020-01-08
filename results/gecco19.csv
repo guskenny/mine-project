@@ -1,0 +1,8 @@
+Run info,Date,Time,Instance,Best obj,Wall time,CPU time,MIP time,Std Dev
+
+,,,Newman1,2.418E+07,,,,1.165E+02
+,,,Zuck_small,8.433E+08,,,,2.078E+06
+,,,KD,4.088E+08,,,,1.881E+05
+,,,Zuck_medium,6.584E+08,,,,8.462E+05
+,,,marvin,8.539E+08,,,,2.575E+05
+,,,Zuck_large,5.441E+07,,,,2.558E+05

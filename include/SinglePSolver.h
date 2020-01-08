@@ -30,6 +30,7 @@
 #include "MergeSolverSimple.h"
 #include "MergeSolverCompact.h"
 #include "ConeMiner.h"
+#include "GRASPSolver.h"
 //#include <math.h>
 // #include <ncurses.h>
 #include <sstream>
@@ -73,6 +74,7 @@ class SinglePSolver{
 
     int forkMergeSolve();
     int serialMergeSolve();
+    int GRASPSolve();
 
     double singlePSolve(const BranchNode_info &init_sol, Sol_Int &sol);
 

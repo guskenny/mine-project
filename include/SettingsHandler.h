@@ -38,8 +38,9 @@ class SettingsHandler {
     bool AUTO_REPAIR=0;
     size_t INIT_SEEDS=1;
     size_t NUM_SEEDS=1;
+    size_t NUM_PASSES=0;
     size_t NUM_ITER=1;
-    size_t MERGE_TYPE=1;
+    size_t SOLVE_TYPE=0;
     size_t MERGE_THRESH=0;
     size_t ITER_INCR=0;
     size_t FIX_BEST_GROUP=false;
@@ -93,6 +94,10 @@ class SettingsHandler {
         }
         if (setting.compare("FORCE_PATH") == 0){
           FORCE_PATH = value;
+          continue;
+        }
+        if (setting.compare("NUM_PASSES") == 0){
+          NUM_PASSES = stoi(value);
           continue;
         }
         if (setting.compare("NUM_TOTAL_RUNS") == 0){
@@ -234,8 +239,8 @@ class SettingsHandler {
           NUM_ITER = stoi(value);
           continue;
         }
-        else if (setting.compare("MERGE_TYPE") == 0){
-          MERGE_TYPE = stoi(value);
+        else if (setting.compare("SOLVE_TYPE") == 0){
+          SOLVE_TYPE = stoi(value);
           continue;
         }
         else if (setting.compare("MERGE_THRESH") == 0){
@@ -407,7 +412,7 @@ class SettingsHandler {
                 << "INIT_SEEDS: " << INIT_SEEDS << std::endl
                 << "NUM_SEEDS: " << NUM_SEEDS << std::endl
                 << "NUM_ITER: " << NUM_ITER << std::endl
-                << "MERGE_TYPE: " << MERGE_TYPE << std::endl
+                << "SOLVE_TYPE: " << SOLVE_TYPE << std::endl
                 << "ITER_INCR: " << ITER_INCR << std::endl
                 << "WINDOW_SIZE: " << WINDOW_SIZE << std::endl
                 << "VNS_WINDOW_LIMIT: " << VNS_WINDOW_LIMIT << std::endl

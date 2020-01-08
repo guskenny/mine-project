@@ -15,7 +15,7 @@ source/ConeMiner.o: source/ConeMiner.cpp include/ConeMiner.h \
  include/SinglePModel.h include/SolutionMerger.h include/SetObj.h \
  include/RandomSearch.h include/LocalSearch.h include/MergeSolver.h \
  include/MergeSolverSimple.h include/MergeSolverCompact.h \
- include/ConeMiner.h include/UpitSolver.h
+ include/ConeMiner.h include/GRASPSolver.h include/UpitSolver.h
 
 include/ConeMiner.h:
 
@@ -104,5 +104,7 @@ include/MergeSolverSimple.h:
 include/MergeSolverCompact.h:
 
 include/ConeMiner.h:
+
+include/GRASPSolver.h:
 
 include/UpitSolver.h:

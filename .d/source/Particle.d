@@ -18,7 +18,8 @@ source/Particle.o: source/Particle.cpp include/Particle.h \
  QOL/GurobiFormulation.h include/my_math.h include/SinglePModel.h \
  include/SolutionMerger.h include/SetObj.h include/RandomSearch.h \
  include/LocalSearch.h include/MergeSolver.h include/MergeSolverSimple.h \
- include/MergeSolverCompact.h include/ConeMiner.h include/UpitSolver.h
+ include/MergeSolverCompact.h include/ConeMiner.h include/GRASPSolver.h \
+ include/UpitSolver.h
 
 include/Particle.h:
 
@@ -121,5 +122,7 @@ include/MergeSolverSimple.h:
 include/MergeSolverCompact.h:
 
 include/ConeMiner.h:
+
+include/GRASPSolver.h:
 
 include/UpitSolver.h:

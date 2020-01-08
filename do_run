@@ -1,6 +1,6 @@
 #!/bin/bash
 
-testsets=("Zuck_small" "Zuck_large" "marvin" "Zuck_medium" "KD")
+testsets=("Newman1" "Zuck_small" "marvin" "Zuck_medium" "KD" "Zuck_large")
 echo " " >> results/results_log.csv
 echo " **************** STARTING RUN **************** " >> results/results_log.csv
 echo "          $(date)" >> results/results_log.csv
@@ -12,11 +12,11 @@ for t in ${testsets[@]}; do
 	echo "###### TESTSET: ${t^^} ######" >> results/results_log.csv
 	echo "" >> results/results_log.csv
 
-	for ((num_runs=1;num_runs<6;num_runs++)); do
+	for ((num_runs=1;num_runs<4;num_runs++)); do
 
-		./QOLcpit -c -B ../Data/${t}
-		rsync -a --delete tracking_data/${t}/ tracking_data/with_splitting/${t}_${num_runs}/
-		rsync -a --delete sol_files/${t}/ sol_files/with_splitting/${t}_${num_runs}/
+		./QOLcpit -c -B ../../Data/${t}
+		rsync -a --delete tracking_data/${t}/ tracking_data/grasp/${t}_${num_runs}/
+		rsync -a --delete sol_files/${t}/ sol_files/grasp/${t}_${num_runs}/
 
 #		if [ $num_runs == 1 ]
 #		then
